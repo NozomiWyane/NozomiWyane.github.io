@@ -352,7 +352,7 @@
                 
                   <span class="post-meta-item-text">更新于</span>
                 
-                <time title="修改时间：2019-11-12 09:40:41" itemprop="dateModified" datetime="2019-11-12T09:40:41+08:00">2019-11-12</time>
+                <time title="修改时间：2019-11-12 09:45:03" itemprop="dateModified" datetime="2019-11-12T09:45:03+08:00">2019-11-12</time>
               
             
           </span>
@@ -396,7 +396,7 @@
 <li>对于训练样本的m个输入x，进行堆叠为一个nx × m的矩阵，y同样为1 x m的矩阵</li>
 </ol>
 <p>在这里我们使用\hat{y}表示通过算法预测的结果，我们需要它与y形成一个概率的关系，即取值为{0~1},由于直接使用线性函数去拟合，我们输出只有0~1的情况下，有可能会输出负数,或者超过1，这里我们使用一个叫sigmoid函数对线性拟合处理，sigmoid表示为如下\frac{1}{1+e<sup>-z</sup>},原来y = w<sup>T</sup>x + b表示为y = $\delta$ (w<sup>T</sup>x + b)</p>
-<h2 id="神经网络的理解"><a href="#神经网络的理解" class="headerlink" title="神经网络的理解"></a>神经网络的理解</h2><p><img src="/images/learning.jpg" alt="network"></p>
+<h2 id="神经网络的理解"><a href="#神经网络的理解" class="headerlink" title="神经网络的理解"></a>神经网络的理解</h2><p><img src="/images/learning.png" alt="network"></p>
 <p>如上图，神经网络可以理解为是一个黑箱，函数，输入图像，经过结构和参数得到里面是否有猫，有=1，无=0，这是一个基本的神经网络的模式。</p>
 <p>神经网络模型 = 结构 + 参数</p>
 <p>我们的目标就是要找到在结构中最佳的参数来的到最好的结果，我们可以改变这个模式中的很多东西：</p>
