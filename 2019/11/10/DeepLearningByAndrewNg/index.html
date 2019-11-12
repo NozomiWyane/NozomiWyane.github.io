@@ -96,17 +96,17 @@
 
 
 
-  <meta name="description" content="裂开由于利用mahjong-helper处理麻将牌谱,整理一下几种人工智能数据格式在python中的处理方式。 xls和xlsxpython中对于这两种文件有三个库可以用，xlwt，xlrd和openpyxl，这里以xlrd为例，其他两个大同小异。 excel文档有三个概念，workbook(文档)，sheet(表单)，cell(单元格)，以下是一个demo遍历每一个单元格：12345678910">
+  <meta name="description" content="Stanford CS230(吴恩达 深度学习 Deep Learning | Autumn 2018)笔记第零课深度学习是什么？深度学习一般与神经网络是一个同义词，Deep Learning简称DL，与传统的Machine Learning(ML)不同，但是是ML的一部分，也是最难的一部分。 深度学习兴起主要是由于互联网发展以及GPU计算的能力提升，更多数据被电子化以及计算力的大幅提升，使得神经">
 <meta property="og:type" content="article">
-<meta property="og:title" content="DataFile Dealing">
-<meta property="og:url" content="http://yoursite.com/2019/06/18/blog2/index.html">
+<meta property="og:title" content="Mahjong">
+<meta property="og:url" content="http://yoursite.com/2019/11/10/DeepLearningByAndrewNg/index.html">
 <meta property="og:site_name" content="Mahjong">
-<meta property="og:description" content="裂开由于利用mahjong-helper处理麻将牌谱,整理一下几种人工智能数据格式在python中的处理方式。 xls和xlsxpython中对于这两种文件有三个库可以用，xlwt，xlrd和openpyxl，这里以xlrd为例，其他两个大同小异。 excel文档有三个概念，workbook(文档)，sheet(表单)，cell(单元格)，以下是一个demo遍历每一个单元格：12345678910">
+<meta property="og:description" content="Stanford CS230(吴恩达 深度学习 Deep Learning | Autumn 2018)笔记第零课深度学习是什么？深度学习一般与神经网络是一个同义词，Deep Learning简称DL，与传统的Machine Learning(ML)不同，但是是ML的一部分，也是最难的一部分。 深度学习兴起主要是由于互联网发展以及GPU计算的能力提升，更多数据被电子化以及计算力的大幅提升，使得神经">
 <meta property="og:locale" content="zh-CN">
-<meta property="og:updated_time" content="2019-06-18T02:23:21.555Z">
+<meta property="og:updated_time" content="2019-11-11T02:21:49.341Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="DataFile Dealing">
-<meta name="twitter:description" content="裂开由于利用mahjong-helper处理麻将牌谱,整理一下几种人工智能数据格式在python中的处理方式。 xls和xlsxpython中对于这两种文件有三个库可以用，xlwt，xlrd和openpyxl，这里以xlrd为例，其他两个大同小异。 excel文档有三个概念，workbook(文档)，sheet(表单)，cell(单元格)，以下是一个demo遍历每一个单元格：12345678910">
+<meta name="twitter:title" content="Mahjong">
+<meta name="twitter:description" content="Stanford CS230(吴恩达 深度学习 Deep Learning | Autumn 2018)笔记第零课深度学习是什么？深度学习一般与神经网络是一个同义词，Deep Learning简称DL，与传统的Machine Learning(ML)不同，但是是ML的一部分，也是最难的一部分。 深度学习兴起主要是由于互联网发展以及GPU计算的能力提升，更多数据被电子化以及计算力的大幅提升，使得神经">
 
 
 
@@ -114,7 +114,7 @@
 
   
   
-  <link rel="canonical" href="http://yoursite.com/2019/06/18/blog2/">
+  <link rel="canonical" href="http://yoursite.com/2019/11/10/DeepLearningByAndrewNg/">
 
 
 
@@ -124,7 +124,7 @@
   };
 </script>
 
-  <title>DataFile Dealing | Mahjong</title>
+  <title> | Mahjong</title>
   
 
 
@@ -293,7 +293,7 @@
   
   
   <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2019/06/18/blog2/">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2019/11/10/DeepLearningByAndrewNg/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="Nozomi">
@@ -310,7 +310,7 @@
 
         
         
-          <h1 class="post-title" itemprop="name headline">DataFile Dealing
+          <h1 class="post-title" itemprop="name headline">
 
               
             
@@ -336,12 +336,24 @@
                 
               
 
-              <time title="创建时间：2019-06-18 08:13:15 / 修改时间：10:23:21" itemprop="dateCreated datePublished" datetime="2019-06-18T08:13:15+08:00">2019-06-18</time>
+              <time title="创建时间：2019-11-10 18:37:02" itemprop="dateCreated datePublished" datetime="2019-11-10T18:37:02+08:00">2019-11-10</time>
             
 
             
               
 
+              
+                
+                <span class="post-meta-divider">|</span>
+                
+
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-calendar-check-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">更新于</span>
+                
+                <time title="修改时间：2019-11-11 10:21:49" itemprop="dateModified" datetime="2019-11-11T10:21:49+08:00">2019-11-11</time>
               
             
           </span>
@@ -375,12 +387,26 @@
       
 
       
-        <h1 id="裂开"><a href="#裂开" class="headerlink" title="裂开"></a>裂开</h1><p>由于利用<a href="https://github.com/EndlessCheng/mahjong-helper" target="_blank" rel="noopener">mahjong-helper</a>处理麻将牌谱,整理一下几种人工智能数据格式在python中的处理方式。</p>
-<h1 id="xls和xlsx"><a href="#xls和xlsx" class="headerlink" title="xls和xlsx"></a>xls和xlsx</h1><p>python中对于这两种文件有三个库可以用，xlwt，xlrd和openpyxl，这里以xlrd为例，其他两个大同小异。</p>
-<p>excel文档有三个概念，workbook(文档)，sheet(表单)，cell(单元格)，以下是一个demo遍历每一个单元格：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br></pre></td><td class="code"><pre><span class="line">import xlrd #导入模块</span><br><span class="line"></span><br><span class="line">data = xlrd.open_workbook(filename) #文件名以及路径打开</span><br><span class="line"></span><br><span class="line">table = data.sheets()[0]  #通过索引顺序获取</span><br><span class="line"></span><br><span class="line">table = data.sheet_by_index(sheet_indx)) #通过索引顺序获取</span><br><span class="line"></span><br><span class="line">table = data.sheet_by_name(sheet_name)  #通过名称获取</span><br><span class="line"></span><br><span class="line">#以上三个函数都会返回一个xlrd.sheet.Sheet()对象</span><br><span class="line"></span><br><span class="line">nrows = table.nrows  #获取该sheet中的有效行数</span><br><span class="line"></span><br><span class="line">ncols = table.ncols   #获取列表的有效列</span><br><span class="line"></span><br><span class="line">如果有表头，可以减1，然后从第一个下标开始遍历</span><br><span class="line"></span><br><span class="line">table.row_values(rowx, start_colx=0, end_colx=None)   #返回由该行中所有单元格的数据组成的列表</span><br><span class="line"></span><br><span class="line">table.row_len(rowx) #返回该列的有效单元格长度</span><br><span class="line"></span><br><span class="line">for i in range(0,nrows) #减1就是 (1,nrows)</span><br><span class="line">    for j in range(0,ncols)</span><br><span class="line">        cell = table.cell_value(i,j)   #返回单元格中的数据</span><br><span class="line">        #进行操作...</span><br></pre></td></tr></table></figure></p>
-<h1 id="csv"><a href="#csv" class="headerlink" title="csv"></a>csv</h1><p>csv跟上面的不一样，它默认有表头，并且只能存一张表，用的是pandas的read_csv函数来读的，返回的是pandas的DataFrame对象。</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line">import pandas as pd</span><br><span class="line">_chunksize = 10000 #一块多少航</span><br><span class="line">#采用chunksize，分块读取文件，避免文件过大打开错误</span><br><span class="line">reader = pd.read_csv(&apos;HV_Radar.csv&apos;, sep=&apos;,&apos;, chunksize=_chunksize)</span><br><span class="line"></span><br><span class="line">output = pd.DataFrame()</span><br><span class="line">c = 0</span><br><span class="line"></span><br><span class="line">#读取完以后，csv表头放在了reader和chunk中的列索引名中，可以通过获取loc来读</span><br><span class="line">for chunk in reader:</span><br><span class="line">    chunk.columns.size #列数</span><br><span class="line">    chunk.rows.size #行数</span><br><span class="line">    #由于在读取块时，如果最后一块不足行数，会有空白填补，下面数据操作会报错</span><br><span class="line">    for i in range(0, chunk.iloc[:, 0].size): </span><br><span class="line">        #loc是名获取，iloc是行/列号获取,这里是取每一行的第一列</span><br><span class="line">        if(chunk.iloc[i,1] == 412198): </span><br><span class="line">            c = c + 1</span><br><span class="line">            output.append(chunk.iloc[i])</span><br><span class="line">            print(&quot;found&quot;, c, &quot;record&quot;)</span><br><span class="line"></span><br><span class="line">output.to_csv(index=False,path=&apos;SPMD_data_412198.csv&apos;)</span><br></pre></td></tr></table></figure>
-<h1 id="hdf5"><a href="#hdf5" class="headerlink" title="hdf5"></a>hdf5</h1><p>这个是最复杂的文件结构，它用的是类Unix的文件组织结构来组织文件。在python中用的是<a href="http://www.h5py.org/" target="_blank" rel="noopener">h5py</a>的库</p>
+        <h1 id="Stanford-CS230-吴恩达-深度学习-Deep-Learning-Autumn-2018-笔记"><a href="#Stanford-CS230-吴恩达-深度学习-Deep-Learning-Autumn-2018-笔记" class="headerlink" title="Stanford CS230(吴恩达 深度学习 Deep Learning | Autumn 2018)笔记"></a>Stanford CS230(吴恩达 深度学习 Deep Learning | Autumn 2018)笔记</h1><h1 id="第零课"><a href="#第零课" class="headerlink" title="第零课"></a>第零课</h1><h2 id="深度学习是什么？"><a href="#深度学习是什么？" class="headerlink" title="深度学习是什么？"></a>深度学习是什么？</h2><p>深度学习一般与神经网络是一个同义词，Deep Learning简称DL，与传统的Machine Learning(ML)不同，但是是ML的一部分，也是最难的一部分。</p>
+<h2 id="深度学习兴起"><a href="#深度学习兴起" class="headerlink" title="深度学习兴起"></a>深度学习兴起</h2><p>主要是由于互联网发展以及GPU计算的能力提升，更多数据被电子化以及计算力的大幅提升，使得神经网络变得更大更能解决更多数据带来的问题和潜在的有价值的东西。</p>
+<h2 id="一个好的AI团队需要什么？"><a href="#一个好的AI团队需要什么？" class="headerlink" title="一个好的AI团队需要什么？"></a>一个好的AI团队需要什么？</h2><ol>
+<li>团队一般具备各种数据采集能力</li>
+<li>团队能通过深度学习来对数据进行分析</li>
+<li>普遍的自动化</li>
+</ol>
+<h2 id="本课程含五个Courses："><a href="#本课程含五个Courses：" class="headerlink" title="本课程含五个Courses："></a>本课程含五个Courses：</h2><ol>
+<li>什么是神经元？什么是神经网络层？如何将他们堆叠起来搭建神经网络？</li>
+<li>如何调整(tune)这些神经网络？如何改进神经网络的效果？</li>
+<li>机器学习项目的开发流程</li>
+<li>卷积神经网络(CNN Convolutional Neural Network)</li>
+<li>序列模型(Sequence Model)如递归神经网络(Recurrent Neural Network)</li>
+</ol>
+<h2 id="参考课程视频："><a href="#参考课程视频：" class="headerlink" title="参考课程视频："></a>参考课程视频：</h2><p>对于2中的每一个视频，先到1中看了视频在看2，效果会好一些</p>
+<p>2中视频备注如C1M1，代表第一个Courses(一共上面5个),每个有很多modules，一般一个视频两个modules</p>
+<ol>
+<li><a href="https://www.bilibili.com/video/av66314465" target="_blank" rel="noopener">Courses</a></li>
+<li><a href="https://www.bilibili.com/video/av57524451" target="_blank" rel="noopener">In-class</a></li>
+</ol>
 
       
     </div>
@@ -411,8 +437,8 @@
         <div class="post-nav">
           <div class="post-nav-next post-nav-item">
             
-              <a href="/2019/05/30/blog1/" rel="next" title="Mahjong AI [AkagiShigeru]">
-                <i class="fa fa-chevron-left"></i> Mahjong AI [AkagiShigeru]
+              <a href="/2019/06/18/blog2/" rel="next" title="DataFile Dealing">
+                <i class="fa fa-chevron-left"></i> DataFile Dealing
               </a>
             
           </div>
@@ -421,7 +447,7 @@
 
           <div class="post-nav-prev post-nav-item">
             
-              <a href="/2019/11/10/DeepLearningByAndrewNg/" rel="prev" title>
+              <a href="/2019/11/10/DeepLearningByAndrewNg1/" rel="prev" title>
                  <i class="fa fa-chevron-right"></i>
               </a>
             
@@ -534,7 +560,7 @@
             
 
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#裂开"><span class="nav-number">1.</span> <span class="nav-text">裂开</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#xls和xlsx"><span class="nav-number">2.</span> <span class="nav-text">xls和xlsx</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#csv"><span class="nav-number">3.</span> <span class="nav-text">csv</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#hdf5"><span class="nav-number">4.</span> <span class="nav-text">hdf5</span></a></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#Stanford-CS230-吴恩达-深度学习-Deep-Learning-Autumn-2018-笔记"><span class="nav-number">1.</span> <span class="nav-text">Stanford CS230(吴恩达 深度学习 Deep Learning | Autumn 2018)笔记</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#第零课"><span class="nav-number">2.</span> <span class="nav-text">第零课</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#深度学习是什么？"><span class="nav-number">2.1.</span> <span class="nav-text">深度学习是什么？</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#深度学习兴起"><span class="nav-number">2.2.</span> <span class="nav-text">深度学习兴起</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#一个好的AI团队需要什么？"><span class="nav-number">2.3.</span> <span class="nav-text">一个好的AI团队需要什么？</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#本课程含五个Courses："><span class="nav-number">2.4.</span> <span class="nav-text">本课程含五个Courses：</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#参考课程视频："><span class="nav-number">2.5.</span> <span class="nav-text">参考课程视频：</span></a></li></ol></li></ol></div>
             
 
           </div>
@@ -709,46 +735,6 @@
   
   
 
-  
-    
-      <script type="text/x-mathjax-config">
-  
-
-  MathJax.Hub.Config({
-    tex2jax: {
-      inlineMath: [ ['$', '$'], ['\\(', '\\)'] ],
-      processEscapes: true,
-      skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
-    },
-    TeX: {
-      
-      equationNumbers: {
-        autoNumber: 'AMS'
-      }
-    }
-  });
-  MathJax.Hub.Register.StartupHook('TeX Jax Ready', function() {
-    MathJax.InputJax.TeX.prefilterHooks.Add(function(data) {
-      if (data.display) {
-        var next = data.script.nextSibling;
-        while (next && next.nodeName.toLowerCase() === '#text') { next = next.nextSibling }
-        if (next && next.nodeName.toLowerCase() === 'br') { next.parentNode.removeChild(next) }
-      }
-    });
-  });
-</script>
-
-<script type="text/x-mathjax-config">
-  MathJax.Hub.Queue(function() {
-    var all = MathJax.Hub.getAllJax(), i;
-    for (i = 0; i < all.length; i += 1) {
-      document.getElementById(all[i].inputID + '-Frame').parentNode.className += ' has-jax';
-    }
-  });
-</script>
-<script src="//cdn.jsdelivr.net/npm/mathjax@2/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
-
-    
   
 
 
