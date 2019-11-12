@@ -98,15 +98,15 @@
 
   <meta name="description" content="第一课神经网络的有监督学习建立y(y1,y2…)到x(x1,x2,x3,x4…)的映射关系，我们给出数据包含(x,y)对神经网络进行训练，找到最佳的参数来表达y和x之间的关系。 有监督学习的x输入结构化数据：表格类型的，矩阵类型的数据非结构化数据：声音，图像，文本等 神经网络基础神经网络包含前向过程(forward propagation) 和 反向传播过程(backward propagatio">
 <meta property="og:type" content="article">
-<meta property="og:title" content="Mahjong">
+<meta property="og:title" content="Deep Learning Nerual Network 1">
 <meta property="og:url" content="http://yoursite.com/2019/11/10/DeepLearningByAndrewNg1/index.html">
 <meta property="og:site_name" content="Mahjong">
 <meta property="og:description" content="第一课神经网络的有监督学习建立y(y1,y2…)到x(x1,x2,x3,x4…)的映射关系，我们给出数据包含(x,y)对神经网络进行训练，找到最佳的参数来表达y和x之间的关系。 有监督学习的x输入结构化数据：表格类型的，矩阵类型的数据非结构化数据：声音，图像，文本等 神经网络基础神经网络包含前向过程(forward propagation) 和 反向传播过程(backward propagatio">
 <meta property="og:locale" content="zh-CN">
 <meta property="og:image" content="http://yoursite.com/images/learning.jpg">
-<meta property="og:updated_time" content="2019-11-12T01:29:02.972Z">
+<meta property="og:updated_time" content="2019-11-12T01:40:41.380Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="Mahjong">
+<meta name="twitter:title" content="Deep Learning Nerual Network 1">
 <meta name="twitter:description" content="第一课神经网络的有监督学习建立y(y1,y2…)到x(x1,x2,x3,x4…)的映射关系，我们给出数据包含(x,y)对神经网络进行训练，找到最佳的参数来表达y和x之间的关系。 有监督学习的x输入结构化数据：表格类型的，矩阵类型的数据非结构化数据：声音，图像，文本等 神经网络基础神经网络包含前向过程(forward propagation) 和 反向传播过程(backward propagatio">
 <meta name="twitter:image" content="http://yoursite.com/images/learning.jpg">
 
@@ -126,7 +126,7 @@
   };
 </script>
 
-  <title> | Mahjong</title>
+  <title>Deep Learning Nerual Network 1 | Mahjong</title>
   
 
 
@@ -312,7 +312,7 @@
 
         
         
-          <h1 class="post-title" itemprop="name headline">
+          <h1 class="post-title" itemprop="name headline">Deep Learning Nerual Network 1
 
               
             
@@ -355,7 +355,7 @@
                 
                   <span class="post-meta-item-text">更新于</span>
                 
-                <time title="修改时间：2019-11-12 09:29:02" itemprop="dateModified" datetime="2019-11-12T09:29:02+08:00">2019-11-12</time>
+                <time title="修改时间：2019-11-12 09:40:41" itemprop="dateModified" datetime="2019-11-12T09:40:41+08:00">2019-11-12</time>
               
             
           </span>
@@ -734,6 +734,46 @@
   
   
 
+  
+    
+      <script type="text/x-mathjax-config">
+  
+
+  MathJax.Hub.Config({
+    tex2jax: {
+      inlineMath: [ ['$', '$'], ['\\(', '\\)'] ],
+      processEscapes: true,
+      skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+    },
+    TeX: {
+      
+      equationNumbers: {
+        autoNumber: 'AMS'
+      }
+    }
+  });
+  MathJax.Hub.Register.StartupHook('TeX Jax Ready', function() {
+    MathJax.InputJax.TeX.prefilterHooks.Add(function(data) {
+      if (data.display) {
+        var next = data.script.nextSibling;
+        while (next && next.nodeName.toLowerCase() === '#text') { next = next.nextSibling }
+        if (next && next.nodeName.toLowerCase() === 'br') { next.parentNode.removeChild(next) }
+      }
+    });
+  });
+</script>
+
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Queue(function() {
+    var all = MathJax.Hub.getAllJax(), i;
+    for (i = 0; i < all.length; i += 1) {
+      document.getElementById(all[i].inputID + '-Frame').parentNode.className += ' has-jax';
+    }
+  });
+</script>
+<script src="//cdn.jsdelivr.net/npm/mathjax@2/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+
+    
   
 
 
