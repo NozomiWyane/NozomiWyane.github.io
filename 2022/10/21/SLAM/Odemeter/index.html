@@ -5,7 +5,7 @@
   <meta charset="utf-8">
   
   
-  <title>Deep Learning Nerual Network 1 | Nozomiの優しい空間</title>
+  <title>激光SLAM学习 前端里程计 | Nozomiの優しい空間</title>
   <meta name="author" content="Nozomi" />
   <meta http-equiv="Cache-Control" content="no-transform" />
   <meta http-equiv="Cache-Control" content="no-siteapp" />
@@ -14,22 +14,20 @@
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
   <meta name="format-detection" content="telphone=no, email=no" />
   
-    <meta name="keywords" content="" />
+    <meta name="keywords" content="SLAM, AI, Deep learning" />
   
-  <meta name="description" content="第一课神经网络的有监督学习建立y(y1,y2…)到x(x1,x2,x3,x4…)的映射关系，我们给出数据包含(x,y)对神经网络进行训练，找到最佳的参数来表达y和x之间的关系。 有监督学习的x输入结构化数据：表格类型的，矩阵类型的数据非结构化数据：声音，图像，文本等 神经网络基础神经网络包含前向过程(forward propagation) 和 反向传播过程(backward propagatio">
+  <meta name="description" content="简介">
 <meta property="og:type" content="article">
-<meta property="og:title" content="Deep Learning Nerual Network 1">
-<meta property="og:url" content="http://yoursite.com/2022/10/19/DeepLearningByAndrewNg1/index.html">
+<meta property="og:title" content="激光SLAM学习 前端里程计">
+<meta property="og:url" content="http://yoursite.com/2022/10/21/SLAM/Odemeter/index.html">
 <meta property="og:site_name" content="Nozomiの優しい空間">
-<meta property="og:description" content="第一课神经网络的有监督学习建立y(y1,y2…)到x(x1,x2,x3,x4…)的映射关系，我们给出数据包含(x,y)对神经网络进行训练，找到最佳的参数来表达y和x之间的关系。 有监督学习的x输入结构化数据：表格类型的，矩阵类型的数据非结构化数据：声音，图像，文本等 神经网络基础神经网络包含前向过程(forward propagation) 和 反向传播过程(backward propagatio">
+<meta property="og:description" content="简介">
 <meta property="og:locale" content="zh_CN">
-<meta property="og:image" content="http://yoursite.com/images/learning.png">
-<meta property="article:published_time" content="2022-10-19T13:45:39.231Z">
-<meta property="article:modified_time" content="2022-10-21T08:46:17.285Z">
+<meta property="article:published_time" content="2022-10-21T14:15:05.037Z">
+<meta property="article:modified_time" content="2022-10-21T14:15:57.272Z">
 <meta property="article:author" content="Nozomi">
-<meta property="article:tag" content="FF14 日麻 AI 日语学习 东方Project">
+<meta property="article:tag" content="SLAM, AI, Deep learning">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:image" content="http://yoursite.com/images/learning.png">
 <meta name="twitter:site" content="@dOqLAto0tk0RefS">
   
   <!-- 站点验证相关 -->
@@ -166,15 +164,15 @@
 
             <article itemscope itemtype="https://schema.org/Article">
     
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2022/10/19/DeepLearningByAndrewNg1/">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2022/10/21/SLAM/Odemeter/">
     <div class="kratos-hentry kratos-post-inner clearfix">
         <header class="kratos-entry-header">
             
-                <h1 class="kratos-entry-title text-center" itemprop="name headline">Deep Learning Nerual Network 1</h1>
+                <h1 class="kratos-entry-title text-center" itemprop="name headline">激光SLAM学习 前端里程计</h1>
             
             
             <ul class="kratos-post-meta text-center">
-                <li><time datetime="2022-10-19T13:45:39.231Z" itemprop="datePublished"><i class="fa fa-calendar"></i> 2022-10-19</time></li>
+                <li><time datetime="2022-10-21T14:15:05.037Z" itemprop="datePublished"><i class="fa fa-calendar"></i> 2022-10-21</time></li>
                 <li itemprop="author" itemscope itemtype="https://schema.org/Person">
                     <i class="fa fa-user"></i> 作者 <span itemprop="name">Nozomi</span>
                 </li>
@@ -182,7 +180,7 @@
                     <i class="fa fa-edit"></i> 
                     
                     
-                        ~1.83K
+                        2
                     
                     字
                 </li>
@@ -193,74 +191,12 @@
             
             <div id="expire-alert" class="alert alert-warning hidden" role="alert">
                 <div class="icon"><i class="fa fa-warning"></i></div>
-                <div class="text"><p>本文最后编辑于 <time datetime="1666341977285"></time> 前，其中的内容可能需要更新。</p></div>
+                <div class="text"><p>本文最后编辑于 <time datetime="1666361757272"></time> 前，其中的内容可能需要更新。</p></div>
             </div>
             
             
             <hr />
-            <div itemprop="articleBody"><h1 id="第一课"><a href="#第一课" class="headerlink" title="第一课"></a>第一课</h1><h2 id="神经网络的有监督学习"><a href="#神经网络的有监督学习" class="headerlink" title="神经网络的有监督学习"></a>神经网络的有监督学习</h2><p>建立y(y1,y2…)到x(x1,x2,x3,x4…)的映射关系，我们给出数据包含(x,y)对神经网络进行训练，找到最佳的参数来表达y和x之间的关系。</p>
-<h3 id="有监督学习的x输入"><a href="#有监督学习的x输入" class="headerlink" title="有监督学习的x输入"></a>有监督学习的x输入</h3><p>结构化数据：表格类型的，矩阵类型的数据<br>非结构化数据：声音，图像，文本等</p>
-<h2 id="神经网络基础"><a href="#神经网络基础" class="headerlink" title="神经网络基础"></a>神经网络基础</h2><p>神经网络包含前向过程(forward propagation) 和 反向传播过程(backward propagation)即BP</p>
-<h3 id="简单的二元逻辑回归例子"><a href="#简单的二元逻辑回归例子" class="headerlink" title="简单的二元逻辑回归例子"></a>简单的二元逻辑回归例子</h3><ol>
-<li>问题模型描述：输入x∈R<sup>nx</sup>，是输出y则是label∈{0,1},一共有m个训练样本{(x1,y1),(x2,y2)…(xm,ym)}</li>
-<li>对于训练样本的m个输入x，进行堆叠为一个nx × m的矩阵，y同样为1 x m的矩阵</li>
-</ol>
-<p>在这里我们使用$\hat{y}$表示通过算法预测的结果，我们需要它与y形成一个概率的关系，即取值为{0~1},由于直接使用线性函数去拟合，我们输出只有0~1的情况下，有可能会输出负数,或者超过1，这里我们使用一个叫sigmoid函数对线性拟合处理，sigmoid表示为如下$\frac{1}{1+e<sup>-z</sup>}$,原来y = w<sup>T</sup>x + b表示为y = $\delta$ (w<sup>T</sup>x + b)</p>
-<h3 id="梯度下降"><a href="#梯度下降" class="headerlink" title="梯度下降"></a>梯度下降</h3><p>上述损失函数很好地描述了w和b对Y和$\hat{y}$之间的的关系，但是我们要得到更好地使得J(w,b)更小，在这里我们提出梯度下降法来求解w和b使得J(w,b)最小。</p>
-<h2 id="神经网络的理解"><a href="#神经网络的理解" class="headerlink" title="神经网络的理解"></a>神经网络的理解</h2><p><img src="/images/learning.png" alt="network"></p>
-<p>如上图，神经网络可以理解为是一个黑箱，函数，输入图像，经过结构和参数得到里面是否有猫，有=1，无=0，这是一个基本的神经网络的模式。</p>
-<p>神经网络模型 = 结构 + 参数</p>
-<p>我们的目标就是要找到在结构中最佳的参数来的到最好的结果，我们可以改变这个模式中的很多东西：</p>
-<ol>
-<li>输入input，将图片换成其他的数据格式</li>
-<li>输出output，改变求解问题，如要求猫的种类(多类分类)，猫的年龄(线性回归)</li>
-<li>损失函数Loss function，根据与真值的比较定义的误差来更新</li>
-<li>结构Architecture，一般以结构来命名神经网络如循环神经网络，卷积神经网络等</li>
-<li>激活函数Activation function，</li>
-<li>优化器Optiomizer, </li>
-<li>超参数Hyperparameters，如学习率,优先的批处理等外部设置的参数</li>
-</ol>
-<h2 id="其中几个例子"><a href="#其中几个例子" class="headerlink" title="其中几个例子"></a>其中几个例子</h2><h3 id="一、分类问题"><a href="#一、分类问题" class="headerlink" title="一、分类问题"></a>一、分类问题</h3><p>问题描述：给一张图片，要分辨出是猫或不是猫（白天或黑夜）<br>问题分析：</p>
-<ol>
-<li>输入：表示为像素矩阵的图片(二维矩阵)</li>
-<li>输出：类型（猫或非猫）</li>
-<li>损失函数：二元逻辑回归，目标是猫（0），不是猫是(1)，设置阈值如(0.5)</li>
-<li>结构：有很多如CNN,RCNN等</li>
-<li>激活函数：使用sigmoid函数，使得输出保持在0~1之间</li>
-</ol>
-<p>如果是多分类问题（分类几种动物）有以下几个解决方法：</p>
-<ol>
-<li>单热编码，这样能在一张图片上同时出现两种动物，但这样需要使用softmax激活函数。</li>
-<li>训练多神经网络，每一个对应一种动物，这样效率不高不能有效利用。</li>
-</ol>
-<p>训练时，需要输入多张带标签的动物图片，在训练时进行带标签（编码）的训练</p>
-<h3 id="二、人像识别"><a href="#二、人像识别" class="headerlink" title="二、人像识别"></a>二、人像识别</h3><p>问题描述：输入人脸后，需要知道是不是对应学生（id）的<br>问题分析：</p>
-<ol>
-<li>输入: 表示为像素矩阵的图片(二维矩阵)</li>
-<li>输出：判断是否为指定的学生，二分类，设置阈值</li>
-<li>损失函数：输入的待认证图像与图像库中的图像进行匹配，向量化的差值<br>基本与上面相同，但比较先进的人脸识别方法应该不是这样的，有一定的改进但总体思路是一样的。</li>
-</ol>
-<h3 id="三、风格转移"><a href="#三、风格转移" class="headerlink" title="三、风格转移"></a>三、风格转移</h3><p>问题描述：给出一张图片的内容和另一张图片的风格，生成1图片内容含2图片风格<br>问题分析：</p>
-<ol>
-<li>数据：目标content和目标style图</li>
-<li>输入：随机白噪声或带偏置的图（或其他的）</li>
-<li>输出：含有content和style的图</li>
-<li>损失函数：生成的图片同时与content之间的内容差值和style图之间的style差值</li>
-</ol>
-<h3 id="四、语音识别"><a href="#四、语音识别" class="headerlink" title="四、语音识别"></a>四、语音识别</h3><p>问题描述：给出一段语音，识别出其中的激活词<br>问题分析：</p>
-<ol>
-<li><p>数据：很多包含或不包含（正负样本）激活词的样本集，有两种方式：</p>
-<p> ①：找很多人录音，手动标记；</p>
-<p> ②：收集正样本和负样本插入到背景噪音中，可以程序化生成样本并自动标记</p>
-</li>
-<li><p>输入：一段待识别的语音</p>
-</li>
-<li>输出：对每个时序输出0或1来识别激活词</li>
-<li>损失函数：编码后的语音与激活词之间的距离</li>
-<li>结构：RNN，LSTM结构</li>
-</ol>
-<p>虽然以上方法很好地定义了其中很多内容，但关键影响效果的是结构和它的参数调整能否有效</p>
-</div>
+            <div itemprop="articleBody"><h1 id="简介"><a href="#简介" class="headerlink" title="简介"></a>简介</h1></div>
         </div>
         
             <div class="kratos-copyright text-center clearfix">
@@ -313,7 +249,7 @@
     <script type="text/javascript">
         $(()=>{
             new QRCode("wechat-qr", {
-                text: "http://yoursite.com/2022/10/19/DeepLearningByAndrewNg1/",
+                text: "http://yoursite.com/2022/10/21/SLAM/Odemeter/",
                 width: 150,
                 height: 150,
                 correctLevel : QRCode.CorrectLevel.H
@@ -325,10 +261,9 @@
             const qzoneBase     = "https://sns.qzone.qq.com/cgi-bin/qzshare/cgi_qzshare_onekey?";
             const facebookBase  = "https://www.facebook.com/sharer/sharer.php?";
             const twitterBase   = "https://twitter.com/intent/tweet?";
-            const hostUrl       = "http://yoursite.com/2022/10/19/DeepLearningByAndrewNg1/";
-            const title         = "「Deep Learning Nerual Network 1」";
-            const excerpt       = `第一课神经网络的有监督学习建立y(y1,y2…)到x(x1,x2,x3,x4…)的映射关系，我们给出数据包含(x,y)对神经网络进行训练，找到最佳的参数来表达y和x之间的关系。
-有监督学习的x输入结构化数据：表格类型的，矩阵类型的数据...`;
+            const hostUrl       = "http://yoursite.com/2022/10/21/SLAM/Odemeter/";
+            const title         = "「激光SLAM学习 前端里程计」";
+            const excerpt       = `简介`;
             let _URL;
             switch (dest) {
                 case "qq"       : _URL = qqBase+"url="+hostUrl+"&title="+title+"&desc=&summary="+excerpt+"&site=cxpy";     break;
@@ -347,10 +282,10 @@
             <div class="footer-tag clearfix">
                 <div class="pull-left">
                 <i class="fa fa-tags"></i>
-                    
+                    <a class="tag-none-link" href="/tags/SLAM-AI-Deep-learning/" rel="tag">SLAM, AI, Deep learning</a>
                 </div>
                 <div class="pull-date">
-                    <time datetime="2022-10-21T08:46:17.285Z" itemprop="dateModified">最后编辑：2022-10-21</time>
+                    <time datetime="2022-10-21T14:15:57.272Z" itemprop="dateModified">最后编辑：2022-10-21</time>
                 </div>
             </div>
         </footer>
@@ -359,7 +294,7 @@
         <nav class="navigation post-navigation clearfix" role="navigation">
             
             <div class="nav-previous clearfix">
-                <a title=" Deep Learning Nerual Network" href="/2022/10/19/DeepLearningByAndrewNg/">&lt; 上一篇</a>
+                <a title=" 深度学习笔记" href="/2022/10/21/SLAM/">&lt; 上一篇</a>
             </div>
             
             
@@ -397,7 +332,7 @@
                 文章
             </span>
             <span class="count">
-                4
+                6
             </span>
         </a>
         <a class="meta-item" href="/categories/">
@@ -413,7 +348,7 @@
                 标签
             </span>
             <span class="count">
-                0
+                3
             </span>
         </a>
     </div>
@@ -425,6 +360,13 @@
 
             
                 
+  <aside id="krw-tags" class="widget widget-kratos-tags clearfix">
+    <h4 class="widget-title"><i class="fa fa-tags"></i>标签聚合</h4>
+      <div class="tag-clouds">
+        <a href="/tags/AI-Deep-learning/" style="font-size: 0.6em;">AI, Deep learning</a> <a href="/tags/AI-%E6%97%A5%E9%BA%BB/" style="font-size: 0.6em;">AI, 日麻</a> <a href="/tags/SLAM-AI-Deep-learning/" style="font-size: 0.8em;">SLAM, AI, Deep learning</a>
+      </div>
+  </aside>
+
             
                 
   <aside id="krw-posts" class="widget widget-kratos-posts">
@@ -435,28 +377,36 @@
         
           
           
-            <a class="list-group-item" href="/2022/10/19/DeepLearningByAndrewNg1/"><i class="fa  fa-book"></i> Deep Learning Nerual Network 1</a>
+            <a class="list-group-item" href="/2022/10/21/SLAM/Odemeter/"><i class="fa  fa-book"></i> 激光SLAM学习 前端里程计</a>
             
           
         
           
           
-            <a class="list-group-item" href="/2022/10/19/DeepLearningByAndrewNg/"><i class="fa  fa-book"></i> Deep Learning Nerual Network</a>
+            <a class="list-group-item" href="/2022/10/21/SLAM/"><i class="fa  fa-book"></i> 深度学习笔记</a>
             
           
         
           
           
-            <a class="list-group-item" href="/2022/10/19/DataFile%20Dealing/"><i class="fa  fa-book"></i> DataFile Dealing</a>
+            <a class="list-group-item" href="/2022/10/21/SLAM/Introduction/"><i class="fa  fa-book"></i> 激光SLAM学习 深蓝学院课程 简介</a>
             
           
         
           
           
-            <a class="list-group-item" href="/2022/10/19/mahjong%20AI/"><i class="fa  fa-book"></i> Mahjong AI [AkagiShigeru]</a>
+            <a class="list-group-item" href="/2022/10/19/DeepLearningByAndrewNg/"><i class="fa  fa-book"></i> 深度学习笔记</a>
             
           
         
+          
+          
+            <a class="list-group-item" href="/2022/10/19/DataFile%20Dealing/"><i class="fa  fa-book"></i> 有关一些文件处理</a>
+            
+          
+        
+          
+            
       </ul>
   </div>
   </aside>
