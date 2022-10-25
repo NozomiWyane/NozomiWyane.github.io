@@ -5,7 +5,7 @@
   <meta charset="utf-8">
   
   
-  <title>标签 | Nozomiの優しい空間</title>
+  <title>激光SLAM学习 点云畸变补偿 | Nozomiの優しい空間</title>
   <meta name="author" content="Nozomi" />
   <meta http-equiv="Cache-Control" content="no-transform" />
   <meta http-equiv="Cache-Control" content="no-siteapp" />
@@ -14,16 +14,25 @@
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
   <meta name="format-detection" content="telphone=no, email=no" />
   
-    <meta name="keywords" content="FF14 日麻 AI 日语学习 东方Project" />
+    <meta name="keywords" content="Deep learning, NDT, SLAM" />
   
-  <meta property="og:type" content="website">
-<meta property="og:title" content="标签">
-<meta property="og:url" content="http://yoursite.com/tags/index.html">
+  <meta name="description" content="点云畸变补偿激光雷达通过发射激光束来测量周围环境物体的距离和方位，从而判断车辆与障碍物的相对位置。当其发射的激光束足够多时，这一个个的激光点将汇集成一片点云，勾勒出其所处的三维环境信息，这便是我们常说的点云数据。对于多数激光雷达而言，尽管激光的发射与接收很快，但构成点云的每一个点仍非同一时刻生成的。一般我们会将100ms (对应典型值10Hz) 内累积的数据作为一帧点云输出。若在这100ms内，激">
+<meta property="og:type" content="article">
+<meta property="og:title" content="激光SLAM学习 点云畸变补偿">
+<meta property="og:url" content="http://yoursite.com/2022/10/25/SLAM/Distortion/index.html">
 <meta property="og:site_name" content="Nozomiの優しい空間">
+<meta property="og:description" content="点云畸变补偿激光雷达通过发射激光束来测量周围环境物体的距离和方位，从而判断车辆与障碍物的相对位置。当其发射的激光束足够多时，这一个个的激光点将汇集成一片点云，勾勒出其所处的三维环境信息，这便是我们常说的点云数据。对于多数激光雷达而言，尽管激光的发射与接收很快，但构成点云的每一个点仍非同一时刻生成的。一般我们会将100ms (对应典型值10Hz) 内累积的数据作为一帧点云输出。若在这100ms内，激">
 <meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="http://yoursite.com/images/slam/pingyi.png">
+<meta property="og:image" content="http://yoursite.com/images/slam/xuanzhua.png">
+<meta property="article:published_time" content="2022-10-25T13:05:12.337Z">
+<meta property="article:modified_time" content="2022-10-25T15:29:44.343Z">
 <meta property="article:author" content="Nozomi">
-<meta property="article:tag" content="FF14 日麻 AI 日语学习 东方Project">
+<meta property="article:tag" content="Deep learning">
+<meta property="article:tag" content="SLAM">
+<meta property="article:tag" content="NDT">
 <meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="http://yoursite.com/images/slam/pingyi.png">
 <meta name="twitter:site" content="@dOqLAto0tk0RefS">
   
   <!-- 站点验证相关 -->
@@ -162,49 +171,173 @@
 
         
 
-            <style>
-  .arc-tags {
-    margin-bottom: 8rem;
-  }
-
-  .arc-tags a {
-    -webkit-box-shadow: 0 1px 4px rgba(0, 0, 0, .1);
-    box-shadow: 0 1px 4px rgba(0, 0, 0, .1);
-    border: 1px solid #fff;
-    border-radius: 15px;
-    margin: 4px 8px 0 0;
-    font-weight: 500;
-    display: inline-block;
-    padding: 0 12px;
-    background: rgba(255, 255, 255, .5);
-    font-size: 16px;
-  }
-
-  .arc-tags a::before {
-    content: "# ";
-    color: #e8a6a6;
-  }
-</style>
-<article>
-  <div class="kratos-hentry kratos-post-inner clearfix">
-    <div class="kratos-post-content">
-      <h2 class="title-h2 text-center">
-        标签聚合
-      </h2>
-      <div style="margin-left: 2em;">
-        <h3 class="archive-page-counter">
-          当前共有 6 个标签 (゜-゜)つロ 干杯~
-        </h3>
-        <div class="tags">
-          
-            <div class="arc-tags">
-              <a class="tag-none-link" href="/tags/AI/" rel="tag">AI</a> <a class="tag-none-link" href="/tags/Deep-learning/" rel="tag">Deep learning</a> <a class="tag-none-link" href="/tags/Markdown/" rel="tag">Markdown</a> <a class="tag-none-link" href="/tags/NDT/" rel="tag">NDT</a> <a class="tag-none-link" href="/tags/SLAM/" rel="tag">SLAM</a> <a class="tag-none-link" href="/tags/%E6%97%A5%E9%BA%BB/" rel="tag">日麻</a>
+            <article itemscope itemtype="https://schema.org/Article">
+    
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2022/10/25/SLAM/Distortion/">
+    <div class="kratos-hentry kratos-post-inner clearfix">
+        <header class="kratos-entry-header">
+            
+                <h1 class="kratos-entry-title text-center" itemprop="name headline">激光SLAM学习 点云畸变补偿</h1>
+            
+            
+            <ul class="kratos-post-meta text-center">
+                <li><time datetime="2022-10-25T13:05:12.337Z" itemprop="datePublished"><i class="fa fa-calendar"></i> 2022-10-25</time></li>
+                <li itemprop="author" itemscope itemtype="https://schema.org/Person">
+                    <i class="fa fa-user"></i> 作者 <span itemprop="name">Nozomi</span>
+                </li>
+                <li>
+                    <i class="fa fa-edit"></i> 
+                    
+                    
+                        1005
+                    
+                    字
+                </li>
+                
+            </ul>
+        </header>
+        <div class="kratos-post-content">
+            
+            <div id="expire-alert" class="alert alert-warning hidden" role="alert">
+                <div class="icon"><i class="fa fa-warning"></i></div>
+                <div class="text"><p>本文最后编辑于 <time datetime="1666711784343"></time> 前，其中的内容可能需要更新。</p></div>
             </div>
-          
+            
+            
+            <hr />
+            <div itemprop="articleBody"><h1 id="点云畸变补偿"><a href="#点云畸变补偿" class="headerlink" title="点云畸变补偿"></a>点云畸变补偿</h1><p>激光雷达通过发射激光束来测量周围环境物体的距离和方位，从而判断车辆与障碍物的相对位置。当其发射的激光束足够多时，这一个个的激光点将汇集成一片点云，勾勒出其所处的三维环境信息，这便是我们常说的点云数据。<br>对于多数激光雷达而言，尽管激光的发射与接收很快，但构成点云的每一个点仍非同一时刻生成的。一般我们会将100ms (对应典型值10Hz) 内累积的数据作为一帧点云输出。若在这100ms内，激光雷达本体或安装所在的机体发生绝对位置的变化，那么此帧点云中每一个点的坐标系就是不同的。直观上看，这一帧点云数据就会发生一定的“变形”，不能真实对应所探测到的环境信息，类似于拍照时手抖了，拍出来的照片就会糊。这便是激光雷达的自运动畸变。引自知乎<a target="_blank" rel="noopener" href="https://www.zhihu.com/question/471673523/answer/2261946251">Livox 览沃激光雷达</a></p>
+<h1 id="自运动畸变"><a href="#自运动畸变" class="headerlink" title="自运动畸变"></a>自运动畸变</h1><p>由于激光雷达自身所在的载体坐标系发生改变时，会导致激光雷达坐标系运动，在一定时间内扫描的一圈不能闭合，包括旋转和平移，如下图：<br><img src="/images/slam/pingyi.png" alt="平移产生的畸变"><br><img src="/images/slam/xuanzhua.png" alt="旋转产生的畸变"><br>由图可知，平移会导致圆形的破坏，导致圆心的偏移；而旋转会导致部分的点相对于起始角有角度偏移。二者均会导致获得的点云产生畸变，在输入到SLAM前，对其纠正是必要的。</p>
+<h1 id="补偿方法"><a href="#补偿方法" class="headerlink" title="补偿方法"></a>补偿方法</h1><p>需要对每个激光点坐标作补偿，补偿量为激光点原点（当时雷达的坐标）相对于起始时刻的变化，即计算时刻0（起始时刻）到时刻i（当前时刻）发生的旋转和平移变化。数学表示如下：</p>
+<blockquote>
+<p>假设一帧点云中，起始时刻0雷达的位姿为：</p>
+<script type="math/tex; mode=display">
+T_0 = 
+\begin{bmatrix}
+   R_0 & t_0 \\
+   0 & 1
+\end{bmatrix}</script><p>在时刻i（第i帧），雷达的位姿为：</p>
+<script type="math/tex; mode=display">
+T_i = 
+\begin{bmatrix}
+   R_i & t_i \\
+   0 & 1
+\end{bmatrix}</script><p>第i个激光点的坐标为:</p>
+<script type="math/tex; mode=display">
+P_i = 
+\begin{bmatrix}
+   p_{ix} & p_{iy} & p_{iz}
+\end{bmatrix}</script><p>经过位姿测量，补偿后的激光点的坐标为:</p>
+<script type="math/tex; mode=display">
+\vec{P_i} = T_0^{-1}T_i P_i</script><p>也可以通过平均角速度$w$和速度$v$来算出来对应的$R_i$和$t_i$:</p>
+<script type="math/tex; mode=display">
+R_i = w d_{time} \\
+t_i = v d_{time}</script><p>该位姿变化可以使用角速度、线速度的输入，或者imu、编码器等外接传感器来计算其相对位姿，也可以使用slam的相对位姿（效果稍差）。</p>
+</blockquote>
+</div>
         </div>
-      </div>
+        
+            <div class="kratos-copyright text-center clearfix">
+                <h5 itemprop="copyrightNotice">本作品采用 <a rel="license nofollow" target="_blank" href="https://creativecommons.org/licenses/by-sa/4.0/">知识共享署名-相同方式共享 4.0 国际许可协议</a> 进行许可</h5>
+            </div>
+        
+        <footer class="kratos-entry-footer clearfix">
+            
+                <div class="post-like-donate text-center clearfix" id="post-like-donate">
+                
+                
+                    <a class="share" href="javascript:;"><i class="fa fa-share-alt"></i> 分享</a>
+                    <div class="share-wrap" style="display: none;">
+    <div class="share-group">
+        <a href="javascript:;" class="share-plain qq" onclick="share('qq');" rel="nofollow">
+            <div class="icon-wrap">
+                <i class="fa fa-qq"></i>
+            </div>
+        </a>
+        <a href="javascript:;" class="share-plain qzone" onclick="share('qzone');" rel="nofollow">
+            <div class="icon-wrap">
+                <i class="fa fa-star"></i>
+            </div>
+        </a>
+        <a href="javascript:;" class="share-plain weixin pop style-plain" rel="nofollow">
+            <div class="icon-wrap">
+                <i class="fa fa-weixin"></i>
+            </div>
+            <div class="share-int">
+                <div class="qrcode" id="wechat-qr"></div>
+                <p>打开微信“扫一扫”，打开网页后点击屏幕右上角分享按钮</p>
+            </div>
+        </a>
+        <a href="javascript:;" class="share-plain weibo" onclick="share('weibo');" rel="nofollow">
+            <div class="icon-wrap">
+                <i class="fa fa-weibo"></i>
+            </div>
+        </a>
+        <a href="javascript:;" class="share-plain facebook style-plain" onclick="share('facebook');" rel="nofollow">
+            <div class="icon-wrap">
+                <i class="fa fa-facebook"></i>
+            </div>
+        </a>
+        <a href="javascript:;" class="share-plain twitter style-plain" onclick="share('twitter');" rel="nofollow">
+            <div class="icon-wrap">
+                <i class="fa fa-twitter"></i>
+            </div>
+        </a>
     </div>
-  </div>
+    <script type="text/javascript">
+        $(()=>{
+            new QRCode("wechat-qr", {
+                text: "http://yoursite.com/2022/10/25/SLAM/Distortion/",
+                width: 150,
+                height: 150,
+                correctLevel : QRCode.CorrectLevel.H
+            });
+        });
+        function share(dest) {
+            const qqBase        = "https://connect.qq.com/widget/shareqq/index.html?";
+            const weiboBase     = "https://service.weibo.com/share/share.php?";
+            const qzoneBase     = "https://sns.qzone.qq.com/cgi-bin/qzshare/cgi_qzshare_onekey?";
+            const facebookBase  = "https://www.facebook.com/sharer/sharer.php?";
+            const twitterBase   = "https://twitter.com/intent/tweet?";
+            const hostUrl       = "http://yoursite.com/2022/10/25/SLAM/Distortion/";
+            const title         = "「激光SLAM学习 点云畸变补偿」";
+            const excerpt       = `点云畸变补偿激光雷达通过发射激光束来测量周围环境物体的距离和方位，从而判断车辆与障碍物的相对位置。当其发射的激光束足够多时，这一个个的激光点将汇集成一片点云，勾勒出其所处的三维环境信息，这便是我们常说的点云数据。对于多数激光雷达而言，...`;
+            let _URL;
+            switch (dest) {
+                case "qq"       : _URL = qqBase+"url="+hostUrl+"&title="+title+"&desc=&summary="+excerpt+"&site=cxpy";     break;
+                case "weibo"    : _URL = weiboBase+"url="+hostUrl+"&title="+title+excerpt;                                 break;
+                case "qzone"    : _URL = qzoneBase+"url="+hostUrl+"&title="+title+"&desc=&summary="+excerpt+"&site=cxpy";  break;
+                case "facebook" : _URL = facebookBase+"u="+hostUrl;                                                        break;
+                case "twitter"  : _URL = twitterBase+"text="+title+excerpt+"&url="+hostUrl;                                break;
+            }
+            window.open(_URL);
+        };
+    </script>
+</div>
+                
+                </div>
+            
+            <div class="footer-tag clearfix">
+                <div class="pull-left">
+                <i class="fa fa-tags"></i>
+                    <a class="tag-none-link" href="/tags/Deep-learning/" rel="tag">Deep learning</a>, <a class="tag-none-link" href="/tags/NDT/" rel="tag">NDT</a>, <a class="tag-none-link" href="/tags/SLAM/" rel="tag">SLAM</a>
+                </div>
+                <div class="pull-date">
+                    <time datetime="2022-10-25T15:29:44.343Z" itemprop="dateModified">最后编辑：2022-10-25</time>
+                </div>
+            </div>
+        </footer>
+    </div>
+    
+        <nav class="navigation post-navigation clearfix" role="navigation">
+            
+            <div class="nav-previous clearfix">
+                <a title=" 激光SLAM学习 正态分布变换NDT" href="/2022/10/24/SLAM/NDT/">&lt; 上一篇</a>
+            </div>
+            
+            
+        </nav>
+    
+    
 </article>
 
         
@@ -218,8 +351,6 @@
 
 <section id="kratos-widget-area" class="col-md-4 hidden-xs hidden-sm">
     <!-- 文章和页面根据splitter来分割，没有的话就从头开始设置为sticky -->
-    
-        <div class="sticky-area">
     
     
                 <aside id="krw-about" class="widget widget-kratos-about clearfix">
@@ -260,6 +391,8 @@
     </div>
 </aside>
             
+                    <div class="sticky-area">
+                
                 
 
             

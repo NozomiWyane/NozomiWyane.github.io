@@ -5,7 +5,7 @@
   <meta charset="utf-8">
   
   
-  <title>标签 | Nozomiの優しい空間</title>
+  <title>激光SLAM学习 正态分布变换NDT | Nozomiの優しい空間</title>
   <meta name="author" content="Nozomi" />
   <meta http-equiv="Cache-Control" content="no-transform" />
   <meta http-equiv="Cache-Control" content="no-siteapp" />
@@ -14,16 +14,25 @@
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
   <meta name="format-detection" content="telphone=no, email=no" />
   
-    <meta name="keywords" content="FF14 日麻 AI 日语学习 东方Project" />
+    <meta name="keywords" content="Deep learning, NDT, SLAM" />
   
-  <meta property="og:type" content="website">
-<meta property="og:title" content="标签">
-<meta property="og:url" content="http://yoursite.com/tags/index.html">
+  <meta name="description" content="正态分布变换 Normal Distribution Transformation正态分布是用于描述一个变量的概率分布中的一种，在SLAM中是将点云的分布用正态分布进行描述。其基本流程如下图：其概率指的是待匹配点云与目标点云他们栅格的点统计的数目，计算了均值，协方差就可构建其相关的正态分布。 问题描述 基于NDT的问题描述和输入描述如下：点集： X &#x3D; \{x_1,x_2, ... , x_{N_">
+<meta property="og:type" content="article">
+<meta property="og:title" content="激光SLAM学习 正态分布变换NDT">
+<meta property="og:url" content="http://yoursite.com/2022/10/24/SLAM/NDT/index.html">
 <meta property="og:site_name" content="Nozomiの優しい空間">
+<meta property="og:description" content="正态分布变换 Normal Distribution Transformation正态分布是用于描述一个变量的概率分布中的一种，在SLAM中是将点云的分布用正态分布进行描述。其基本流程如下图：其概率指的是待匹配点云与目标点云他们栅格的点统计的数目，计算了均值，协方差就可构建其相关的正态分布。 问题描述 基于NDT的问题描述和输入描述如下：点集： X &#x3D; \{x_1,x_2, ... , x_{N_">
 <meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="http://yoursite.com/images/slam/NDT.png">
+<meta property="og:image" content="http://yoursite.com/images/slam/3D_NDT.png">
+<meta property="article:published_time" content="2022-10-24T14:57:19.385Z">
+<meta property="article:modified_time" content="2022-10-25T13:04:50.466Z">
 <meta property="article:author" content="Nozomi">
-<meta property="article:tag" content="FF14 日麻 AI 日语学习 东方Project">
+<meta property="article:tag" content="Deep learning">
+<meta property="article:tag" content="SLAM">
+<meta property="article:tag" content="NDT">
 <meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="http://yoursite.com/images/slam/NDT.png">
 <meta name="twitter:site" content="@dOqLAto0tk0RefS">
   
   <!-- 站点验证相关 -->
@@ -162,49 +171,200 @@
 
         
 
-            <style>
-  .arc-tags {
-    margin-bottom: 8rem;
-  }
-
-  .arc-tags a {
-    -webkit-box-shadow: 0 1px 4px rgba(0, 0, 0, .1);
-    box-shadow: 0 1px 4px rgba(0, 0, 0, .1);
-    border: 1px solid #fff;
-    border-radius: 15px;
-    margin: 4px 8px 0 0;
-    font-weight: 500;
-    display: inline-block;
-    padding: 0 12px;
-    background: rgba(255, 255, 255, .5);
-    font-size: 16px;
-  }
-
-  .arc-tags a::before {
-    content: "# ";
-    color: #e8a6a6;
-  }
-</style>
-<article>
-  <div class="kratos-hentry kratos-post-inner clearfix">
-    <div class="kratos-post-content">
-      <h2 class="title-h2 text-center">
-        标签聚合
-      </h2>
-      <div style="margin-left: 2em;">
-        <h3 class="archive-page-counter">
-          当前共有 6 个标签 (゜-゜)つロ 干杯~
-        </h3>
-        <div class="tags">
-          
-            <div class="arc-tags">
-              <a class="tag-none-link" href="/tags/AI/" rel="tag">AI</a> <a class="tag-none-link" href="/tags/Deep-learning/" rel="tag">Deep learning</a> <a class="tag-none-link" href="/tags/Markdown/" rel="tag">Markdown</a> <a class="tag-none-link" href="/tags/NDT/" rel="tag">NDT</a> <a class="tag-none-link" href="/tags/SLAM/" rel="tag">SLAM</a> <a class="tag-none-link" href="/tags/%E6%97%A5%E9%BA%BB/" rel="tag">日麻</a>
+            <article itemscope itemtype="https://schema.org/Article">
+    
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2022/10/24/SLAM/NDT/">
+    <div class="kratos-hentry kratos-post-inner clearfix">
+        <header class="kratos-entry-header">
+            
+                <h1 class="kratos-entry-title text-center" itemprop="name headline">激光SLAM学习 正态分布变换NDT</h1>
+            
+            
+            <ul class="kratos-post-meta text-center">
+                <li><time datetime="2022-10-24T14:57:19.385Z" itemprop="datePublished"><i class="fa fa-calendar"></i> 2022-10-24</time></li>
+                <li itemprop="author" itemscope itemtype="https://schema.org/Person">
+                    <i class="fa fa-user"></i> 作者 <span itemprop="name">Nozomi</span>
+                </li>
+                <li>
+                    <i class="fa fa-edit"></i> 
+                    
+                    
+                        ~1.94K
+                    
+                    字
+                </li>
+                
+            </ul>
+        </header>
+        <div class="kratos-post-content">
+            
+            <div id="expire-alert" class="alert alert-warning hidden" role="alert">
+                <div class="icon"><i class="fa fa-warning"></i></div>
+                <div class="text"><p>本文最后编辑于 <time datetime="1666703090466"></time> 前，其中的内容可能需要更新。</p></div>
             </div>
-          
+            
+            
+            <hr />
+            <div itemprop="articleBody"><h1 id="正态分布变换-Normal-Distribution-Transformation"><a href="#正态分布变换-Normal-Distribution-Transformation" class="headerlink" title="正态分布变换 Normal Distribution Transformation"></a>正态分布变换 Normal Distribution Transformation</h1><p>正态分布是用于描述一个变量的概率分布中的一种，在SLAM中是将点云的分布用正态分布进行描述。其基本流程如下图：<br><img src="/images/slam/NDT.png" alt="NDT流程框架"><br>其概率指的是待匹配点云与目标点云他们栅格的点统计的数目，计算了均值，协方差就可构建其相关的正态分布。</p>
+<h2 id="问题描述"><a href="#问题描述" class="headerlink" title="问题描述"></a>问题描述</h2><blockquote>
+<p>基于NDT的问题描述和输入描述如下：<br><strong>点集：</strong></p>
+<script type="math/tex; mode=display">X = \{x_1,x_2, ... , x_{N_x}\}</script><script type="math/tex; mode=display">Y = \{y_1,y_2, ... , y_{N_y}\}</script><p>其中X和Y是原始点云的子集，选取的是两个点集中能够互相关联的点集，$N_x = N_y$<br><strong>目标函数：</strong></p>
+<script type="math/tex; mode=display">max \Psi =max \prod_{i=1}^{N_y} f(X,T(p,y_i))</script><p>目标函数由原来的点到点之间的欧式距离计算变为了联合概率。<br>f代表的是概率密度函数，X代表的是待匹配点集,$T(P,Y_i)$代表的是其空间转换函数，其中p代表的姿态变换，用于对$y_i$进行移动。</p>
+<ul>
+<li>对于2D模型：$p = p_3 = [t_x t_y \phi _z]^T$</li>
+<li>对于3D模型：$p = p_6 = [t_x t_y t_z \phi _x \phi _y \phi _z]^T$</li>
+</ul>
+</blockquote>
+<h2 id="概率模型计算"><a href="#概率模型计算" class="headerlink" title="概率模型计算"></a>概率模型计算</h2><p>对于点云概率分布的计算，需要计算其均值和协方差。</p>
+<script type="math/tex; mode=display">
+ 均值：  \mu = \frac{1}{N_x} \sum_{i=1}^{N_x} x_i \\
+ 协方差： E = \frac{N_x -1}{1} \sum_{i=1}^{N_x} (x_i - \mu) (x_i - \mu)^T</script><p>对于目标函数中的预测的位姿，根据初始值R和t对点进行旋转平移得到Y,获得在同一坐标系下的X和Y。</p>
+<ul>
+<li>预测值: $y\prime _i = T(p,y_i) = Ry_i + t$<br>根据定义即可计算各点的联合概率：<script type="math/tex; mode=display">
+f(X,y\prime _i) = \frac{1} {\sqrt{2\pi}\sqrt{|E|}}
+exp(-\frac{(y\prime _i-\mu)^TE^{-1}(y\prime _i-\mu)}{2})</script>所有点的联合概率：<script type="math/tex; mode=display">
+\begin{equation}
+\begin{split}
+\Phi &= \prod_{i=1}^{N_y} f(X,T(p,y_i)) \\
+&= \prod_{i=1}^{N_y} \frac{1} {\sqrt{2\pi}\sqrt{|E|}}
+exp(-\frac{(y\prime _i-\mu)^TE^{-1}(y\prime _i-\mu)}{2}) \\
+\end{split}
+\nonumber
+\end{equation}</script>取对数,最后一项为常数：<script type="math/tex; mode=display">
+ln \Phi = \sum_{i=1}^{N_y}(-\frac{(y\prime _i-\mu)^TE^{-1}(y\prime _i-\mu)}{2}+ln(\frac{1} {\sqrt{2\pi}\sqrt{|E|}}))</script>所以目标函数则可以转化为：<script type="math/tex; mode=display">
+max \Psi  = max ln\Psi = min\sum_{i=1}^{N_y}(y\prime _i-\mu)^TE^{-1}(y\prime _i-\mu)</script>由该目标函数中可以定义出残差函数$f_i(p)=y\prime _i-\mu$,根据高斯牛顿法进行计算，残差函数关于待求参数的雅可比，便可迭代优化。<script type="math/tex; mode=display">
+J_i = \frac{dp}{df_i(p)}</script>这里的p其实就是前面的姿态变换矩阵，对其求偏导，对于2D模型的求导过程如下：<script type="math/tex; mode=display">
+p = p_3 = [t_x t_y \phi _z]^T \\
+\begin{equation}
+\begin{split}
+y\prime _i &= T(p,y_i) \\
+&= \begin{bmatrix}
+ cos \phi _z & -sin \phi _z \\
+ sin \phi _z & cos \phi _z 
+\end{bmatrix} y_i + 
+\begin{bmatrix}
+ t_x \\
+ t_y
+\end{bmatrix}
+\end{split}
+\nonumber
+\end{equation}\\
+雅可比矩阵J_i = \begin{bmatrix}
+ 1 & 0 & -y_{i1} sin \phi _z - -y_{i2} cos \phi _z\\
+ 0 & 1 & y_{i1} cos \phi _z - -y_{i2} sin \phi _z
+\end{bmatrix}</script></li>
+</ul>
+<p>三维场景下同样能求出对应的雅可比矩阵，这里用图进行表示：<br><img src="/images/slam/3D_NDT.png" alt="3D场景求解"></p>
+<p>代码：</p>
+</div>
         </div>
-      </div>
+        
+            <div class="kratos-copyright text-center clearfix">
+                <h5 itemprop="copyrightNotice">本作品采用 <a rel="license nofollow" target="_blank" href="https://creativecommons.org/licenses/by-sa/4.0/">知识共享署名-相同方式共享 4.0 国际许可协议</a> 进行许可</h5>
+            </div>
+        
+        <footer class="kratos-entry-footer clearfix">
+            
+                <div class="post-like-donate text-center clearfix" id="post-like-donate">
+                
+                
+                    <a class="share" href="javascript:;"><i class="fa fa-share-alt"></i> 分享</a>
+                    <div class="share-wrap" style="display: none;">
+    <div class="share-group">
+        <a href="javascript:;" class="share-plain qq" onclick="share('qq');" rel="nofollow">
+            <div class="icon-wrap">
+                <i class="fa fa-qq"></i>
+            </div>
+        </a>
+        <a href="javascript:;" class="share-plain qzone" onclick="share('qzone');" rel="nofollow">
+            <div class="icon-wrap">
+                <i class="fa fa-star"></i>
+            </div>
+        </a>
+        <a href="javascript:;" class="share-plain weixin pop style-plain" rel="nofollow">
+            <div class="icon-wrap">
+                <i class="fa fa-weixin"></i>
+            </div>
+            <div class="share-int">
+                <div class="qrcode" id="wechat-qr"></div>
+                <p>打开微信“扫一扫”，打开网页后点击屏幕右上角分享按钮</p>
+            </div>
+        </a>
+        <a href="javascript:;" class="share-plain weibo" onclick="share('weibo');" rel="nofollow">
+            <div class="icon-wrap">
+                <i class="fa fa-weibo"></i>
+            </div>
+        </a>
+        <a href="javascript:;" class="share-plain facebook style-plain" onclick="share('facebook');" rel="nofollow">
+            <div class="icon-wrap">
+                <i class="fa fa-facebook"></i>
+            </div>
+        </a>
+        <a href="javascript:;" class="share-plain twitter style-plain" onclick="share('twitter');" rel="nofollow">
+            <div class="icon-wrap">
+                <i class="fa fa-twitter"></i>
+            </div>
+        </a>
     </div>
-  </div>
+    <script type="text/javascript">
+        $(()=>{
+            new QRCode("wechat-qr", {
+                text: "http://yoursite.com/2022/10/24/SLAM/NDT/",
+                width: 150,
+                height: 150,
+                correctLevel : QRCode.CorrectLevel.H
+            });
+        });
+        function share(dest) {
+            const qqBase        = "https://connect.qq.com/widget/shareqq/index.html?";
+            const weiboBase     = "https://service.weibo.com/share/share.php?";
+            const qzoneBase     = "https://sns.qzone.qq.com/cgi-bin/qzshare/cgi_qzshare_onekey?";
+            const facebookBase  = "https://www.facebook.com/sharer/sharer.php?";
+            const twitterBase   = "https://twitter.com/intent/tweet?";
+            const hostUrl       = "http://yoursite.com/2022/10/24/SLAM/NDT/";
+            const title         = "「激光SLAM学习 正态分布变换NDT」";
+            const excerpt       = `正态分布变换 Normal Distribution Transformation正态分布是用于描述一个变量的概率分布中的一种，在SLAM中是将点云的分布用正态分布进行描述。其基本流程如下图：其概率指的是待匹配点云与目标点云他们栅格的...`;
+            let _URL;
+            switch (dest) {
+                case "qq"       : _URL = qqBase+"url="+hostUrl+"&title="+title+"&desc=&summary="+excerpt+"&site=cxpy";     break;
+                case "weibo"    : _URL = weiboBase+"url="+hostUrl+"&title="+title+excerpt;                                 break;
+                case "qzone"    : _URL = qzoneBase+"url="+hostUrl+"&title="+title+"&desc=&summary="+excerpt+"&site=cxpy";  break;
+                case "facebook" : _URL = facebookBase+"u="+hostUrl;                                                        break;
+                case "twitter"  : _URL = twitterBase+"text="+title+excerpt+"&url="+hostUrl;                                break;
+            }
+            window.open(_URL);
+        };
+    </script>
+</div>
+                
+                </div>
+            
+            <div class="footer-tag clearfix">
+                <div class="pull-left">
+                <i class="fa fa-tags"></i>
+                    <a class="tag-none-link" href="/tags/Deep-learning/" rel="tag">Deep learning</a>, <a class="tag-none-link" href="/tags/NDT/" rel="tag">NDT</a>, <a class="tag-none-link" href="/tags/SLAM/" rel="tag">SLAM</a>
+                </div>
+                <div class="pull-date">
+                    <time datetime="2022-10-25T13:04:50.466Z" itemprop="dateModified">最后编辑：2022-10-25</time>
+                </div>
+            </div>
+        </footer>
+    </div>
+    
+        <nav class="navigation post-navigation clearfix" role="navigation">
+            
+            <div class="nav-previous clearfix">
+                <a title=" 激光SLAM学习 迭代最近邻点算法" href="/2022/10/24/SLAM/ICP/">&lt; 上一篇</a>
+            </div>
+            
+            
+            <div class="nav-next clearfix">
+                <a title=" 激光SLAM学习 点云畸变补偿" href="/2022/10/25/SLAM/Distortion/">下一篇 &gt;</a>
+            </div>
+            
+        </nav>
+    
+    
 </article>
 
         
@@ -218,8 +378,6 @@
 
 <section id="kratos-widget-area" class="col-md-4 hidden-xs hidden-sm">
     <!-- 文章和页面根据splitter来分割，没有的话就从头开始设置为sticky -->
-    
-        <div class="sticky-area">
     
     
                 <aside id="krw-about" class="widget widget-kratos-about clearfix">
@@ -260,6 +418,8 @@
     </div>
 </aside>
             
+                    <div class="sticky-area">
+                
                 
 
             
