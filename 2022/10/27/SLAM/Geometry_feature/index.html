@@ -5,7 +5,7 @@
   <meta charset="utf-8">
   
   
-  <title>好伙伴们 | Nozomiの優しい空間</title>
+  <title>激光SLAM学习 点云特征提取与位姿优化 | Nozomiの優しい空間</title>
   <meta name="author" content="Nozomi" />
   <meta http-equiv="Cache-Control" content="no-transform" />
   <meta http-equiv="Cache-Control" content="no-siteapp" />
@@ -14,20 +14,27 @@
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
   <meta name="format-detection" content="telphone=no, email=no" />
   
-    <meta name="keywords" content="FF14 日麻 AI 日语学习 东方Project" />
+    <meta name="keywords" content="Deep learning, SLAM, 特征提取" />
   
-  <meta name="description" content="好伙伴们在哪里~">
-<meta property="og:type" content="website">
-<meta property="og:title" content="好伙伴们">
-<meta property="og:url" content="http://yoursite.com/friends/index.html">
+  <meta name="description" content="点云线面特征提取参考博客：[LOAM论文和程序代码的解读]https:&#x2F;&#x2F;blog.csdn.net&#x2F;robinvista&#x2F;article&#x2F;details&#x2F;104379087 按线数分割当给出的一帧点云中，所给的点不知道它属于哪根线时，可以根据激光点的坐标，计算该束激光相比于雷达水平面的倾角,根据内参倾角就可以计算得到：  P &#x3D; (x,y,z) \\ w &#x3D; arctan \frac{z}{\s">
+<meta property="og:type" content="article">
+<meta property="og:title" content="激光SLAM学习 点云特征提取与位姿优化">
+<meta property="og:url" content="http://yoursite.com/2022/10/27/SLAM/Geometry_feature/index.html">
 <meta property="og:site_name" content="Nozomiの優しい空間">
-<meta property="og:description" content="好伙伴们在哪里~">
+<meta property="og:description" content="点云线面特征提取参考博客：[LOAM论文和程序代码的解读]https:&#x2F;&#x2F;blog.csdn.net&#x2F;robinvista&#x2F;article&#x2F;details&#x2F;104379087 按线数分割当给出的一帧点云中，所给的点不知道它属于哪根线时，可以根据激光点的坐标，计算该束激光相比于雷达水平面的倾角,根据内参倾角就可以计算得到：  P &#x3D; (x,y,z) \\ w &#x3D; arctan \frac{z}{\s">
 <meta property="og:locale" content="zh_CN">
-<meta property="og:image" content="http://yoursite.com/images/avatar.webp">
+<meta property="og:image" content="http://yoursite.com/images/slam/angle_line.png">
+<meta property="og:image" content="http://yoursite.com/images/slam/angle.jpg">
+<meta property="og:image" content="http://yoursite.com/images/slam/unflatten_2Dmap.jpg">
+<meta property="og:image" content="http://yoursite.com/images/slam/feature.png">
+<meta property="article:published_time" content="2022-10-27T07:59:19.173Z">
+<meta property="article:modified_time" content="2022-11-03T03:24:33.950Z">
 <meta property="article:author" content="Nozomi">
-<meta property="article:tag" content="FF14 日麻 AI 日语学习 东方Project">
+<meta property="article:tag" content="Deep learning">
+<meta property="article:tag" content="SLAM">
+<meta property="article:tag" content="特征提取">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:image" content="http://yoursite.com/images/avatar.webp">
+<meta name="twitter:image" content="http://yoursite.com/images/slam/angle_line.png">
 <meta name="twitter:site" content="@dOqLAto0tk0RefS">
   
   <!-- 站点验证相关 -->
@@ -167,35 +174,174 @@
         
 
             <article itemscope itemtype="https://schema.org/Article">
-    <link itemprop="mainEntityOfPage" href="undefined">
+    
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2022/10/27/SLAM/Geometry_feature/">
     <div class="kratos-hentry kratos-post-inner clearfix">
+        <header class="kratos-entry-header">
+            
+                <h1 class="kratos-entry-title text-center" itemprop="name headline">激光SLAM学习 点云特征提取与位姿优化</h1>
+            
+            
+            <ul class="kratos-post-meta text-center">
+                <li><time datetime="2022-10-27T07:59:19.173Z" itemprop="datePublished"><i class="fa fa-calendar"></i> 2022-10-27</time></li>
+                <li itemprop="author" itemscope itemtype="https://schema.org/Person">
+                    <i class="fa fa-user"></i> 作者 <span itemprop="name">Nozomi</span>
+                </li>
+                <li>
+                    <i class="fa fa-edit"></i> 
+                    
+                    
+                        ~1.58K
+                    
+                    字
+                </li>
+                
+            </ul>
+        </header>
         <div class="kratos-post-content">
-            <h2 class="title-h2 text-center" itemprop="name headline">好伙伴们</h2>
-            <div itemprop="articleBody"><div class="linkpage">
-    <ul id="friendsList"></ul>
+            
+            <div id="expire-alert" class="alert alert-warning hidden" role="alert">
+                <div class="icon"><i class="fa fa-warning"></i></div>
+                <div class="text"><p>本文最后编辑于 <time datetime="1667445873950"></time> 前，其中的内容可能需要更新。</p></div>
+            </div>
+            
+            
+            <hr />
+            <div itemprop="articleBody"><h1 id="点云线面特征提取"><a href="#点云线面特征提取" class="headerlink" title="点云线面特征提取"></a>点云线面特征提取</h1><p>参考博客：[LOAM论文和程序代码的解读]<a target="_blank" rel="noopener" href="https://blog.csdn.net/robinvista/article/details/104379087">https://blog.csdn.net/robinvista/article/details/104379087</a></p>
+<h2 id="按线数分割"><a href="#按线数分割" class="headerlink" title="按线数分割"></a>按线数分割</h2><p>当给出的一帧点云中，所给的点不知道它属于哪根线时，可以根据激光点的坐标，计算该束激光相比于雷达水平面的倾角,根据内参倾角就可以计算得到：</p>
+<script type="math/tex; mode=display">
+P = (x,y,z) \\
+w = arctan \frac{z}{\sqrt{x^2+y^2}}</script><p><img src="/images/slam/angle_line.png" alt="机械激光雷达角度"></p>
+<h2 id="计算曲率"><a href="#计算曲率" class="headerlink" title="计算曲率"></a>计算曲率</h2><p>根据同一条线面上<strong>前后各5个点</strong>与<strong>当前点</strong>的长度（长度指激光点到雷达的距离），计算曲率大小。</p>
+<script type="math/tex; mode=display">
+c= \frac{1}{\| x\|}\| \sum_{i} (X - X_i) \|</script><p>这样我们可以在同一个平面内，按照曲率大小进行特征提取。</p>
+<ul>
+<li>1.曲率特别大的点（sharp)<br>这种情况下，这个线打到的实体表面应该如下图：<br><img src="/images/slam/angle.jpg" alt="规则平面内曲率表示"><br>可以由图看见，作者直观地展示曲率的大小，我用直线表示在各个点上，直线高度与曲率c成正比。越尖锐的点曲率越大，在直线上的点曲率则是，远比左右点的距离小，得到的曲率值是特别大的。而对于平面来说，他们之间的差距很小甚至没有，所以能得到其曲率为0。<br>同样地，在不规则平面内可以显示：<br><img src="/images/slam/unflatten_2Dmap.jpg" alt="不规则平面内曲率表示"><br>根据曲率值的大小，可以对点进行分类。论文中分成两类：曲率大的就是角点(sharp)，曲率小的是平面点（flat），或者说一条线上的点，作为特征进行匹配。这些特征要如何用于位姿估计和优化？</li>
+</ul>
+<h1 id="基于线面特征的位姿优化"><a href="#基于线面特征的位姿优化" class="headerlink" title="基于线面特征的位姿优化"></a>基于线面特征的位姿优化</h1><h2 id="1-帧间关联"><a href="#1-帧间关联" class="headerlink" title="1. 帧间关联"></a>1. 帧间关联</h2><h3 id="1）点云位姿转换"><a href="#1）点云位姿转换" class="headerlink" title="1）点云位姿转换"></a>1）点云位姿转换</h3><p>对于相邻两帧之间的相对位姿，即第k+1帧与第k帧的相对位姿为</p>
+<script type="math/tex; mode=display">
+T = 
+\begin{bmatrix}
+   R & t \\
+   0 & 1
+\end{bmatrix}</script><p>从第k+1帧中的点#p_i#转到第k帧坐标系：</p>
+<script type="math/tex; mode=display">
+\tilde{p_i} = Rp_i+t</script><h3 id="2）特征关联"><a href="#2）特征关联" class="headerlink" title="2）特征关联"></a>2）特征关联</h3><p>对于所有的特征点，由于一帧内的点是在不同时间内扫出来的，将一帧内所有点先重投影到每一帧的最后的时刻，这样就能得到一帧中所有特征点的信息。<br>特征点分为两类：</p>
+<ul>
+<li><p>对于角点，一般在转折线上（例如卧室里的墙角），要计算它到折线的距离。作者认为，可以有如下假设：角点是雷达某个线束与物理世界两个平面夹角相交时的采样，那么这个线束相邻的雷达扫描线束也会与这个平面夹角相交，所以这个平面夹角的直线可以用前后两次扫描的角点进行标识。<br>角点#p_i}#在上一帧的坐标系转换为#\tilde{p_i}#,在这个坐标系中找离它最近的线特征点a，并在相邻的线上再找一个线特征点b。这两个点就可以确定直线方程，就能够计算激光雷达到该直线的距离。<br>我的理解是这样做可以把角点作为参考点，而这个线特征点a是当前的位置，线特征点b是上一帧的位置，利用环境稳定的特征点作为参考得到计算</p>
+</li>
+<li><p>对于平面点，一般在比较平坦的表面上（例如墙面），要计算它到平面的距离。与角点是差不多的，首先找上一帧中最近邻的平面点，之后在同一个扫描线数和不同的线束上各提取一个平面点，这样共得到了3个不共线的平面点，唯一确定了平面，从而计算平面点到平面的距离。<br><img src="/images/slam/feature.png" alt="线特征提取——三个点在两帧中的直观表示"> </p>
+</li>
+</ul>
+<h2 id="2-残差函数"><a href="#2-残差函数" class="headerlink" title="2. 残差函数"></a>2. 残差函数</h2><p>由上图和我们的计算函数可知，我们对于点云中的#\tilde{p_i}#到该直线的距离（线特征）可以由下式计算</p>
+<script type="math/tex; mode=display">
+d_{\epislon} = \frac{|(\tilde{p_i}-p_j)\times(\tilde{p_i}-p_l)|}{|p_l-p_j|}</script><p>而对于点到平面的距离（面特征）：</p>
+<script type="math/tex; mode=display">
+d_{H} = (\tilde{p_i}-p_j) \ \frac{|(p_l-p_j)\times(p_m-p_j)|}{|(p_l-p_j)\times(p_m-p_j)|}</script><p>根据这个特征，我们可以构造关于待求变量（T，相对位姿转换矩阵）的残差函数并建立其优化目的，即求特征点对与T的雅可比矩阵，进行优化。</p>
 </div>
-
-<script type="text/javascript">
-{
-    const flist = [{"name":"最终幻想14","link":"https://ff.web.sdo.com/","avatar":"https://ff.web.sdo.com/fanicon.ico","bio":"我最爱的艾欧泽亚大陆"},{"name":"Markdown","link":"https://www.zybuluo.com/codeep/note/163962","avatar":null,"bio":"Markdown 公式指导手册"}];
-    let friendNodes = '';
-    while (flist.length > 0) {
-        const rndNum = Math.floor(Math.random()*flist.length);
-        friendNodes += `<li><a target="_blank" href="${flist[rndNum].link}"><img src="${flist[rndNum].avatar}" onerror="this.src='/images/avatar.webp';this.onerror=null;"><h4>${flist[rndNum].name}</h4><p>${flist[rndNum].bio}</p></a></li>`;
-        flist.splice(rndNum, 1);
-    }
-    document.getElementById("friendsList").innerHTML = friendNodes;
-}
-</script></div>
         </div>
+        
+            <div class="kratos-copyright text-center clearfix">
+                <h5 itemprop="copyrightNotice">本作品采用 <a rel="license nofollow" target="_blank" href="https://creativecommons.org/licenses/by-sa/4.0/">知识共享署名-相同方式共享 4.0 国际许可协议</a> 进行许可</h5>
+            </div>
+        
         <footer class="kratos-entry-footer clearfix">
+            
+                <div class="post-like-donate text-center clearfix" id="post-like-donate">
+                
+                
+                    <a class="share" href="javascript:;"><i class="fa fa-share-alt"></i> 分享</a>
+                    <div class="share-wrap" style="display: none;">
+    <div class="share-group">
+        <a href="javascript:;" class="share-plain qq" onclick="share('qq');" rel="nofollow">
+            <div class="icon-wrap">
+                <i class="fa fa-qq"></i>
+            </div>
+        </a>
+        <a href="javascript:;" class="share-plain qzone" onclick="share('qzone');" rel="nofollow">
+            <div class="icon-wrap">
+                <i class="fa fa-star"></i>
+            </div>
+        </a>
+        <a href="javascript:;" class="share-plain weixin pop style-plain" rel="nofollow">
+            <div class="icon-wrap">
+                <i class="fa fa-weixin"></i>
+            </div>
+            <div class="share-int">
+                <div class="qrcode" id="wechat-qr"></div>
+                <p>打开微信“扫一扫”，打开网页后点击屏幕右上角分享按钮</p>
+            </div>
+        </a>
+        <a href="javascript:;" class="share-plain weibo" onclick="share('weibo');" rel="nofollow">
+            <div class="icon-wrap">
+                <i class="fa fa-weibo"></i>
+            </div>
+        </a>
+        <a href="javascript:;" class="share-plain facebook style-plain" onclick="share('facebook');" rel="nofollow">
+            <div class="icon-wrap">
+                <i class="fa fa-facebook"></i>
+            </div>
+        </a>
+        <a href="javascript:;" class="share-plain twitter style-plain" onclick="share('twitter');" rel="nofollow">
+            <div class="icon-wrap">
+                <i class="fa fa-twitter"></i>
+            </div>
+        </a>
+    </div>
+    <script type="text/javascript">
+        $(()=>{
+            new QRCode("wechat-qr", {
+                text: "http://yoursite.com/2022/10/27/SLAM/Geometry_feature/",
+                width: 150,
+                height: 150,
+                correctLevel : QRCode.CorrectLevel.H
+            });
+        });
+        function share(dest) {
+            const qqBase        = "https://connect.qq.com/widget/shareqq/index.html?";
+            const weiboBase     = "https://service.weibo.com/share/share.php?";
+            const qzoneBase     = "https://sns.qzone.qq.com/cgi-bin/qzshare/cgi_qzshare_onekey?";
+            const facebookBase  = "https://www.facebook.com/sharer/sharer.php?";
+            const twitterBase   = "https://twitter.com/intent/tweet?";
+            const hostUrl       = "http://yoursite.com/2022/10/27/SLAM/Geometry_feature/";
+            const title         = "「激光SLAM学习 点云特征提取与位姿优化」";
+            const excerpt       = `点云线面特征提取参考博客：[LOAM论文和程序代码的解读]https://blog.csdn.net/robinvista/article/details/104379087
+按线数分割当给出的一帧点云中，所给的点不知道它属于哪根线时...`;
+            let _URL;
+            switch (dest) {
+                case "qq"       : _URL = qqBase+"url="+hostUrl+"&title="+title+"&desc=&summary="+excerpt+"&site=cxpy";     break;
+                case "weibo"    : _URL = weiboBase+"url="+hostUrl+"&title="+title+excerpt;                                 break;
+                case "qzone"    : _URL = qzoneBase+"url="+hostUrl+"&title="+title+"&desc=&summary="+excerpt+"&site=cxpy";  break;
+                case "facebook" : _URL = facebookBase+"u="+hostUrl;                                                        break;
+                case "twitter"  : _URL = twitterBase+"text="+title+excerpt+"&url="+hostUrl;                                break;
+            }
+            window.open(_URL);
+        };
+    </script>
+</div>
+                
+                </div>
+            
             <div class="footer-tag clearfix">
+                <div class="pull-left">
+                <i class="fa fa-tags"></i>
+                    <a class="tag-none-link" href="/tags/Deep-learning/" rel="tag">Deep learning</a>, <a class="tag-none-link" href="/tags/SLAM/" rel="tag">SLAM</a>, <a class="tag-none-link" href="/tags/%E7%89%B9%E5%BE%81%E6%8F%90%E5%8F%96/" rel="tag">特征提取</a>
+                </div>
                 <div class="pull-date">
-                    <time datetime="2022-10-21T00:00:00.000Z" itemprop="dateModified">最后编辑：2022-10-21</time>
+                    <time datetime="2022-11-03T03:24:33.950Z" itemprop="dateModified">最后编辑：2022-11-03</time>
                 </div>
             </div>
         </footer>
     </div>
+    
+        <nav class="navigation post-navigation clearfix" role="navigation">
+            
+            <div class="nav-previous clearfix">
+                <a title=" 激光SLAM学习 几何基础" href="/2022/10/27/SLAM/Geometry/">&lt; 上一篇</a>
+            </div>
+            
+            
+        </nav>
     
     
 </article>
@@ -211,8 +357,6 @@
 
 <section id="kratos-widget-area" class="col-md-4 hidden-xs hidden-sm">
     <!-- 文章和页面根据splitter来分割，没有的话就从头开始设置为sticky -->
-    
-        <div class="sticky-area">
     
     
                 <aside id="krw-about" class="widget widget-kratos-about clearfix">
@@ -253,6 +397,8 @@
     </div>
 </aside>
             
+                    <div class="sticky-area">
+                
                 
 
             
