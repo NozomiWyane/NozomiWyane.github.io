@@ -5,7 +5,7 @@
   <meta charset="utf-8">
   
   
-  <title>激光SLAM学习 前端里程计 | Nozomiの優しい空間</title>
+  <title>激光SLAM学习 LOAM代码 | Nozomiの優しい空間</title>
   <meta name="author" content="Nozomi" />
   <meta http-equiv="Cache-Control" content="no-transform" />
   <meta http-equiv="Cache-Control" content="no-siteapp" />
@@ -14,21 +14,21 @@
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
   <meta name="format-detection" content="telphone=no, email=no" />
   
-    <meta name="keywords" content="AI, Deep learning, SLAM" />
+    <meta name="keywords" content="LOAM, SLAM, 机器学习" />
   
-  <meta name="description" content="简介 在课程中的介绍，前端里程计的作用是为了将当前点云与已存在点云进行相对位姿的计算，在当前点云: 在当前时刻帧，激光雷达对周围环境采集的点云已存在点云 ：上一帧或已建成地图的点云课程中介绍了多种前端里程计基本算法，分别为以下：  基于直接匹配的方法：整体点云直接匹配，包括ICP（Iterative Closest Point），NDT（Normal Distribution Transforma">
+  <meta name="description" content="LOAM代码学习引自Github多传感器融合定位 三章 3D激光里程计2参考博客slam中ceres的用法解析">
 <meta property="og:type" content="article">
-<meta property="og:title" content="激光SLAM学习 前端里程计">
-<meta property="og:url" content="http://yoursite.com/2022/10/21/SLAM/Odemeter/index.html">
+<meta property="og:title" content="激光SLAM学习 LOAM代码">
+<meta property="og:url" content="http://yoursite.com/2022/11/03/SLAM/LOAM_code/index.html">
 <meta property="og:site_name" content="Nozomiの優しい空間">
-<meta property="og:description" content="简介 在课程中的介绍，前端里程计的作用是为了将当前点云与已存在点云进行相对位姿的计算，在当前点云: 在当前时刻帧，激光雷达对周围环境采集的点云已存在点云 ：上一帧或已建成地图的点云课程中介绍了多种前端里程计基本算法，分别为以下：  基于直接匹配的方法：整体点云直接匹配，包括ICP（Iterative Closest Point），NDT（Normal Distribution Transforma">
+<meta property="og:description" content="LOAM代码学习引自Github多传感器融合定位 三章 3D激光里程计2参考博客slam中ceres的用法解析">
 <meta property="og:locale" content="zh_CN">
-<meta property="article:published_time" content="2022-10-21T14:15:05.037Z">
-<meta property="article:modified_time" content="2022-10-25T07:50:46.453Z">
+<meta property="article:published_time" content="2022-11-03T12:12:57.571Z">
+<meta property="article:modified_time" content="2022-11-09T06:19:59.737Z">
 <meta property="article:author" content="Nozomi">
-<meta property="article:tag" content="AI">
-<meta property="article:tag" content="Deep learning">
 <meta property="article:tag" content="SLAM">
+<meta property="article:tag" content="LOAM">
+<meta property="article:tag" content="机器学习">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:site" content="@dOqLAto0tk0RefS">
   
@@ -170,15 +170,15 @@
 
             <article itemscope itemtype="https://schema.org/Article">
     
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2022/10/21/SLAM/Odemeter/">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2022/11/03/SLAM/LOAM_code/">
     <div class="kratos-hentry kratos-post-inner clearfix">
         <header class="kratos-entry-header">
             
-                <h1 class="kratos-entry-title text-center" itemprop="name headline">激光SLAM学习 前端里程计</h1>
+                <h1 class="kratos-entry-title text-center" itemprop="name headline">激光SLAM学习 LOAM代码</h1>
             
             
             <ul class="kratos-post-meta text-center">
-                <li><time datetime="2022-10-21T14:15:05.037Z" itemprop="datePublished"><i class="fa fa-calendar"></i> 2022-10-21</time></li>
+                <li><time datetime="2022-11-03T12:12:57.571Z" itemprop="datePublished"><i class="fa fa-calendar"></i> 2022-11-03</time></li>
                 <li itemprop="author" itemscope itemtype="https://schema.org/Person">
                     <i class="fa fa-user"></i> 作者 <span itemprop="name">Nozomi</span>
                 </li>
@@ -186,7 +186,7 @@
                     <i class="fa fa-edit"></i> 
                     
                     
-                        409
+                        56
                     
                     字
                 </li>
@@ -197,24 +197,12 @@
             
             <div id="expire-alert" class="alert alert-warning hidden" role="alert">
                 <div class="icon"><i class="fa fa-warning"></i></div>
-                <div class="text"><p>本文最后编辑于 <time datetime="1666684246453"></time> 前，其中的内容可能需要更新。</p></div>
+                <div class="text"><p>本文最后编辑于 <time datetime="1667974799737"></time> 前，其中的内容可能需要更新。</p></div>
             </div>
             
             
             <hr />
-            <div itemprop="articleBody"><h1 id="简介"><a href="#简介" class="headerlink" title="简介"></a>简介</h1><blockquote>
-<p>在课程中的介绍，前端里程计的作用是为了将<strong>当前点云</strong>与<strong>已存在点云</strong>进行相对位姿的计算，在<br><strong>当前点云</strong>: 在当前时刻帧，激光雷达对周围环境采集的点云<br><strong>已存在点云</strong> ：上一帧或已建成地图的点云<br>课程中介绍了多种前端里程计基本算法，分别为以下：</p>
-<ol>
-<li>基于直接匹配的方法：整体点云直接匹配，包括ICP（Iterative Closest Point），NDT（Normal Distribution Transformation）等</li>
-<li>基于特征：LOAM, A-LOAM, F-LOAM, LEGO-LOAM</li>
-<li>多传感器融合里程计： LINS, LIO-SAM, LIO-mapping</li>
-<li>基于栅格： cartographer</li>
-<li>基于面元： suma</li>
-<li>基于语义： segmap, suma++</li>
-</ol>
-</blockquote>
-<p>其中课程中主要对前三个进行讲解和分析，并给出实现代码和运行框架。</p>
-<p>在其他文章中，对其前端里程计基本算法进行学习和笔记记录，包括公式推导和代码讲解。</p>
+            <div itemprop="articleBody"><h1 id="LOAM代码学习"><a href="#LOAM代码学习" class="headerlink" title="LOAM代码学习"></a>LOAM代码学习</h1><p>引自Github<a target="_blank" rel="noopener" href="https://github.com/kahowang/sensor-fusion-for-localization-and-mapping/tree/main/%E7%AC%AC%E4%B8%89%E7%AB%A0%203D%E6%BF%80%E5%85%89%E9%87%8C%E7%A8%8B%E8%AE%A12">多传感器融合定位 三章 3D激光里程计2</a><br>参考博客<a target="_blank" rel="noopener" href="https://blog.csdn.net/qq_42700518/article/details/105898222">slam中ceres的用法解析</a></p>
 </div>
         </div>
         
@@ -268,7 +256,7 @@
     <script type="text/javascript">
         $(()=>{
             new QRCode("wechat-qr", {
-                text: "http://yoursite.com/2022/10/21/SLAM/Odemeter/",
+                text: "http://yoursite.com/2022/11/03/SLAM/LOAM_code/",
                 width: 150,
                 height: 150,
                 correctLevel : QRCode.CorrectLevel.H
@@ -280,12 +268,10 @@
             const qzoneBase     = "https://sns.qzone.qq.com/cgi-bin/qzshare/cgi_qzshare_onekey?";
             const facebookBase  = "https://www.facebook.com/sharer/sharer.php?";
             const twitterBase   = "https://twitter.com/intent/tweet?";
-            const hostUrl       = "http://yoursite.com/2022/10/21/SLAM/Odemeter/";
-            const title         = "「激光SLAM学习 前端里程计」";
-            const excerpt       = `简介
-在课程中的介绍，前端里程计的作用是为了将当前点云与已存在点云进行相对位姿的计算，在当前点云: 在当前时刻帧，激光雷达对周围环境采集的点云已存在点云 ：上一帧或已建成地图的点云课程中介绍了多种前端里程计基本算法，分别为以下：
-
-基...`;
+            const hostUrl       = "http://yoursite.com/2022/11/03/SLAM/LOAM_code/";
+            const title         = "「激光SLAM学习 LOAM代码」";
+            const excerpt       = `LOAM代码学习引自Github多传感器融合定位 三章 3D激光里程计2参考博客slam中ceres的用法解析
+`;
             let _URL;
             switch (dest) {
                 case "qq"       : _URL = qqBase+"url="+hostUrl+"&title="+title+"&desc=&summary="+excerpt+"&site=cxpy";     break;
@@ -304,10 +290,10 @@
             <div class="footer-tag clearfix">
                 <div class="pull-left">
                 <i class="fa fa-tags"></i>
-                    <a class="tag-none-link" href="/tags/AI/" rel="tag">AI</a>, <a class="tag-none-link" href="/tags/Deep-learning/" rel="tag">Deep learning</a>, <a class="tag-none-link" href="/tags/SLAM/" rel="tag">SLAM</a>
+                    <a class="tag-none-link" href="/tags/LOAM/" rel="tag">LOAM</a>, <a class="tag-none-link" href="/tags/SLAM/" rel="tag">SLAM</a>, <a class="tag-none-link" href="/tags/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0/" rel="tag">机器学习</a>
                 </div>
                 <div class="pull-date">
-                    <time datetime="2022-10-25T07:50:46.453Z" itemprop="dateModified">最后编辑：2022-10-25</time>
+                    <time datetime="2022-11-09T06:19:59.737Z" itemprop="dateModified">最后编辑：2022-11-09</time>
                 </div>
             </div>
         </footer>
@@ -316,12 +302,12 @@
         <nav class="navigation post-navigation clearfix" role="navigation">
             
             <div class="nav-previous clearfix">
-                <a title=" 激光SLAM学习 深蓝学院课程 简介" href="/2022/10/21/SLAM/Introduction/">&lt; 上一篇</a>
+                <a title=" 激光SLAM学习 点云特征提取与位姿优化" href="/2022/10/27/SLAM/Geometry_feature/">&lt; 上一篇</a>
             </div>
             
             
             <div class="nav-next clearfix">
-                <a title=" Cmd Markdown 公式指导手册" href="/2022/10/24/tools/mathjax_tutorial_mdeditor_220713/">下一篇 &gt;</a>
+                <a title=" SLAM在农业机器人方面应用的论文阅读笔记" href="/2022/11/06/Agriculture/Agriculture_paper/">下一篇 &gt;</a>
             </div>
             
         </nav>

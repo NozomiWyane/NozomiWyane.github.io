@@ -5,7 +5,7 @@
   <meta charset="utf-8">
   
   
-  <title>激光SLAM学习 前端里程计 | Nozomiの優しい空間</title>
+  <title>SLAM在农业机器人方面应用的论文阅读笔记 | Nozomiの優しい空間</title>
   <meta name="author" content="Nozomi" />
   <meta http-equiv="Cache-Control" content="no-transform" />
   <meta http-equiv="Cache-Control" content="no-siteapp" />
@@ -14,22 +14,24 @@
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
   <meta name="format-detection" content="telphone=no, email=no" />
   
-    <meta name="keywords" content="AI, Deep learning, SLAM" />
+    <meta name="keywords" content="Agriculture, Machinery, Paper Reading" />
   
-  <meta name="description" content="简介 在课程中的介绍，前端里程计的作用是为了将当前点云与已存在点云进行相对位姿的计算，在当前点云: 在当前时刻帧，激光雷达对周围环境采集的点云已存在点云 ：上一帧或已建成地图的点云课程中介绍了多种前端里程计基本算法，分别为以下：  基于直接匹配的方法：整体点云直接匹配，包括ICP（Iterative Closest Point），NDT（Normal Distribution Transforma">
+  <meta name="description" content="该文主要是关于在期刊Computers_and_electroincs in agriculture上关键词SLAM的论文,提供后续论文的一些素材。根据之前读的一篇综述文章，将后续阅读的文章根据一下几个因素进行评估：  （1）机械系统？（2）最终应用方向？（3）使用什么传感器？（4）使用了什么智能算法？（5）目前的发展状况？（研究阶段或商用）（6）应用区域？属于哪个国家和大洲？（7）弥补了什么缺点">
 <meta property="og:type" content="article">
-<meta property="og:title" content="激光SLAM学习 前端里程计">
-<meta property="og:url" content="http://yoursite.com/2022/10/21/SLAM/Odemeter/index.html">
+<meta property="og:title" content="SLAM在农业机器人方面应用的论文阅读笔记">
+<meta property="og:url" content="http://yoursite.com/2022/11/06/Agriculture/Agriculture_paper/index.html">
 <meta property="og:site_name" content="Nozomiの優しい空間">
-<meta property="og:description" content="简介 在课程中的介绍，前端里程计的作用是为了将当前点云与已存在点云进行相对位姿的计算，在当前点云: 在当前时刻帧，激光雷达对周围环境采集的点云已存在点云 ：上一帧或已建成地图的点云课程中介绍了多种前端里程计基本算法，分别为以下：  基于直接匹配的方法：整体点云直接匹配，包括ICP（Iterative Closest Point），NDT（Normal Distribution Transforma">
+<meta property="og:description" content="该文主要是关于在期刊Computers_and_electroincs in agriculture上关键词SLAM的论文,提供后续论文的一些素材。根据之前读的一篇综述文章，将后续阅读的文章根据一下几个因素进行评估：  （1）机械系统？（2）最终应用方向？（3）使用什么传感器？（4）使用了什么智能算法？（5）目前的发展状况？（研究阶段或商用）（6）应用区域？属于哪个国家和大洲？（7）弥补了什么缺点">
 <meta property="og:locale" content="zh_CN">
-<meta property="article:published_time" content="2022-10-21T14:15:05.037Z">
-<meta property="article:modified_time" content="2022-10-25T07:50:46.453Z">
+<meta property="og:image" content="http://yoursite.com/images/agriculture/pa.png">
+<meta property="article:published_time" content="2022-11-06T06:56:51.571Z">
+<meta property="article:modified_time" content="2022-11-08T13:51:42.902Z">
 <meta property="article:author" content="Nozomi">
-<meta property="article:tag" content="AI">
-<meta property="article:tag" content="Deep learning">
-<meta property="article:tag" content="SLAM">
+<meta property="article:tag" content="Agriculture">
+<meta property="article:tag" content="Machinery">
+<meta property="article:tag" content="Paper Reading">
 <meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="http://yoursite.com/images/agriculture/pa.png">
 <meta name="twitter:site" content="@dOqLAto0tk0RefS">
   
   <!-- 站点验证相关 -->
@@ -170,15 +172,15 @@
 
             <article itemscope itemtype="https://schema.org/Article">
     
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2022/10/21/SLAM/Odemeter/">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2022/11/06/Agriculture/Agriculture_paper/">
     <div class="kratos-hentry kratos-post-inner clearfix">
         <header class="kratos-entry-header">
             
-                <h1 class="kratos-entry-title text-center" itemprop="name headline">激光SLAM学习 前端里程计</h1>
+                <h1 class="kratos-entry-title text-center" itemprop="name headline">SLAM在农业机器人方面应用的论文阅读笔记</h1>
             
             
             <ul class="kratos-post-meta text-center">
-                <li><time datetime="2022-10-21T14:15:05.037Z" itemprop="datePublished"><i class="fa fa-calendar"></i> 2022-10-21</time></li>
+                <li><time datetime="2022-11-06T06:56:51.571Z" itemprop="datePublished"><i class="fa fa-calendar"></i> 2022-11-06</time></li>
                 <li itemprop="author" itemscope itemtype="https://schema.org/Person">
                     <i class="fa fa-user"></i> 作者 <span itemprop="name">Nozomi</span>
                 </li>
@@ -186,7 +188,7 @@
                     <i class="fa fa-edit"></i> 
                     
                     
-                        409
+                        ~2.27K
                     
                     字
                 </li>
@@ -197,24 +199,25 @@
             
             <div id="expire-alert" class="alert alert-warning hidden" role="alert">
                 <div class="icon"><i class="fa fa-warning"></i></div>
-                <div class="text"><p>本文最后编辑于 <time datetime="1666684246453"></time> 前，其中的内容可能需要更新。</p></div>
+                <div class="text"><p>本文最后编辑于 <time datetime="1667915502902"></time> 前，其中的内容可能需要更新。</p></div>
             </div>
             
             
             <hr />
-            <div itemprop="articleBody"><h1 id="简介"><a href="#简介" class="headerlink" title="简介"></a>简介</h1><blockquote>
-<p>在课程中的介绍，前端里程计的作用是为了将<strong>当前点云</strong>与<strong>已存在点云</strong>进行相对位姿的计算，在<br><strong>当前点云</strong>: 在当前时刻帧，激光雷达对周围环境采集的点云<br><strong>已存在点云</strong> ：上一帧或已建成地图的点云<br>课程中介绍了多种前端里程计基本算法，分别为以下：</p>
-<ol>
-<li>基于直接匹配的方法：整体点云直接匹配，包括ICP（Iterative Closest Point），NDT（Normal Distribution Transformation）等</li>
-<li>基于特征：LOAM, A-LOAM, F-LOAM, LEGO-LOAM</li>
-<li>多传感器融合里程计： LINS, LIO-SAM, LIO-mapping</li>
-<li>基于栅格： cartographer</li>
-<li>基于面元： suma</li>
-<li>基于语义： segmap, suma++</li>
-</ol>
-</blockquote>
-<p>其中课程中主要对前三个进行讲解和分析，并给出实现代码和运行框架。</p>
-<p>在其他文章中，对其前端里程计基本算法进行学习和笔记记录，包括公式推导和代码讲解。</p>
+            <div itemprop="articleBody"><p>该文主要是关于在期刊Computers_and_electroincs in agriculture上关键词SLAM的论文,提供后续论文的一些素材。根据之前读的一篇综述文章，将后续阅读的文章根据一下几个因素进行评估：</p>
+<ul>
+<li>（1）机械系统？<br>（2）最终应用方向？<br>（3）使用什么传感器？<br>（4）使用了什么智能算法？<br>（5）目前的发展状况？（研究阶段或商用）<br>（6）应用区域？属于哪个国家和大洲？<br>（7）弥补了什么缺点？还存在那些缺点<h1 id="0-Advances-in-Agriculture-Robotics-A-State-of-the-Art-Review-and-Challenges-Ahead"><a href="#0-Advances-in-Agriculture-Robotics-A-State-of-the-Art-Review-and-Challenges-Ahead" class="headerlink" title="0.Advances in Agriculture Robotics: A State-of-the-Art Review and Challenges Ahead"></a>0.Advances in Agriculture Robotics: A State-of-the-Art Review and Challenges Ahead</h1><h2 id="摘要"><a href="#摘要" class="headerlink" title="摘要"></a>摘要</h2>一直以来，农业机器人的目的都是为了克服人口增长、城市化加速、高质量产物的高适配性，保护环境以及合格劳动力的缺少带来的挑战。这篇文章回顾了农业机器人系统在播种、种植、植物处理、收获、产量估计和表型分析方面前的土地准备执行操作的主要现有应用。<br>总的来说，所有机器人都通过以下几个因素进行评估：机械系统，最终应用，使用什么传感器，机械臂或视觉算法，发展状况以及属于哪个国家和大洲。评估了这些相似特征后，来发掘出研究的潮流，普遍存在的隐患以及与商业环境有关的特征。论文发现了目前智慧农业四个比较创新和潮流的方向：定位系统，传感器，视觉算法以及通信技术（自动驾驶也是同样的）。作者建议农业机器人系统投资短期目标为收获监控，长期目标为整体田野的评估。<br><img src="/images/agriculture/pa.png" alt="与精确农业相关的技术领域"><br>作者引用了另一篇文章中对精细农业的定义：a management strategy that uses electronic information and other technologies to gather, process, and analyze spatial and temporal data for the purpose of guiding targeted actions that improve efficiency, productivity, and sustainability of agricultural operations。一种利用电子信息和其他技术来收集、处理和分析空间和时间数据，以指导有针对性的行动，提高农业操作的效率、生产力和可持续性管理策略。<br>分析了目前与精细农业相关的三个方面，机器人（robotics）、人工智能（artificial intelligence）和物联网（internet of things）。它们可以为农业任务提供保障，如：土地平整，播种，种植，害虫控制以及收获。</li>
+</ul>
+<h2 id="内容：机器人在农业中的应用"><a href="#内容：机器人在农业中的应用" class="headerlink" title="内容：机器人在农业中的应用"></a>内容：机器人在农业中的应用</h2><p>关注本人目前的研究方向是水稻种植方面的农业机器人研究，仅对里面关于水稻田的机器人应用进行分析。</p>
+<h3 id="（1）在种植前的土地平整应用"><a href="#（1）在种植前的土地平整应用" class="headerlink" title="（1）在种植前的土地平整应用"></a>（1）在种植前的土地平整应用</h3><p>在这里面提及到了使用UAV Octocopter（无人八旋翼直升机），使用GPS,摄像头，加速计以及指南针作为导航传感器，用全向雷达作为障碍物感知。这里介绍的是大疆的MG-1P 系列农业植保机，现在已经停产了，更新一代的是<a target="_blank" rel="noopener" href="https://ag.dji.com/cn/t40?site=brandsite&amp;from=eol_mg-1p">T40农业无人飞机</a>。它的优点是可以无视地形进行作业，而受到电池容量的限制以及风雨天气的影响较大。</p>
+<h3 id="（2）在播种和种植方面的应用"><a href="#（2）在播种和种植方面的应用" class="headerlink" title="（2）在播种和种植方面的应用"></a>（2）在播种和种植方面的应用</h3><p>根据不同的作物种类以及作业农场规模大小的不同，所使用的机器人差异巨大。与水稻播种相关的主要是两个机器人，一个是小麦播种的，用4WD的机械系统进行播种<a target="_blank" rel="noopener" href="http://dx.doi.org/10.1155/2015/696301">小麦播种机器人</a>；而另外一个值得关注的是使用了卡尔曼滤波来矫正它的定位。<a target="_blank" rel="noopener" href="https://ieeexplore.ieee.org/abstract/document/7906789">Design of an autonomous seed planting robot</a></p>
+<p>同时根据播种的机械装置也是不同的，有使用真空管+播种马达，也有使用线性的传动器和真空马达的，或者螺线管传动。</p>
+<h3 id="（3）在植物处理方面的应用"><a href="#（3）在植物处理方面的应用" class="headerlink" title="（3）在植物处理方面的应用"></a>（3）在植物处理方面的应用</h3><p>在播种后的阶段，需要对植物的生长进行适当的维护，保证其免受疾病和害虫的侵害，需要对其进行监控。<br>这方面的研究多使用相机或者深度相机作为传感器进行图片识别，利用人工智能算法区分杂草/无杂草，害虫/无害虫，能够早期发现这些异常进行处理。<br>对水稻田研究的其中一种机器人是除草机器人，它能够在移动中除去杂草，通过高精度的图像处理，识别出它们的位置。首先避免植物（水稻）的碰撞，然后通过机械的方式在田间移动，能够在田里进行移动，并进行除草。</p>
+<h3 id="（4）在收获方面的应用"><a href="#（4）在收获方面的应用" class="headerlink" title="（4）在收获方面的应用"></a>（4）在收获方面的应用</h3><p>在收获方面，绝大部分的收获所用的传感器都是用的RGB相机作为收获目标的识别，对于收获任务来说，只需要获得其目标所在的位置就可以，其余的机动状态是交给locomotion system。其中大部分都是关于长在树上或者植株上的收割，如草莓，椰子，苹果等，能够从背景中识别出来并使用机械臂进行抓取和脱离，完成收割任务。<br>然而对于小麦、水稻等，是使用待收割区域，使用收割机完成收割任务。</p>
+<h1 id="1-3D-global-mapping-of-large-scale-unstructured-orchard-integrating-eye-in-hand-stereo-vision-and-SLAM"><a href="#1-3D-global-mapping-of-large-scale-unstructured-orchard-integrating-eye-in-hand-stereo-vision-and-SLAM" class="headerlink" title="1.3D global mapping of large-scale unstructured orchard integrating eye-in-hand stereo vision and SLAM"></a>1.3D global mapping of large-scale unstructured orchard integrating eye-in-hand stereo vision and SLAM</h1><ul>
+<li>（1）机械系统：4轮驱动移动平台以及采集用机械臂<br>（2）最终应用方向：用于果树园林，执行收获任务<br>（3）使用什么传感器：眼手系统，双目相机（立体声）-6自由度机械臂<br>（4）使用了什么智能算法：ORB-SLAM3<br>（5）目前的发展状况：研究阶段<br>（6）应用区域？属于哪个国家和大洲？中国广东的果园<br>（7）解决问题/创新点：对大范围面积的果园进行了双目相机的地图建模，同时根据该地图进行定位和目标识别。</li>
+</ul>
+<p>该论文的</p>
 </div>
         </div>
         
@@ -268,7 +271,7 @@
     <script type="text/javascript">
         $(()=>{
             new QRCode("wechat-qr", {
-                text: "http://yoursite.com/2022/10/21/SLAM/Odemeter/",
+                text: "http://yoursite.com/2022/11/06/Agriculture/Agriculture_paper/",
                 width: 150,
                 height: 150,
                 correctLevel : QRCode.CorrectLevel.H
@@ -280,12 +283,11 @@
             const qzoneBase     = "https://sns.qzone.qq.com/cgi-bin/qzshare/cgi_qzshare_onekey?";
             const facebookBase  = "https://www.facebook.com/sharer/sharer.php?";
             const twitterBase   = "https://twitter.com/intent/tweet?";
-            const hostUrl       = "http://yoursite.com/2022/10/21/SLAM/Odemeter/";
-            const title         = "「激光SLAM学习 前端里程计」";
-            const excerpt       = `简介
-在课程中的介绍，前端里程计的作用是为了将当前点云与已存在点云进行相对位姿的计算，在当前点云: 在当前时刻帧，激光雷达对周围环境采集的点云已存在点云 ：上一帧或已建成地图的点云课程中介绍了多种前端里程计基本算法，分别为以下：
+            const hostUrl       = "http://yoursite.com/2022/11/06/Agriculture/Agriculture_paper/";
+            const title         = "「SLAM在农业机器人方面应用的论文阅读笔记」";
+            const excerpt       = `该文主要是关于在期刊Computers_and_electroincs in agriculture上关键词SLAM的论文,提供后续论文的一些素材。根据之前读的一篇综述文章，将后续阅读的文章根据一下几个因素进行评估：
 
-基...`;
+（1）机械系统...`;
             let _URL;
             switch (dest) {
                 case "qq"       : _URL = qqBase+"url="+hostUrl+"&title="+title+"&desc=&summary="+excerpt+"&site=cxpy";     break;
@@ -304,10 +306,10 @@
             <div class="footer-tag clearfix">
                 <div class="pull-left">
                 <i class="fa fa-tags"></i>
-                    <a class="tag-none-link" href="/tags/AI/" rel="tag">AI</a>, <a class="tag-none-link" href="/tags/Deep-learning/" rel="tag">Deep learning</a>, <a class="tag-none-link" href="/tags/SLAM/" rel="tag">SLAM</a>
+                    <a class="tag-none-link" href="/tags/Agriculture/" rel="tag">Agriculture</a>, <a class="tag-none-link" href="/tags/Machinery/" rel="tag">Machinery</a>, <a class="tag-none-link" href="/tags/Paper-Reading/" rel="tag">Paper Reading</a>
                 </div>
                 <div class="pull-date">
-                    <time datetime="2022-10-25T07:50:46.453Z" itemprop="dateModified">最后编辑：2022-10-25</time>
+                    <time datetime="2022-11-08T13:51:42.902Z" itemprop="dateModified">最后编辑：2022-11-08</time>
                 </div>
             </div>
         </footer>
@@ -316,13 +318,9 @@
         <nav class="navigation post-navigation clearfix" role="navigation">
             
             <div class="nav-previous clearfix">
-                <a title=" 激光SLAM学习 深蓝学院课程 简介" href="/2022/10/21/SLAM/Introduction/">&lt; 上一篇</a>
+                <a title=" 激光SLAM学习 LOAM代码" href="/2022/11/03/SLAM/LOAM_code/">&lt; 上一篇</a>
             </div>
             
-            
-            <div class="nav-next clearfix">
-                <a title=" Cmd Markdown 公式指导手册" href="/2022/10/24/tools/mathjax_tutorial_mdeditor_220713/">下一篇 &gt;</a>
-            </div>
             
         </nav>
     
