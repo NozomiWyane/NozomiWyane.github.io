@@ -5,7 +5,7 @@
   <meta charset="utf-8">
   
   
-  <title>深度学习笔记 | Nozomiの優しい空間</title>
+  <title>激光SLAM学习 迭代最近邻点算法 | Nozomiの優しい空間</title>
   <meta name="author" content="Nozomi" />
   <meta http-equiv="Cache-Control" content="no-transform" />
   <meta http-equiv="Cache-Control" content="no-siteapp" />
@@ -14,23 +14,22 @@
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
   <meta name="format-detection" content="telphone=no, email=no" />
   
-    <meta name="keywords" content="AI, Deep learning" />
+    <meta name="keywords" content="AI, Deep learning, SLAM" />
   
-  <meta name="description" content="Stanford CS230(吴恩达 深度学习 Deep Learning | Autumn 2018)笔记第零课深度学习是什么？深度学习一般与神经网络是一个同义词，Deep Learning简称DL，与传统的Machine Learning(ML)不同，但是是ML的一部分，也是最难的一部分。 深度学习兴起主要是由于互联网发展以及GPU计算的能力提升，更多数据被电子化以及计算力的大幅提升，使得神经">
+  <meta name="description" content="迭代最近邻点算法 Iterative Closest Point该方法为最简单暴力的匹配算法，根据问题描述中的目标函数，对目标函数进行推导。 问题描述 前端里程计的问题描述和输入描述如下：点集： X &#x3D; \{x_1,x_2, ... , x_{N_x}\}Y &#x3D; \{y_1,y_2, ... , y_{N_y}\}其中X和Y是原始点云的子集，选取的是两个点集中能够互相关联的点集，$N_x &#x3D; N_">
 <meta property="og:type" content="article">
-<meta property="og:title" content="深度学习笔记">
-<meta property="og:url" content="http://yoursite.com/2022/10/19/DeepLearningByAndrewNg/index.html">
+<meta property="og:title" content="激光SLAM学习 迭代最近邻点算法">
+<meta property="og:url" content="http://yoursite.com/2022/10/24/SLAM/1_ICP/index.html">
 <meta property="og:site_name" content="Nozomiの優しい空間">
-<meta property="og:description" content="Stanford CS230(吴恩达 深度学习 Deep Learning | Autumn 2018)笔记第零课深度学习是什么？深度学习一般与神经网络是一个同义词，Deep Learning简称DL，与传统的Machine Learning(ML)不同，但是是ML的一部分，也是最难的一部分。 深度学习兴起主要是由于互联网发展以及GPU计算的能力提升，更多数据被电子化以及计算力的大幅提升，使得神经">
+<meta property="og:description" content="迭代最近邻点算法 Iterative Closest Point该方法为最简单暴力的匹配算法，根据问题描述中的目标函数，对目标函数进行推导。 问题描述 前端里程计的问题描述和输入描述如下：点集： X &#x3D; \{x_1,x_2, ... , x_{N_x}\}Y &#x3D; \{y_1,y_2, ... , y_{N_y}\}其中X和Y是原始点云的子集，选取的是两个点集中能够互相关联的点集，$N_x &#x3D; N_">
 <meta property="og:locale" content="zh_CN">
-<meta property="og:image" content="http://yoursite.com/images/learning.png">
-<meta property="article:published_time" content="2022-10-19T13:45:39.211Z">
-<meta property="article:modified_time" content="2022-10-22T16:02:32.839Z">
+<meta property="article:published_time" content="2022-10-24T07:51:41.516Z">
+<meta property="article:modified_time" content="2022-11-03T03:29:39.314Z">
 <meta property="article:author" content="Nozomi">
 <meta property="article:tag" content="AI">
 <meta property="article:tag" content="Deep learning">
+<meta property="article:tag" content="SLAM">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:image" content="http://yoursite.com/images/learning.png">
 <meta name="twitter:site" content="@dOqLAto0tk0RefS">
   
   <!-- 站点验证相关 -->
@@ -171,15 +170,15 @@
 
             <article itemscope itemtype="https://schema.org/Article">
     
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2022/10/19/DeepLearningByAndrewNg/">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2022/10/24/SLAM/1_ICP/">
     <div class="kratos-hentry kratos-post-inner clearfix">
         <header class="kratos-entry-header">
             
-                <h1 class="kratos-entry-title text-center" itemprop="name headline">深度学习笔记</h1>
+                <h1 class="kratos-entry-title text-center" itemprop="name headline">激光SLAM学习 迭代最近邻点算法</h1>
             
             
             <ul class="kratos-post-meta text-center">
-                <li><time datetime="2022-10-19T13:45:39.211Z" itemprop="datePublished"><i class="fa fa-calendar"></i> 2022-10-19</time></li>
+                <li><time datetime="2022-10-24T07:51:41.516Z" itemprop="datePublished"><i class="fa fa-calendar"></i> 2022-10-24</time></li>
                 <li itemprop="author" itemscope itemtype="https://schema.org/Person">
                     <i class="fa fa-user"></i> 作者 <span itemprop="name">Nozomi</span>
                 </li>
@@ -187,7 +186,7 @@
                     <i class="fa fa-edit"></i> 
                     
                     
-                        ~2.42K
+                        ~4.23K
                     
                     字
                 </li>
@@ -198,93 +197,131 @@
             
             <div id="expire-alert" class="alert alert-warning hidden" role="alert">
                 <div class="icon"><i class="fa fa-warning"></i></div>
-                <div class="text"><p>本文最后编辑于 <time datetime="1666454552839"></time> 前，其中的内容可能需要更新。</p></div>
+                <div class="text"><p>本文最后编辑于 <time datetime="1667446179314"></time> 前，其中的内容可能需要更新。</p></div>
             </div>
             
             
             <hr />
-            <div itemprop="articleBody"><h1 id="Stanford-CS230-吴恩达-深度学习-Deep-Learning-Autumn-2018-笔记"><a href="#Stanford-CS230-吴恩达-深度学习-Deep-Learning-Autumn-2018-笔记" class="headerlink" title="Stanford CS230(吴恩达 深度学习 Deep Learning | Autumn 2018)笔记"></a>Stanford CS230(吴恩达 深度学习 Deep Learning | Autumn 2018)笔记</h1><h1 id="第零课"><a href="#第零课" class="headerlink" title="第零课"></a>第零课</h1><h2 id="深度学习是什么？"><a href="#深度学习是什么？" class="headerlink" title="深度学习是什么？"></a>深度学习是什么？</h2><p>深度学习一般与神经网络是一个同义词，Deep Learning简称DL，与传统的Machine Learning(ML)不同，但是是ML的一部分，也是最难的一部分。</p>
-<h2 id="深度学习兴起"><a href="#深度学习兴起" class="headerlink" title="深度学习兴起"></a>深度学习兴起</h2><p>主要是由于互联网发展以及GPU计算的能力提升，更多数据被电子化以及计算力的大幅提升，使得神经网络变得更大更能解决更多数据带来的问题和潜在的有价值的东西。</p>
-<h2 id="一个好的AI团队需要什么？"><a href="#一个好的AI团队需要什么？" class="headerlink" title="一个好的AI团队需要什么？"></a>一个好的AI团队需要什么？</h2><ol>
-<li>团队一般具备各种数据采集能力</li>
-<li>团队能通过深度学习来对数据进行分析</li>
-<li>普遍的自动化</li>
-</ol>
-<h2 id="本课程含五个Courses："><a href="#本课程含五个Courses：" class="headerlink" title="本课程含五个Courses："></a>本课程含五个Courses：</h2><ol>
-<li>什么是神经元？什么是神经网络层？如何将他们堆叠起来搭建神经网络？</li>
-<li>如何调整(tune)这些神经网络？如何改进神经网络的效果？</li>
-<li>机器学习项目的开发流程</li>
-<li>卷积神经网络(CNN Convolutional Neural Network)</li>
-<li>序列模型(Sequence Model)如递归神经网络(Recurrent Neural Network)</li>
-</ol>
-<h2 id="参考课程视频："><a href="#参考课程视频：" class="headerlink" title="参考课程视频："></a>参考课程视频：</h2><p>对于2中的每一个视频，先到1中看了视频在看2，效果会好一些</p>
-<p>2中视频备注如C1M1，代表第一个Courses(一共上面5个),每个有很多modules，一般一个视频两个modules</p>
+            <div itemprop="articleBody"><h1 id="迭代最近邻点算法-Iterative-Closest-Point"><a href="#迭代最近邻点算法-Iterative-Closest-Point" class="headerlink" title="迭代最近邻点算法 Iterative Closest Point"></a>迭代最近邻点算法 Iterative Closest Point</h1><p>该方法为最简单暴力的匹配算法，根据问题描述中的目标函数，对目标函数进行推导。</p>
+<h2 id="问题描述"><a href="#问题描述" class="headerlink" title="问题描述"></a>问题描述</h2><blockquote>
+<p>前端里程计的问题描述和输入描述如下：<br><strong>点集：</strong></p>
+<script type="math/tex; mode=display">X = \{x_1,x_2, ... , x_{N_x}\}</script><script type="math/tex; mode=display">Y = \{y_1,y_2, ... , y_{N_y}\}</script><p>其中X和Y是原始点云的子集，选取的是两个点集中能够互相关联的点集，$N_x = N_y$<br><strong>目标函数：</strong></p>
+<script type="math/tex; mode=display">minE(R,T)=min\frac{1}{N_y} \sum_{i=1}^{N_y} \|x_i - Ry_i - t\|^2</script><p>其中R和T分别为旋转矩阵和平移矩阵，E代表均方差。<br>求得R和T使得他们的欧式距离的均方差E最小，这是最基本的目标函数。</p>
+<h2 id="（1）基于奇异值分解（SVD）的ICP"><a href="#（1）基于奇异值分解（SVD）的ICP" class="headerlink" title="（1）基于奇异值分解（SVD）的ICP"></a>（1）基于奇异值分解（SVD）的ICP</h2><p>SVD的方法首先第一步将加了几部分进来，进行转变</p>
+<script type="math/tex; mode=display">
+\begin{equation}
+\begin{split}
+E(R,T) &= \frac{1}{N_y} \sum_{i=1}^{N_y} \|x_i - Ry_i - t + -u_x + Ru_y +u_x - Ru_y \|^2  \\
+&= \frac{1}{N_y} \sum_{i=1}^{N_y} \|x_i -u_x - R(y_i - u_y)+ (u_x - Ru_y - t )\|^2 \\
+& 这里根据平方差公式展开\\
+&= \frac{1}{N_y} \sum_{i=1}^{N_y} (\|x_i -u_x - R(y_i - u_y)\|^2 + \|(u_x - Ru_y - t )\|^2 \\ 
+& +2(x_i -u_x - R(y_i - u_y))^T(u_x - Ru_y - t ))
+\end{split}
+\nonumber
+\end{equation}</script><p>其中$u_x$和$u_y$分别是点集X和Y的质心，即</p>
+<script type="math/tex; mode=display">
+u_x = \frac{1}{N_x} \sum_{i=1}^{N_x} x_i  \\
+u_y = \frac{1}{N_y} \sum_{i=1}^{N_y} y_i</script><p>结合前面的求和可知$x_i -u_x - R(y_i - u_y)$项为0，E(R,T)变为如下</p>
+<script type="math/tex; mode=display">
+E(R,T) = \frac{1}{N_y} \sum_{i=1}^{N_y} (\|x_i -u_x - R(y_i - u_y)\|^2 + \|(u_x - Ru_y - t )\|^2)</script><p>将其拆分为两部分：</p>
+<script type="math/tex; mode=display">
+E_1(R,T) = \frac{1}{N_y} \sum_{i=1}^{N_y} \|x_i -u_x - R(y_i - u_y)\|^2  \\
+E_2(R,T) = \frac{1}{N_y} \sum_{i=1}^{N_y} \|(u_x - Ru_y - t )\|^2</script><ul>
+<li>由$E_2$的性质可知，对于任意的一个R，都可以找到一个t使得$u_x - Ru_y - t = 0$，所以不需要求$E_2$，只需要求$E_1$，得到R之后，自然得到t。<br>对$E_1$进行推导:<script type="math/tex; mode=display">
+\begin{equation}
+\begin{split}
+E\prime _1(R,T) &= \frac{1}{N_y} \sum_{i=1}^{N_y} \|x_i -u_x - R(y_i - u_y)\|^2   \\
+&= \frac{1}{N_y} \sum_{i=1}^{N_y} \|x\prime _i - R(y\prime _i)\|^2 \\
+&= \frac{1}{N_y} \sum_{i=1}^{N_y} ( x\prime _i^T x\prime _i+ y\prime _i^T R^T Ry\prime _i - 2x\prime _i^T Ry\prime _i)
+\end{split}
+\nonumber
+\end{equation}</script></li>
+<li>该式中，第一项与R无关，而第二项二单位阵，只与第三项有关，则目标函数变为：<script type="math/tex; mode=display">
+\begin{equation}
+\begin{split}
+E\prime _1(R,t) &= arg\underset {R}{max} \sum_{i=1}^{N_y} x\prime _i^T Ry\prime _i   \\
+&= arg\underset {R}{max} \sum_{i=1}^{N_y}  Trace(x\prime _i^T Ry\prime _i) \\
+& 由 trace(AB) = trace(BA) \\
+&= arg\underset {R}{max} \sum_{i=1}^{N_y}  Trace(Ry\prime _i x\prime _i^T ) \\
+&= arg\underset {R}{max} Trace(RH) \\
+其中H = \sum_{i=1}^{N_y} y\prime _i x\prime _i^T
+\end{split}
+\nonumber
+\end{equation}</script></li>
+</ul>
+</blockquote>
+<p>至此，需要对该矩阵转变为正定矩阵，并进行分解<br>定理：若存在正定矩阵$AA^T$,一定存在任意正交矩阵B，使得$Trace(AA^T) \geq Trace(BAA^T)  $<br>意义：若能找到R，使得RH变为正定矩阵，则找到最大值，满足目标函数</p>
+<blockquote>
+<p>对H进行奇异值分解：</p>
+<script type="math/tex; mode=display">
+H = UEV^T = y\prime _i x\prime _i^T\\
+若R = VU^T \\
+则RH = VU^T UE V^T =VE V^T = VE^{\frac 12} (VE^{\frac 12})^T</script><p>在这里其实由H的定义可知U即$y\prime _i$,V即$x\prime _i^T$。</p>
+</blockquote>
+<p>接下来我们对实现代码进行讲解</p>
+<h2 id="（2）基于凸优化的ICP"><a href="#（2）基于凸优化的ICP" class="headerlink" title="（2）基于凸优化的ICP"></a>（2）基于凸优化的ICP</h2><p>首先对凸优化本身进行一些基础讲解，它对什么样的问题有进行什么操作？</p>
+<h3 id="凸优化基础"><a href="#凸优化基础" class="headerlink" title="凸优化基础"></a>凸优化基础</h3><ul>
+<li>优化任务的目标<br>凸优化是对n维的变量$x^* \in \frak{R} ^n$，使得损失函数F(x)取得局部最小值：<script type="math/tex; mode=display">
+\underset {x}{min} F(x) = \frac 12 \|f(x) \|_2^2</script>局部最小值指对任意的$|x - x^<em> | &lt; \sigma $，都有$F(x^</em>) \leq F(x) $, F(x)代表的是损失函数，用以衡量真实值 y和预测值 f(x)之间不一致的程度，一般越小越好。为了便于不同损失函数的比较，常将其表示为单变量的函数，即关于f(x)的表达式作为残差函数，这个残差函数可以代表预测和观测,也可以是匹配的时候的点的距离，可以由多个残差函数组成。</li>
+<li>迭代方法的思路</li>
+</ul>
 <ol>
-<li><a target="_blank" rel="noopener" href="https://www.bilibili.com/video/av66314465">Courses</a></li>
-<li><a target="_blank" rel="noopener" href="https://www.bilibili.com/video/av57524451">In-class</a></li>
+<li>给定初值$x_0$；</li>
+<li>对于第k次迭代，寻找增量$\Delta x_k$，使得$|x_k + \Delta x_k |_2^2$达到极小值;</li>
+<li>如果达到足够小的值，则停止；否则返回第2步，继续迭代。</li>
 </ol>
-<h1 id="第一课"><a href="#第一课" class="headerlink" title="第一课"></a>第一课</h1><h2 id="神经网络的有监督学习"><a href="#神经网络的有监督学习" class="headerlink" title="神经网络的有监督学习"></a>神经网络的有监督学习</h2><p>建立y(y1,y2…)到x(x1,x2,x3,x4…)的映射关系，我们给出数据包含(x,y)对神经网络进行训练，找到最佳的参数来表达y和x之间的关系。</p>
-<h3 id="有监督学习的x输入"><a href="#有监督学习的x输入" class="headerlink" title="有监督学习的x输入"></a>有监督学习的x输入</h3><p>结构化数据：表格类型的，矩阵类型的数据<br>非结构化数据：声音，图像，文本等</p>
-<h2 id="神经网络基础"><a href="#神经网络基础" class="headerlink" title="神经网络基础"></a>神经网络基础</h2><p>神经网络包含前向过程(forward propagation) 和 反向传播过程(backward propagation)即BP</p>
-<h3 id="简单的二元逻辑回归例子"><a href="#简单的二元逻辑回归例子" class="headerlink" title="简单的二元逻辑回归例子"></a>简单的二元逻辑回归例子</h3><ol>
-<li>问题模型描述：输入x∈R<sup>nx</sup>，是输出y则是label∈{0,1},一共有m个训练样本{(x1,y1),(x2,y2)…(xm,ym)}</li>
-<li>对于训练样本的m个输入x，进行堆叠为一个nx × m的矩阵，y同样为1 x m的矩阵</li>
-</ol>
-<p>在这里我们使用$\hat{y}$表示通过算法预测的结果，我们需要它与y形成一个概率的关系，即取值为{0~1},由于直接使用线性函数去拟合，我们输出只有0~1的情况下，有可能会输出负数,或者超过1，这里我们使用一个叫sigmoid函数对线性拟合处理，sigmoid表示为如下 $\frac{1}{1+e^{-z}}$, 原来y = w<sup>T</sup>x + b表示为y = $\delta$ (w<sup>T</sup>x + b)</p>
-<h3 id="梯度下降"><a href="#梯度下降" class="headerlink" title="梯度下降"></a>梯度下降</h3><p>上述损失函数很好地描述了w和b对Y和$\hat{y}$之间的的关系，但是我们要得到更好地使得J(w,b)更小，在这里我们提出梯度下降法来求解w和b使得J(w,b)最小。</p>
-<h2 id="神经网络的理解"><a href="#神经网络的理解" class="headerlink" title="神经网络的理解"></a>神经网络的理解</h2><p><img src="/images/learning.png" alt="network"></p>
-<p>如上图，神经网络可以理解为是一个黑箱，函数，输入图像，经过结构和参数得到里面是否有猫，有=1，无=0，这是一个基本的神经网络的模式。</p>
-<p>神经网络模型 = 结构 + 参数</p>
-<p>我们的目标就是要找到在结构中最佳的参数来的到最好的结果，我们可以改变这个模式中的很多东西：</p>
-<ol>
-<li>输入input，将图片换成其他的数据格式</li>
-<li>输出output，改变求解问题，如要求猫的种类(多类分类)，猫的年龄(线性回归)</li>
-<li>损失函数Loss function，根据与真值的比较定义的误差来更新</li>
-<li>结构Architecture，一般以结构来命名神经网络如循环神经网络，卷积神经网络等</li>
-<li>激活函数Activation function，</li>
-<li>优化器Optiomizer, </li>
-<li>超参数Hyperparameters，如学习率,优先的批处理等外部设置的参数</li>
-</ol>
-<h2 id="其中几个例子"><a href="#其中几个例子" class="headerlink" title="其中几个例子"></a>其中几个例子</h2><h3 id="一、分类问题"><a href="#一、分类问题" class="headerlink" title="一、分类问题"></a>一、分类问题</h3><p>问题描述：给一张图片，要分辨出是猫或不是猫（白天或黑夜）<br>问题分析：</p>
-<ol>
-<li>输入：表示为像素矩阵的图片(二维矩阵)</li>
-<li>输出：类型（猫或非猫）</li>
-<li>损失函数：二元逻辑回归，目标是猫（0），不是猫是(1)，设置阈值如(0.5)</li>
-<li>结构：有很多如CNN,RCNN等</li>
-<li>激活函数：使用sigmoid函数，使得输出保持在0~1之间</li>
-</ol>
-<p>如果是多分类问题（分类几种动物）有以下几个解决方法：</p>
-<ol>
-<li>单热编码，这样能在一张图片上同时出现两种动物，但这样需要使用softmax激活函数。</li>
-<li>训练多神经网络，每一个对应一种动物，这样效率不高不能有效利用。</li>
-</ol>
-<p>训练时，需要输入多张带标签的动物图片，在训练时进行带标签（编码）的训练</p>
-<h3 id="二、人像识别"><a href="#二、人像识别" class="headerlink" title="二、人像识别"></a>二、人像识别</h3><p>问题描述：输入人脸后，需要知道是不是对应学生（id）的<br>问题分析：</p>
-<ol>
-<li>输入: 表示为像素矩阵的图片(二维矩阵)</li>
-<li>输出：判断是否为指定的学生，二分类，设置阈值</li>
-<li>损失函数：输入的待认证图像与图像库中的图像进行匹配，向量化的差值<br>基本与上面相同，但比较先进的人脸识别方法应该不是这样的，有一定的改进但总体思路是一样的。</li>
-</ol>
-<h3 id="三、风格转移"><a href="#三、风格转移" class="headerlink" title="三、风格转移"></a>三、风格转移</h3><p>问题描述：给出一张图片的内容和另一张图片的风格，生成1图片内容含2图片风格<br>问题分析：</p>
-<ol>
-<li>数据：目标content和目标style图</li>
-<li>输入：随机白噪声或带偏置的图（或其他的）</li>
-<li>输出：含有content和style的图</li>
-<li>损失函数：生成的图片同时与content之间的内容差值和style图之间的style差值</li>
-</ol>
-<h3 id="四、语音识别"><a href="#四、语音识别" class="headerlink" title="四、语音识别"></a>四、语音识别</h3><p>问题描述：给出一段语音，识别出其中的激活词<br>问题分析：</p>
-<ol>
-<li><p>数据：很多包含或不包含（正负样本）激活词的样本集，有两种方式：</p>
-<p> ①：找很多人录音，手动标记；</p>
-<p> ②：收集正样本和负样本插入到背景噪音中，可以程序化生成样本并自动标记</p>
+<ul>
+<li><p>迭代下降求解优化的方法<br>对损失函数进行泰勒展开可以得到：</p>
+<script type="math/tex; mode=display">
+F(x + \Delta x) \approx F(x) + J \Delta x + \frac 12 \Delta x^T H \Delta x</script><p>其中J为X的一阶导（雅可比矩阵，Jacobian），H为X的二阶导（海森矩阵，Hessian）</p>
 </li>
-<li><p>输入：一段待识别的语音</p>
+<li><p>最速下降法</p>
+<blockquote>
+<p>只保留一阶泰勒展开，增量$\Delta x^* = -J^T$,沿梯度的反方向取增量，保证损失函数减少。<br>优点: 简单、迭代方便<br>缺点：精度有限、接近目标值时会下降变慢</p>
+</blockquote>
 </li>
-<li>输出：对每个时序输出0或1来识别激活词</li>
-<li>损失函数：编码后的语音与激活词之间的距离</li>
-<li>结构：RNN，LSTM结构</li>
-</ol>
-<p>虽然以上方法很好地定义了其中很多内容，但关键影响效果的是结构和它的参数调整能否有效</p>
+<li><p>牛顿法</p>
+<blockquote>
+<p>保留二阶泰勒展开，增量方程为</p>
+<script type="math/tex; mode=display">
+\Delta x^* = argmin (F(x) + J\Delta x + \frac 12 \Delta x^TH\Delta x</script><p>求其最小值即求该方程的导数为0，即</p>
+<script type="math/tex; mode=display">
+J^T + H\Delta x = 0 \Rightarrow  H\Delta x = -J^T</script><p>优点: 更精确，每一步收敛更准确；收敛速度快<br>缺点：当规模变大时，H矩阵的计算比较难</p>
+</blockquote>
+</li>
+<li><p>高斯牛顿法</p>
+<blockquote>
+<p>原先是对其损失函数即残差函数的一个二范数求最小值，而高斯牛顿法是直接对残差函数进行泰勒展开，同时保留其一阶导求雅可比矩阵：<br>问题变为寻找增量$\Delta x$使得$| f(x+\Delta x)|^2$达到最小：</p>
+<script type="math/tex; mode=display">
+\Delta x^* = arg\underset {\Delta x}{min} \frac 12 \| f(x + J\Delta x)\|^2</script><p>同样地，需要对其求导且导数为0的情况下为最小，展开为：</p>
+<script type="math/tex; mode=display">
+\begin{equation}
+\begin{split}
+\frac 12 \| f(x + J\Delta x)\|^2 
+&= \frac 12(f(x) + J\Delta x)^T(f(x) + J\Delta x) \\
+&= \frac 12( \| f(x) \|_2^2 + 2f(x)J\Delta x + \Delta x^T J^T J \Delta x )
+\end{split}
+\end{equation}</script><p>对其求导并令其为0，则得到</p>
+<script type="math/tex; mode=display">
+\underbrace{J^T f(x)}_{g} + \underbrace{J^T J}_{H} \Delta x = 0 \\
+即 \Delta x = H^{-1}g</script><p>优点: 用$J^TJ$代替牛顿法中的H，则不需要二阶导数<br>缺点：但是求解必须保证H矩阵是可逆的，而$J^TJ$只能保证半正定，算法稳定性变差，最终难以收敛。</p>
+</blockquote>
+</li>
+</ul>
+<h3 id="在SLAM中的凸优化"><a href="#在SLAM中的凸优化" class="headerlink" title="在SLAM中的凸优化"></a>在SLAM中的凸优化</h3><blockquote>
+<p>基于凸优化的ICP问题，我们将原来的目标函数重新说明一下：</p>
+<script type="math/tex; mode=display">
+minE(R,t)=min\frac{1}{N_y} \sum_{i=1}^{N_y} \|x_i - Ry_i - t\|^2</script><p>使用矩阵T对R和t进行表示：</p>
+<script type="math/tex; mode=display">
+T =
+\quad
+\begin{bmatrix}
+   R & t \\
+   0 & 1 
+\end{bmatrix}</script><p>目标函数变为: </p>
+<script type="math/tex; mode=display">
+\underset{T}{min} \frac 12 \sum_{i=1}^{N_y} \|x_i - Ty_i\|_2^2</script><p>还有相对应的李代数变换，目前还不会先不记录了。<br>接下来我们对实现代码进行讲解:</p>
+</blockquote>
 </div>
         </div>
         
@@ -338,7 +375,7 @@
     <script type="text/javascript">
         $(()=>{
             new QRCode("wechat-qr", {
-                text: "http://yoursite.com/2022/10/19/DeepLearningByAndrewNg/",
+                text: "http://yoursite.com/2022/10/24/SLAM/1_ICP/",
                 width: 150,
                 height: 150,
                 correctLevel : QRCode.CorrectLevel.H
@@ -350,9 +387,12 @@
             const qzoneBase     = "https://sns.qzone.qq.com/cgi-bin/qzshare/cgi_qzshare_onekey?";
             const facebookBase  = "https://www.facebook.com/sharer/sharer.php?";
             const twitterBase   = "https://twitter.com/intent/tweet?";
-            const hostUrl       = "http://yoursite.com/2022/10/19/DeepLearningByAndrewNg/";
-            const title         = "「深度学习笔记」";
-            const excerpt       = `Stanford CS230(吴恩达 深度学习 Deep Learning | Autumn 2018)笔记第零课深度学习是什么？深度学习一般与神经网络是一个同义词，Deep Learning简称DL，与传统的Machine Lear...`;
+            const hostUrl       = "http://yoursite.com/2022/10/24/SLAM/1_ICP/";
+            const title         = "「激光SLAM学习 迭代最近邻点算法」";
+            const excerpt       = `迭代最近邻点算法 Iterative Closest Point该方法为最简单暴力的匹配算法，根据问题描述中的目标函数，对目标函数进行推导。
+问题描述
+前端里程计的问题描述和输入描述如下：点集：
+X = \{x_1,x_2, ... ...`;
             let _URL;
             switch (dest) {
                 case "qq"       : _URL = qqBase+"url="+hostUrl+"&title="+title+"&desc=&summary="+excerpt+"&site=cxpy";     break;
@@ -371,10 +411,10 @@
             <div class="footer-tag clearfix">
                 <div class="pull-left">
                 <i class="fa fa-tags"></i>
-                    <a class="tag-none-link" href="/tags/AI/" rel="tag">AI</a>, <a class="tag-none-link" href="/tags/Deep-learning/" rel="tag">Deep learning</a>
+                    <a class="tag-none-link" href="/tags/AI/" rel="tag">AI</a>, <a class="tag-none-link" href="/tags/Deep-learning/" rel="tag">Deep learning</a>, <a class="tag-none-link" href="/tags/SLAM/" rel="tag">SLAM</a>
                 </div>
                 <div class="pull-date">
-                    <time datetime="2022-10-22T16:02:32.839Z" itemprop="dateModified">最后编辑：2022-10-23</time>
+                    <time datetime="2022-11-03T03:29:39.314Z" itemprop="dateModified">最后编辑：2022-11-03</time>
                 </div>
             </div>
         </footer>
@@ -383,12 +423,12 @@
         <nav class="navigation post-navigation clearfix" role="navigation">
             
             <div class="nav-previous clearfix">
-                <a title=" 有关一些文件处理" href="/2022/10/19/tools/DataFile Dealing/">&lt; 上一篇</a>
+                <a title=" Cmd Markdown 公式指导手册" href="/2022/10/24/tools/mathjax_tutorial_mdeditor_220713/">&lt; 上一篇</a>
             </div>
             
             
             <div class="nav-next clearfix">
-                <a title=" 激光SLAM学习 深蓝学院课程 简介" href="/2022/10/21/SLAM/0_Introduction/">下一篇 &gt;</a>
+                <a title=" 激光SLAM学习 正态分布变换NDT" href="/2022/10/24/SLAM/2_NDT/">下一篇 &gt;</a>
             </div>
             
         </nav>
