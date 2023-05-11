@@ -19,13 +19,13 @@
   <meta name="description" content="LOAM代码学习引自Github多传感器融合定位 三章 3D激光里程计2参考博客:slam中ceres的用法解析基于Aloam对特征匹配及雷达里程计的学习 引言该部分主要对ceres库在slam算法中的应用以及基本用法进行介绍和学习，作为以后自己参考的内容。Ceres&#96;&#96;是由Google开发的开源C++通用非线性优化库（项目主页），与g2o并列为目前视觉SLAM中应用最广泛的优化算法库（VINS-">
 <meta property="og:type" content="article">
 <meta property="og:title" content="激光SLAM学习 LOAM代码">
-<meta property="og:url" content="http://yoursite.com/2022/11/03/SLAM/z_LOAM_code/index.html">
+<meta property="og:url" content="http://yoursite.com/2022/11/03/SLAM/7_LOAM_code/index.html">
 <meta property="og:site_name" content="Nozomiの優しい空間">
 <meta property="og:description" content="LOAM代码学习引自Github多传感器融合定位 三章 3D激光里程计2参考博客:slam中ceres的用法解析基于Aloam对特征匹配及雷达里程计的学习 引言该部分主要对ceres库在slam算法中的应用以及基本用法进行介绍和学习，作为以后自己参考的内容。Ceres&#96;&#96;是由Google开发的开源C++通用非线性优化库（项目主页），与g2o并列为目前视觉SLAM中应用最广泛的优化算法库（VINS-">
 <meta property="og:locale" content="zh_CN">
 <meta property="og:image" content="http://yoursite.com/images/slam/slamcode_launch.png">
 <meta property="article:published_time" content="2022-11-03T12:12:57.571Z">
-<meta property="article:modified_time" content="2022-11-30T03:55:07.163Z">
+<meta property="article:modified_time" content="2023-05-10T07:17:05.575Z">
 <meta property="article:author" content="Nozomi">
 <meta property="article:tag" content="SLAM">
 <meta property="article:tag" content="LOAM">
@@ -170,7 +170,7 @@
 
             <article itemscope itemtype="https://schema.org/Article">
     
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2022/11/03/SLAM/z_LOAM_code/">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2022/11/03/SLAM/7_LOAM_code/">
     <div class="kratos-hentry kratos-post-inner clearfix">
         <header class="kratos-entry-header">
             
@@ -186,7 +186,7 @@
                     <i class="fa fa-edit"></i> 
                     
                     
-                        ~4.33K
+                        ~4.59K
                     
                     字
                 </li>
@@ -197,7 +197,7 @@
             
             <div id="expire-alert" class="alert alert-warning hidden" role="alert">
                 <div class="icon"><i class="fa fa-warning"></i></div>
-                <div class="text"><p>本文最后编辑于 <time datetime="1669780507163"></time> 前，其中的内容可能需要更新。</p></div>
+                <div class="text"><p>本文最后编辑于 <time datetime="1683703025575"></time> 前，其中的内容可能需要更新。</p></div>
             </div>
             
             
@@ -221,18 +221,23 @@ l_j 和 u_j分别为参数模块的下界和上界</script><p>Ceres的求解过�
 <p>//新建一个代价函数，这里用的是面特征，这段代码是选取了面点<br>ceres::CostFunction *cost_function = LidarPlaneFactor::Create(curr_point, last_point_a, last_point_b, last_point_c, s);<br>//当代价函数和损失函数以及参数模块都准备好后，加入残差模块<br>problem.AddResidualBlock(cost_function, loss_function, para_q, para_t);<br>//使用求解器对该优化问题进行求解<br>ceres::Solver::Options options;<br>options.linear_solver_type = ceres::DENSE_QR;<br>options.max_num_iterations = 4;<br>options.minimizer_progress_to_stdout = false;<br>ceres::Solver::Summary summary;<br>ceres::Solve(options, &amp;problem, &amp;summary);<br>通过problem类把参数模块已经传进去，求解后就可以得到参数变量的内存空间就更新了。</p>
 <h1 id="代码结构解读"><a href="#代码结构解读" class="headerlink" title="代码结构解读"></a>代码结构解读</h1><p>参考博客<a target="_blank" rel="noopener" href="https://zhuanlan.zhihu.com/p/439353727">A-LOAM工程架构与代码详解</a><br>代码是lidar_localization文件夹，它整个文件夹是ros中的一个package，首先看它的launch文件，启动了哪几个节点。分别启动了下面几个：</p>
 <ol>
-<li>scan_registration_node：原始点云的订阅和发布，每一帧线点和角点的计算</li>
-<li>front_end_node（注释了）</li>
+<li>scan_registration_node：原始点云的订阅和发布，每一帧线点和角点的计算，输出计算好特征的点云</li>
+<li>front_end_node：前端输入，是激光点云的入口，输出</li>
 <li>aloam_laser_odometry_node 基于线点和角点，计算他们帧与帧之间的关联关系</li>
 <li>aloam_mapping_node</li>
-<li>evaluation_node<br><img src="/images/slam/slamcode_launch.png" alt="launch文件启动的节点列表"><br>这几个node中都存在一个while循环，逻辑是readdata然后检测validdata，然后updatedata，再PublishData。<br>由上述代码可以知道，主要是四个模块。每个模块的cpp文件都由node，flow以及原始类组成。node是作为启动节点的cpp，而flow是作为流，个人理解是作为一个线程开启，具体的函数逻辑在原始类中。<h2 id="1-scan-registration-node"><a href="#1-scan-registration-node" class="headerlink" title="1. scan_registration_node"></a>1. scan_registration_node</h2>在while循环中分为以下几个部分：<br>（1）Readdata：<br>这个函数将从cloud_sub_ptr（cloud_subsriber）的ParseData中获得，该函数使用地址传递，将点云数据传递到cloud_data_buff下面。<br>（2）hasData：<br>该函数判断是否有数据，从序列中获取最新的一帧。<br>（3）Update：<br>里面有三个函数，对获取的原始数据进行处理：<br>// filter input point cloud:<br>CloudData::CLOUD filtered_cloud;<br>FilterByRange(<em>input_cloud.cloud_ptr, filtered_cloud);<br>这个函数是对min_range这个值外的点云进行处理，相当于不处理周围5米内的点<br>// sort point cloud by scan,根据每个点所在的角度来获取它在哪一条线上，根据所在线来分类点云:<br>output_cloud.reset(new CloudData::CLOUD());<br>SortPointCloudByScan(filtered_cloud, </em>output_cloud);</li>
+<li>evaluation_node<br><img src="/images/slam/slamcode_launch.png" alt="launch文件启动的节点列表"><br>这几个node中都存在一个while循环，逻辑是readdata然后检测validdata，然后updatedata，再PublishData。<br>由上述代码可以知道，主要是四个模块。每个模块的cpp文件都由node，flow以及原始类组成。node是作为启动节点的cpp，而flow是作为流，个人理解是作为一个线程开启，具体的函数逻辑在原始的cpp中。<h2 id="1-scan-registration-node"><a href="#1-scan-registration-node" class="headerlink" title="1. scan_registration_node"></a>1. scan_registration_node</h2>在原始类中，对初始点云进行计算，在while循环中分为以下几个部分：<br>（1）Readdata：<br>这个函数将从cloud_sub_ptr（cloud_subsriber）的ParseData中获得，该函数使用地址传递，将点云数据传递到cloud_data_buff下面。<br>（2）hasData：<br>该函数判断是否有数据，从序列中获取最新的一帧。<br>（3）Update：<br>里面有三个函数，对获取的原始数据进行处理：<br>// filter input point cloud:<br>CloudData::CLOUD filtered_cloud;<br>FilterByRange(*input_cloud.cloud_ptr, filtered_cloud);<br>这个函数是对min_range这个值外的点云进行处理，相当于不处理周围5米内的点</li>
 </ol>
+<p>// sort point cloud by scan,根据每个点所在的角度来获取它在哪一条线上，根据所在线来分类点云:<br>output_cloud.reset(new CloudData::CLOUD());<br>SortPointCloudByScan(filtered_cloud, *output_cloud);</p>
 <p>// get feature points，这个函数是获得四种特征点的计算，包括曲率等:<br>GetFeaturePoints(*output_cloud, corner_sharp, corner_less_sharp, surf_flat, surf_less_flat);</p>
+<p>通过计算后输出了五个点云topic，四种特征点的点云以及filtered_cloud供后面计算残差使用</p>
 <h2 id="2-aloam-laser-odometry-node"><a href="#2-aloam-laser-odometry-node" class="headerlink" title="2.aloam_laser_odometry_node"></a>2.aloam_laser_odometry_node</h2><p>核心流程如下：<br>这个函数是对从scan_registration_node里面获取的特征，包括cornerpoint和planepoint。首先对首帧进行初始化，对第二帧的点云，进行kdtree结构化构造。<br>利用以下函数进行计算：<br>kdtreeCornerLast-&gt;nearestKSearch(pointSel, 1, pointSearchInd, pointSearchSqDis);</p>
 <ul>
 <li>Parameters（参数）<br>[in]    point    a given valid (i.e., finite) query point，这里指的是输入点的序列<br>[in]    k    the number of neighbors to search for 这里指的是每个点要找的邻居点个数<br>[out]    k_indices    the resultant indices of the neighboring points (must be resized to k a priori!) 输出的邻居点他们的序列号<br>[out]    k_sqr_distances    the resultant squared distances to the neighboring points (must be resized to k a priori!) 输出的邻居点他们的距离<br>从这函数可以看到，它找的是1个最近点，从这个点开始找所有的点，限制为往上3个点，向下3个点。面特征点也是一样的。这里找到了对应点所包含的线特征和面特征后，输入到前面所说的损失函数，进行求解。这样就完成了一次循环，再不断迭代。</li>
 </ul>
-<h2 id="3-aloam-mapping-node"><a href="#3-aloam-mapping-node" class="headerlink" title="3.aloam_mapping_node"></a>3.aloam_mapping_node</h2></div>
+<p>构造了特征点后，我们就可以利用公式进行分析了。</p>
+<h2 id="3-aloam-mapping-node"><a href="#3-aloam-mapping-node" class="headerlink" title="3.aloam_mapping_node"></a>3.aloam_mapping_node</h2><p>这部分是最后的建图部分，通过odometry_node得到了当前基于激光点云残差计算的位姿变化，从而也能计算出上一帧点云和当前点云的位姿变化，</p>
+<p>在这个代码里，他使用了一个函数叫void process()，就是整个建图的一个死循环流程。<br>（1）确认每个特征点都同步且不为空，为后面使用。</p>
+</div>
         </div>
         
             <div class="kratos-copyright text-center clearfix">
@@ -285,7 +290,7 @@ l_j 和 u_j分别为参数模块的下界和上界</script><p>Ceres的求解过�
     <script type="text/javascript">
         $(()=>{
             new QRCode("wechat-qr", {
-                text: "http://yoursite.com/2022/11/03/SLAM/z_LOAM_code/",
+                text: "http://yoursite.com/2022/11/03/SLAM/7_LOAM_code/",
                 width: 150,
                 height: 150,
                 correctLevel : QRCode.CorrectLevel.H
@@ -297,7 +302,7 @@ l_j 和 u_j分别为参数模块的下界和上界</script><p>Ceres的求解过�
             const qzoneBase     = "https://sns.qzone.qq.com/cgi-bin/qzshare/cgi_qzshare_onekey?";
             const facebookBase  = "https://www.facebook.com/sharer/sharer.php?";
             const twitterBase   = "https://twitter.com/intent/tweet?";
-            const hostUrl       = "http://yoursite.com/2022/11/03/SLAM/z_LOAM_code/";
+            const hostUrl       = "http://yoursite.com/2022/11/03/SLAM/7_LOAM_code/";
             const title         = "「激光SLAM学习 LOAM代码」";
             const excerpt       = `LOAM代码学习引自Github多传感器融合定位 三章 3D激光里程计2参考博客:slam中ceres的用法解析基于Aloam对特征匹配及雷达里程计的学习
 引言该部分主要对ceres库在slam算法中的应用以及基本用法进行介绍和学习，...`;
@@ -322,7 +327,7 @@ l_j 和 u_j分别为参数模块的下界和上界</script><p>Ceres的求解过�
                     <a class="tag-none-link" href="/tags/LOAM/" rel="tag">LOAM</a>, <a class="tag-none-link" href="/tags/SLAM/" rel="tag">SLAM</a>, <a class="tag-none-link" href="/tags/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0/" rel="tag">机器学习</a>
                 </div>
                 <div class="pull-date">
-                    <time datetime="2022-11-30T03:55:07.163Z" itemprop="dateModified">最后编辑：2022-11-30</time>
+                    <time datetime="2023-05-10T07:17:05.575Z" itemprop="dateModified">最后编辑：2023-05-10</time>
                 </div>
             </div>
         </footer>
@@ -373,7 +378,7 @@ l_j 和 u_j分别为参数模块的下界和上界</script><p>Ceres的求解过�
                 文章
             </span>
             <span class="count">
-                14
+                15
             </span>
         </a>
         <a class="meta-item" href="/categories/">
@@ -389,7 +394,7 @@ l_j 和 u_j分别为参数模块的下界和上界</script><p>Ceres的求解过�
                 标签
             </span>
             <span class="count">
-                16
+                17
             </span>
         </a>
     </div>
@@ -404,7 +409,7 @@ l_j 和 u_j分别为参数模块的下界和上界</script><p>Ceres的求解过�
   <aside id="krw-tags" class="widget widget-kratos-tags clearfix">
     <h4 class="widget-title"><i class="fa fa-tags"></i>标签聚合</h4>
       <div class="tag-clouds">
-        <a href="/tags/AI/" style="font-size: 0.7em;">AI</a> <a href="/tags/Agriculture/" style="font-size: 0.6em;">Agriculture</a> <a href="/tags/Deep-learning/" style="font-size: 0.75em;">Deep learning</a> <a href="/tags/LOAM/" style="font-size: 0.65em;">LOAM</a> <a href="/tags/Machinery/" style="font-size: 0.6em;">Machinery</a> <a href="/tags/Markdown/" style="font-size: 0.6em;">Markdown</a> <a href="/tags/N1/" style="font-size: 0.6em;">N1</a> <a href="/tags/NDT/" style="font-size: 0.6em;">NDT</a> <a href="/tags/Paper-Reading/" style="font-size: 0.6em;">Paper Reading</a> <a href="/tags/SLAM/" style="font-size: 0.8em;">SLAM</a> <a href="/tags/%E5%87%A0%E4%BD%95/" style="font-size: 0.6em;">几何</a> <a href="/tags/%E6%97%A5%E8%AF%AD%E5%AD%A6%E4%B9%A0/" style="font-size: 0.6em;">日语学习</a> <a href="/tags/%E6%97%A5%E9%BA%BB/" style="font-size: 0.6em;">日麻</a> <a href="/tags/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0/" style="font-size: 0.65em;">机器学习</a> <a href="/tags/%E7%89%B9%E5%BE%81%E6%8F%90%E5%8F%96/" style="font-size: 0.6em;">特征提取</a> <a href="/tags/%E7%95%B8%E5%8F%98%E8%A1%A5%E5%81%BF/" style="font-size: 0.6em;">畸变补偿</a>
+        <a href="/tags/AI/" style="font-size: 0.72em;">AI</a> <a href="/tags/Agriculture/" style="font-size: 0.6em;">Agriculture</a> <a href="/tags/Deep-learning/" style="font-size: 0.76em;">Deep learning</a> <a href="/tags/LIO-SAM/" style="font-size: 0.6em;">LIO_SAM</a> <a href="/tags/LOAM/" style="font-size: 0.64em;">LOAM</a> <a href="/tags/Machinery/" style="font-size: 0.6em;">Machinery</a> <a href="/tags/Markdown/" style="font-size: 0.6em;">Markdown</a> <a href="/tags/N1/" style="font-size: 0.6em;">N1</a> <a href="/tags/NDT/" style="font-size: 0.6em;">NDT</a> <a href="/tags/Paper-Reading/" style="font-size: 0.6em;">Paper Reading</a> <a href="/tags/SLAM/" style="font-size: 0.8em;">SLAM</a> <a href="/tags/%E5%87%A0%E4%BD%95/" style="font-size: 0.6em;">几何</a> <a href="/tags/%E6%97%A5%E8%AF%AD%E5%AD%A6%E4%B9%A0/" style="font-size: 0.6em;">日语学习</a> <a href="/tags/%E6%97%A5%E9%BA%BB/" style="font-size: 0.6em;">日麻</a> <a href="/tags/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0/" style="font-size: 0.68em;">机器学习</a> <a href="/tags/%E7%89%B9%E5%BE%81%E6%8F%90%E5%8F%96/" style="font-size: 0.6em;">特征提取</a> <a href="/tags/%E7%95%B8%E5%8F%98%E8%A1%A5%E5%81%BF/" style="font-size: 0.6em;">畸变补偿</a>
       </div>
   </aside>
 
@@ -415,6 +420,12 @@ l_j 和 u_j分别为参数模块的下界和上界</script><p>Ceres的求解过�
   <div class="tab-content">
       <ul class="list-group">
         
+        
+          
+          
+            <a class="list-group-item" href="/2023/05/10/SLAM/8_LIO_SAM/"><i class="fa  fa-book"></i> 激光SLAM学习</a>
+            
+          
         
           
           
@@ -436,16 +447,12 @@ l_j 和 u_j分别为参数模块的下界和上界</script><p>Ceres的求解过�
         
           
           
-            <a class="list-group-item" href="/2022/11/03/SLAM/z_LOAM_code/"><i class="fa  fa-book"></i> 激光SLAM学习 LOAM代码</a>
+            <a class="list-group-item" href="/2022/11/03/SLAM/7_LOAM_code/"><i class="fa  fa-book"></i> 激光SLAM学习 LOAM代码</a>
             
           
         
           
-          
-            <a class="list-group-item" href="/2022/10/27/SLAM/5_Geometry_feature/"><i class="fa  fa-book"></i> 激光SLAM学习 点云特征提取与位姿优化</a>
             
-          
-        
           
             
           

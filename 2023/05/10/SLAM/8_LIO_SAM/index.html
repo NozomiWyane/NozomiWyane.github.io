@@ -1,0 +1,789 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+    <head>
+  <!-- 元数据 -->
+  <meta charset="utf-8">
+  
+  
+  <title>激光SLAM学习 | Nozomiの優しい空間</title>
+  <meta name="author" content="Nozomi" />
+  <meta http-equiv="Cache-Control" content="no-transform" />
+  <meta http-equiv="Cache-Control" content="no-siteapp" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  <meta name="robots" content="index,follow" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
+  <meta name="format-detection" content="telphone=no, email=no" />
+  
+    <meta name="keywords" content="LIO_SAM, SLAM, 机器学习" />
+  
+  <meta name="description" content="LIO_SAM代码学习LIO_SAM全称是Lidar-Internal-Odometry Smoothing and Mapping，就是利用Lidar和IMU两个传感器进行融合得到Odometry，再输入到GTSAM库中构建图优化结构，从而实现Mapping。本学习新的参考以下博客，对我帮助非常大。LIO_SAM代码注释详解LIO_SAM工程LIO_SAM论文地址整体的流程在github中也给出">
+<meta property="og:type" content="article">
+<meta property="og:title" content="激光SLAM学习">
+<meta property="og:url" content="http://yoursite.com/2023/05/10/SLAM/8_LIO_SAM/index.html">
+<meta property="og:site_name" content="Nozomiの優しい空間">
+<meta property="og:description" content="LIO_SAM代码学习LIO_SAM全称是Lidar-Internal-Odometry Smoothing and Mapping，就是利用Lidar和IMU两个传感器进行融合得到Odometry，再输入到GTSAM库中构建图优化结构，从而实现Mapping。本学习新的参考以下博客，对我帮助非常大。LIO_SAM代码注释详解LIO_SAM工程LIO_SAM论文地址整体的流程在github中也给出">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="http://yoursite.com/images/slam/liosam_framework.png">
+<meta property="article:published_time" content="2023-05-10T07:10:18.166Z">
+<meta property="article:modified_time" content="2023-05-11T02:18:08.635Z">
+<meta property="article:author" content="Nozomi">
+<meta property="article:tag" content="SLAM">
+<meta property="article:tag" content="机器学习">
+<meta property="article:tag" content="LIO_SAM">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="http://yoursite.com/images/slam/liosam_framework.png">
+<meta name="twitter:site" content="@dOqLAto0tk0RefS">
+  
+  <!-- 站点验证相关 -->
+  
+    
+    
+    
+  
+  <!-- 样式表文件 -->
+  <link rel="stylesheet" id="kratos-css" href="/css/kratosr.min.css" media="all"></script>
+  
+    <link rel="stylesheet" id="darkmode-css" href="/css/kr-color-dark.min.css" media="(prefers-color-scheme: dark)"></script>
+    <script src="/js/kr-dark.min.js"></script>
+  
+  
+    <link rel="stylesheet" id="highlight-css" href="/css/highlight/night-eighties.min.css" media="all"></script>
+  
+  
+  <link rel="stylesheet" id="fontawe-css" href="/vendors/font-awesome@4.7.0/css/font-awesome.min.css" media="all"></script>
+  <link rel="stylesheet" id="nprogress-css" href="/vendors/nprogress@0.2.0/nprogress.css" media="all"></script>
+  
+  
+    <link rel="stylesheet" href="/vendors/aplayer@1.10.1/dist/APlayer.min.css"></script>
+  
+  
+    <link rel="stylesheet" href="/vendors/@fancyapps/fancybox@3.5.7/dist/jquery.fancybox.min.css"></script>
+  
+  <!-- 不得不预先加载的一些JS文件 -->
+  <script src="/vendors/jquery@3.6.0/dist/jquery.min.js"></script>
+  
+    <script src="/vendors/qrcode_js@1.0.0/qrcode.min.js"></script>
+  
+  
+  <style>
+    
+      .kratos-cover.kratos-cover-2 {
+        background-image: url('/images/top-cover.jpg');
+      }
+    
+    
+      @media(min-width:768px) {
+        body.custom-background {
+          background-image: url('/images/background.jpeg');
+        }
+      }
+    
+  </style>
+  
+<!-- hexo injector head_end start -->
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.12.0/dist/katex.min.css">
+<!-- hexo injector head_end end --><meta name="generator" content="Hexo 6.3.0"></head>
+
+
+    <body class="custom-background">
+        <div id="kratos-wrapper">
+    <div id="kratos-page">
+        <div id="kratos-header">
+            <header id="kratos-desktop-topnav" class="kratos-topnav">
+                <div class="container">
+                    <div class="nav-header">
+                        <nav id="kratos-menu-wrap">
+                            <ul id="kratos-primary-menu" class="sf-menu">
+                                
+                                    
+                                    
+                                        
+                                            <li><a href="/"><i class="fa fa-home"></i>首页</a></li>
+                                        
+                                    
+                                        
+                                            <li><a href="/archives/"><i class="fa fa-file"></i>档案馆</a></li>
+                                        
+                                    
+                                        
+                                            <li><a href="/friends/"><i class="fa fa-paw"></i>好伙伴</a></li>
+                                        
+                                    
+                                        
+                                            <li>
+                                                <a><i class="fa fa-link"></i>链接</a>
+                                                <ul class="sub-menu">
+                                                    
+                                                        
+                                                    
+                                                        
+                                                            <li><a target="_blank" rel="noopener" href="https://nozomiwyane.github.io/">作者博客</a></li>
+                                                        
+                                                    
+                                                        
+                                                            <li><a target="_blank" rel="noopener" href="https://github.com/NozomiWyane/NozomiWyane.github.io">项目链接</a></li>
+                                                        
+                                                    
+                                                </ul>
+                                            </li>
+                                        
+                                    
+                                
+                            </ul>
+                        </nav>
+                    </div>
+                </div>
+            </header>
+            <header id="kratos-mobile-topnav" class="kratos-topnav">
+                <div class="container">
+                    <div class="color-logo"><a href="/">Nozomiの優しい空間</a></div>
+                    <div class="nav-toggle">
+                        <a class="kratos-nav-toggle js-kratos-nav-toggle">
+                            <i></i>
+                        </a>
+                    </div>
+                </div>
+            </header>
+        </div>
+        <div class="kratos-start kratos-hero-2">
+            <!-- <div class="kratos-overlay"></div> -->
+            <div class="kratos-cover kratos-cover-2 text-center">
+                <div class="desc desc2 animate-box">
+                    <a href="/">
+                        <h2>Nozomiの優しい空間</h2> <br />
+                        <span>自分が嫌いの人は、他人を好きように、信頼するようにできないでしょう。</span>
+                    </a>
+                </div>
+            </div>
+        </div>
+
+        <div id="kratos-blog-post">
+            <div class="container">
+                <div id="main" class="row">
+                    
+
+        
+
+            <section class="col-md-8">
+
+        
+
+            <article itemscope itemtype="https://schema.org/Article">
+    
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2023/05/10/SLAM/8_LIO_SAM/">
+    <div class="kratos-hentry kratos-post-inner clearfix">
+        <header class="kratos-entry-header">
+            
+                <h1 class="kratos-entry-title text-center" itemprop="name headline">激光SLAM学习</h1>
+            
+            
+            <ul class="kratos-post-meta text-center">
+                <li><time datetime="2023-05-10T07:10:18.166Z" itemprop="datePublished"><i class="fa fa-calendar"></i> 2023-05-10</time></li>
+                <li itemprop="author" itemscope itemtype="https://schema.org/Person">
+                    <i class="fa fa-user"></i> 作者 <span itemprop="name">Nozomi</span>
+                </li>
+                <li>
+                    <i class="fa fa-edit"></i> 
+                    
+                    
+                        ~12.69K
+                    
+                    字
+                </li>
+                
+            </ul>
+        </header>
+        <div class="kratos-post-content">
+            
+            <div id="expire-alert" class="alert alert-warning hidden" role="alert">
+                <div class="icon"><i class="fa fa-warning"></i></div>
+                <div class="text"><p>本文最后编辑于 <time datetime="1683771488635"></time> 前，其中的内容可能需要更新。</p></div>
+            </div>
+            
+            
+            <hr />
+            <div itemprop="articleBody"><h1 id="LIO-SAM代码学习"><a href="#LIO-SAM代码学习" class="headerlink" title="LIO_SAM代码学习"></a>LIO_SAM代码学习</h1><p>LIO_SAM全称是Lidar-Internal-Odometry Smoothing and Mapping，就是利用Lidar和IMU两个传感器进行融合得到Odometry，再输入到GTSAM库中构建图优化结构，从而实现Mapping。本学习新的参考以下博客，对我帮助非常大。<br><a target="_blank" rel="noopener" href="https://github.com/smilefacehh/LIO-SAM-DetailedNote">LIO_SAM代码注释详解</a><br><a target="_blank" rel="noopener" href="https://github.com/TixiaoShan/LIO-SAM">LIO_SAM工程</a><br><a target="_blank" rel="noopener" href="https://github.com/TixiaoShan/LIO-SAM/blob/master/config/doc/paper.pdf">LIO_SAM论文地址</a><br>整体的流程在github中也给出了，很好地解释了如下图：<br><img src="/images/slam/liosam_framework.png" alt="LIO_SAM framework and code structure"><br>从中我们可以看到整体代码是非常轻量级的，一共只有四个cpp文件，对应四个功能：</p>
+<ol>
+<li><p>ImageProjection.cpp:<br>激光运动畸变校正。利用当前帧起止时刻之间的IMU数据、IMU里程计数据计算预积分，得到每一时刻的激光点位姿，从而变换到初始时刻激光点坐标系下，实现校正。</p>
+</li>
+<li><p>FeatureExtraction.cpp<br>提取特征。对经过运动畸变校正之后的当前帧激光点云，计算每个点的曲率，进而提取角点、平面点特征。</p>
+</li>
+<li><p>IMUPreintegration.cpp<br>IMU预积分模块，在该预积分模块中有两个类：</p>
+<h3 id="TransformFusion类"><a href="#TransformFusion类" class="headerlink" title="TransformFusion类"></a>TransformFusion类</h3></li>
+</ol>
+<p>订阅激光里程计（来自MapOptimization，lio_sam/mapping/odometry）和IMU里程计（odomTopic+”_incremental”，来自ImuPreintegration类），<br>根据前一时刻激光里程计，和该时刻到当前时刻的IMU里程计变换增量，计算当前时刻IMU里程计(odomTopic)；rviz展示IMU里程计轨迹（局部）。</p>
+<p>在该类中，定义了两个handler，<br>(1) lidarOdometryHandler<br>void lidarOdometryHandler(const nav_msgs::Odometry::ConstPtr&amp; odomMsg)<br>    {<br>        std::lock_guard<std::mutex> lock(mtx);<br>        // 激光里程计对应变换矩阵<br>        lidarOdomAffine = odom2affine(*odomMsg);<br>        // 激光里程计时间戳<br>        lidarOdomTime = odomMsg-&gt;header.stamp.toSec();<br>    }<br>激光里程计，只是坐标转换和获取时间戳；</std::mutex></p>
+<p>(2) imuOdometryHandler<br>void imuOdometryHandler(const nav_msgs::Odometry::ConstPtr&amp; odomMsg)</p>
+<p>而对于IMU里程计，是通过上一帧时刻中的激光里程计对应的imu里程计位姿，以及当前imu位姿算出imu的增量，最后得到当前时刻的imu里程计位姿<br>// 最近的一帧激光里程计时刻对应imu里程计位姿<br> Eigen::Affine3f imuOdomAffineFront = odom2affine(imuOdomQueue.front());<br>// 当前时刻imu里程计位姿<br>Eigen::Affine3f imuOdomAffineBack = odom2affine(imuOdomQueue.back());<br>// imu里程计增量位姿变换<br>Eigen::Affine3f imuOdomAffineIncre = imuOdomAffineFront.inverse() <em> imuOdomAffineBack;<br>// 最近的一帧激光里程计位姿 </em> imu里程计增量位姿变换 = 当前时刻imu里程计位姿<br>Eigen::Affine3f imuOdomAffineLast = lidarOdomAffine * imuOdomAffineIncre;</p>
+<p>从这后面的代码是发布当前里程计的位姿，坐标系变换关系以及其位姿的路径。</p>
+<h3 id="ImuPreintegration类"><a href="#ImuPreintegration类" class="headerlink" title="ImuPreintegration类"></a>ImuPreintegration类</h3><p>这里面同样也订阅了两个topic，关于激光里程计的（lio_sam/mapping/odometry_incremental，注意这里有incremental）以及IMU里程计（imuTopic），而输出是IMUodometry(odomTopic+”_incremental”)<br>用激光里程计，两帧激光里程计之间的IMU预计分量构建因子图，优化当前帧的状态（包括位姿、速度、偏置）;<br>以优化后的状态为基础，施加IMU预计分量，得到每一时刻的IMU里程计。</p>
+<p>(1) imuhandler<br>这里的imu是Topic是原始数据，是真正的imu里程计，即odomTopic+”_incremental”。<br>用上一帧激光里程计时刻对应的状态、偏置，施加从该时刻开始到当前时刻的imu预计分量，得到当前时刻的状态，也就是imu里程计<br>imu里程计位姿转到lidar系，发布里程计。</p>
+<p>(2) odometryhandler<br>这里从mapping节点中得到的激光里程计（lio_sam/mapping/odometry_incremental）进行分析。这里最重要的是利用gtsam库构建图优化因子，来进行计算。</p>
+<ul>
+<li><p>0、使用ISAM2优化器对各个因子以及imu数据进行初始化<br>// 0. 系统初始化，第一帧<br> if (systemInitialized == false)<br> {</p>
+<pre><code> // 重置ISAM2优化器
+ resetOptimization();
+
+ // 从imu优化队列中删除当前帧激光里程计时刻之前的imu数据
+ while (!imuQueOpt.empty())
+ &#123;
+     if (ROS_TIME(&amp;imuQueOpt.front()) &lt; currentCorrectionTime - delta_t)
+     &#123;
+         lastImuT_opt = ROS_TIME(&amp;imuQueOpt.front());
+         imuQueOpt.pop_front();
+     &#125;
+     else
+         break;
+ &#125;
+ // 添加里程计位姿先验因子
+ prevPose_ = lidarPose.compose(lidar2Imu);
+ gtsam::PriorFactor&lt;gtsam::Pose3&gt; priorPose(X(0), prevPose_, priorPoseNoise);
+ graphFactors.add(priorPose);
+ // 添加速度先验因子
+ prevVel_ = gtsam::Vector3(0, 0, 0);
+ gtsam::PriorFactor&lt;gtsam::Vector3&gt; priorVel(V(0), prevVel_, priorVelNoise);
+ graphFactors.add(priorVel);
+ // 添加imu偏置先验因子
+ prevBias_ = gtsam::imuBias::ConstantBias();
+ gtsam::PriorFactor&lt;gtsam::imuBias::ConstantBias&gt; priorBias(B(0), prevBias_, priorBiasNoise);
+ graphFactors.add(priorBias);
+ // 变量节点赋初值
+ graphValues.insert(X(0), prevPose_);
+ graphValues.insert(V(0), prevVel_);
+ graphValues.insert(B(0), prevBias_);
+ // 优化一次
+ optimizer.update(graphFactors, graphValues);
+ graphFactors.resize(0);
+ graphValues.clear();
+
+ // 重置优化之后的偏置
+ imuIntegratorImu_-&gt;resetIntegrationAndSetBias(prevBias_);
+ imuIntegratorOpt_-&gt;resetIntegrationAndSetBias(prevBias_);
+
+ key = 1;
+ systemInitialized = true;
+ return;
+</code></pre><p> }<br>初始化后，他执行三个步骤：</p>
+</li>
+<li><p>1、每隔100帧激光里程计，重置ISAM2优化器，添加里程计、速度、偏置先验因子，执行优化<br>if (key == 100)<br> {</p>
+<pre><code> // 前一帧的位姿、速度、偏置噪声模型
+ gtsam::noiseModel::Gaussian::shared_ptr updatedPoseNoise = gtsam::noiseModel::Gaussian::Covariance(optimizer.marginalCovariance(X(key-1)));
+ gtsam::noiseModel::Gaussian::shared_ptr updatedVelNoise  = gtsam::noiseModel::Gaussian::Covariance(optimizer.marginalCovariance(V(key-1)));
+ gtsam::noiseModel::Gaussian::shared_ptr updatedBiasNoise = gtsam::noiseModel::Gaussian::Covariance(optimizer.marginalCovariance(B(key-1)));
+ // 重置ISAM2优化器
+ resetOptimization();
+ // 添加位姿先验因子，用前一帧的值初始化
+ gtsam::PriorFactor&lt;gtsam::Pose3&gt; priorPose(X(0), prevPose_, updatedPoseNoise);
+ graphFactors.add(priorPose);
+ // 添加速度先验因子，用前一帧的值初始化
+ gtsam::PriorFactor&lt;gtsam::Vector3&gt; priorVel(V(0), prevVel_, updatedVelNoise);
+ graphFactors.add(priorVel);
+ // 添加偏置先验因子，用前一帧的值初始化
+ gtsam::PriorFactor&lt;gtsam::imuBias::ConstantBias&gt; priorBias(B(0), prevBias_, updatedBiasNoise);
+ graphFactors.add(priorBias);
+ // 变量节点赋初值，用前一帧的值初始化
+ graphValues.insert(X(0), prevPose_);
+ graphValues.insert(V(0), prevVel_);
+ graphValues.insert(B(0), prevBias_);
+ // 优化一次
+ optimizer.update(graphFactors, graphValues);
+ graphFactors.resize(0);
+ graphValues.clear();
+
+ key = 1;
+</code></pre><p> }</p>
+</li>
+<li><p>2、计算前一帧激光里程计与当前帧激光里程计之间的imu预积分量，用前一帧状态施加预积分量得到当前帧初始状态估计，主要是利用gtsam库进行分析，这里主要是对imu预积分模块输入<br>while (!imuQueOpt.empty())<br> {</p>
+<pre><code> // 提取前一帧与当前帧之间的imu数据，计算预积分
+ sensor_msgs::Imu *thisImu = &amp;imuQueOpt.front(); //上一帧
+ double imuTime = ROS_TIME(thisImu); //上一帧的时刻
+ if (imuTime &lt; currentCorrectionTime - delta_t) //距离上一帧的时间大于 delta_t 进行积分
+ &#123;
+     // 两帧imu数据时间间隔
+     double dt = (lastImuT_opt &lt; 0) ? (1.0 / 500.0) : (imuTime - lastImuT_opt);
+     // imu预积分数据输入：加速度、角速度、dt
+     imuIntegratorOpt_-&gt;integrateMeasurement(
+             gtsam::Vector3(thisImu-&gt;linear_acceleration.x, thisImu-&gt;linear_acceleration.y, thisImu-&gt;linear_acceleration.z),
+             gtsam::Vector3(thisImu-&gt;angular_velocity.x,    thisImu-&gt;angular_velocity.y,    thisImu-&gt;angular_velocity.z), dt);
+
+     lastImuT_opt = imuTime;
+     // 从队列中删除已经处理的imu数据
+     imuQueOpt.pop_front();
+ &#125;
+ else
+     break;
+</code></pre><p> }<br> // 添加imu预积分因子，前面是预积分器imuIntegratorOpt<em><br> const gtsam::PreintegratedImuMeasurements&amp; preint_imu = dynamic_cast<const gtsam::preintegratedimumeasurements&>(*imuIntegratorOpt</const></em>);<br> // 参数：前一帧位姿，前一帧速度，当前帧位姿，当前帧速度，前一帧偏置，预计分量<br> gtsam::ImuFactor imu_factor(X(key - 1), V(key - 1), X(key), V(key), B(key - 1), preint_imu);<br> graphFactors.add(imu_factor);<br> // 添加imu偏置因子，前一帧偏置，当前帧偏置，观测值，噪声协方差；deltaTij()是积分段的时间<br> graphFactors.add(gtsam::BetweenFactor<gtsam::imuBias::ConstantBias>(B(key - 1), B(key), gtsam::imuBias::ConstantBias(),</gtsam::imuBias::ConstantBias></p>
+<pre><code>                 gtsam::noiseModel::Diagonal::Sigmas(sqrt(imuIntegratorOpt_-&gt;deltaTij()) * noiseModelBetweenBias)));
+</code></pre><p> // 添加位姿因子<br> gtsam::Pose3 curPose = lidarPose.compose(lidar2Imu);<br> gtsam::PriorFactor<gtsam::Pose3> pose<em>factor(X(key), curPose, degenerate ? correctionNoise2 : correctionNoise);<br> graphFactors.add(pose_factor);<br> // 用前一帧的状态、偏置，施加imu预计分量，得到当前帧的状态，这里就直接输出了初值<br> gtsam::NavState propState</em> = imuIntegratorOpt<em>-&gt;predict(prevState</em>, prevBias<em>);<br> // 变量节点赋初值<br> graphValues.insert(X(key), propState</em>.pose());<br> graphValues.insert(V(key), propState<em>.v());<br> graphValues.insert(B(key), prevBias</em>);<br> // 优化<br> optimizer.update(graphFactors, graphValues);<br> optimizer.update();<br> graphFactors.resize(0);<br> graphValues.clear();<br> // 优化结果<br> gtsam::Values result = optimizer.calculateEstimate();<br> // 更新当前帧位姿、速度<br> prevPose<em>  = result.at<gtsam::Pose3>(X(key));<br> prevVel</gtsam::Pose3></em>   = result.at<gtsam::Vector3>(V(key));<br> // 更新当前帧状态<br> prevState<em> = gtsam::NavState(prevPose</em>, prevVel<em>);<br> // 更新当前帧imu偏置<br> prevBias</em>  = result.at<gtsam::imuBias::ConstantBias>(B(key));<br> // 重置预积分器，设置新的偏置，这样下一帧激光里程计进来的时候，预积分量就是两帧之间的增量<br> imuIntegratorOpt<em>-&gt;resetIntegrationAndSetBias(prevBias</em>);</gtsam::imuBias::ConstantBias></gtsam::Vector3></gtsam::Pose3></p>
+<p> // imu因子图优化结果，速度或者偏置过大，认为失败<br> if (failureDetection(prevVel<em>, prevBias</em>))<br> {</p>
+<pre><code> // 重置参数
+ resetParams();
+ return;
+</code></pre><p> }<br> 在这里，我们得到了</p>
+</li>
+<li><p>3、优化之后，执行重传播；优化更新了imu的偏置，用最新的偏置重新计算当前激光里程计时刻之后的imu预积分，这个预积分用于计算每时刻位姿<br>prevStateOdom = prevState<em>;<br> prevBiasOdom  = prevBias</em>;<br> // 从imu队列中删除当前激光里程计时刻之前的imu数据<br> double lastImuQT = -1;<br> while (!imuQueImu.empty() &amp;&amp; ROS_TIME(&amp;imuQueImu.front()) &lt; currentCorrectionTime - delta_t)<br> {</p>
+<pre><code> lastImuQT = ROS_TIME(&amp;imuQueImu.front());
+ imuQueImu.pop_front();
+</code></pre><p> }<br> // 对剩余的imu数据计算预积分<br> if (!imuQueImu.empty())<br> {</p>
+<pre><code> // 重置预积分器和最新的偏置
+ imuIntegratorImu_-&gt;resetIntegrationAndSetBias(prevBiasOdom);
+ // 计算预积分
+ for (int i = 0; i &lt; (int)imuQueImu.size(); ++i)
+ &#123;
+     sensor_msgs::Imu *thisImu = &amp;imuQueImu[i];
+     double imuTime = ROS_TIME(thisImu);
+     double dt = (lastImuQT &lt; 0) ? (1.0 / 500.0) :(imuTime - lastImuQT);
+
+     imuIntegratorImu_-&gt;integrateMeasurement(gtsam::Vector3(thisImu-&gt;linear_acceleration.x, thisImu-&gt;linear_acceleration.y, thisImu-&gt;linear_acceleration.z),
+                                             gtsam::Vector3(thisImu-&gt;angular_velocity.x,    thisImu-&gt;angular_velocity.y,    thisImu-&gt;angular_velocity.z), dt);
+     lastImuQT = imuTime;
+ &#125;
+</code></pre><p> }</p>
+<p> ++key;<br> doneFirstOpt = true;</p>
+</li>
+</ul>
+<ol>
+<li>MapOptimization.cpp<br>主要的类：mapOptimization</li>
+</ol>
+<ul>
+<li>输入（subscribe topic）：<br>// 订阅当前激光帧点云信息，来自featureExtraction<br>  subCloud = nh.subscribe<lio_sam::cloud_info>(“lio_sam/feature/cloud_info”, 1, &amp;mapOptimization::laserCloudInfoHandler, this, ros::TransportHints().tcpNoDelay());<br>  // 订阅GPS里程计<br>  subGPS   = nh.subscribe<nav_msgs::Odometry> (gpsTopic, 200, &amp;mapOptimization::gpsHandler, this, ros::TransportHints().tcpNoDelay());<br>  // 订阅来自外部闭环检测程序提供的闭环数据，本程序没有提供，这里实际没用上<br>  subLoop  = nh.subscribe<std_msgs::Float64MultiArray>(“lio_loop/loop_closure_detection”, 1, &amp;mapOptimization::loopInfoHandler, this, ros::TransportHints().tcpNoDelay());</std_msgs::Float64MultiArray></nav_msgs::Odometry></lio_sam::cloud_info></li>
+<li><p>输出（publish topic）<br>  // 发布历史关键帧里程计<br>  pubKeyPoses                 = nh.advertise<sensor_msgs::PointCloud2>(“lio_sam/mapping/trajectory”, 1);<br>  // 发布局部关键帧map的特征点云<br>  pubLaserCloudSurround       = nh.advertise<sensor_msgs::PointCloud2>(“lio_sam/mapping/map_global”, 1);<br>  // 发布激光里程计，rviz中表现为坐标轴<br>  pubLaserOdometryGlobal      = nh.advertise<nav_msgs::Odometry> (“lio_sam/mapping/odometry”, 1);<br>  // 发布激光里程计，它与上面的激光里程计基本一样，只是roll、pitch用imu数据加权平均了一下，z做了限制<br>  pubLaserOdometryIncremental = nh.advertise<nav_msgs::Odometry> (“lio_sam/mapping/odometry_incremental”, 1);<br>  // 发布激光里程计路径，rviz中表现为载体的运行轨迹<br>  pubPath                     = nh.advertise<nav_msgs::Path>(“lio_sam/mapping/path”, 1);<br>  // 发布地图保存服务<br>  srvSaveMap  = nh.advertiseService(“lio_sam/save_map”, &amp;mapOptimization::saveMapService, this);</nav_msgs::Path></nav_msgs::Odometry></nav_msgs::Odometry></sensor_msgs::PointCloud2></sensor_msgs::PointCloud2></p>
+<p>  // 发布闭环匹配关键帧局部map<br>  pubHistoryKeyFrames   = nh.advertise<sensor_msgs::PointCloud2>(“lio_sam/mapping/icp_loop_closure_history_cloud”, 1);<br>  // 发布当前关键帧经过闭环优化后的位姿变换之后的特征点云<br>  pubIcpKeyFrames       = nh.advertise<sensor_msgs::PointCloud2>(“lio_sam/mapping/icp_loop_closure_corrected_cloud”, 1);<br>  // 发布闭环边，rviz中表现为闭环帧之间的连线<br>  pubLoopConstraintEdge = nh.advertise<visualization_msgs::MarkerArray>(“/lio_sam/mapping/loop_closure_constraints”, 1);</visualization_msgs::MarkerArray></sensor_msgs::PointCloud2></sensor_msgs::PointCloud2></p>
+<p>  // 发布局部map的降采样平面点集合<br>  pubRecentKeyFrames    = nh.advertise<sensor_msgs::PointCloud2>(“lio_sam/mapping/map_local”, 1);<br>  // 发布历史帧（累加的）的角点、平面点降采样集合<br>  pubRecentKeyFrame     = nh.advertise<sensor_msgs::PointCloud2>(“lio_sam/mapping/cloud_registered”, 1);<br>  // 发布当前帧原始点云配准之后的点云<br>  pubCloudRegisteredRaw = nh.advertise<sensor_msgs::PointCloud2>(“lio_sam/mapping/cloud_registered_raw”, 1);</sensor_msgs::PointCloud2></sensor_msgs::PointCloud2></sensor_msgs::PointCloud2></p>
+</li>
+</ul>
+<p>可以看到输入主要是两个一个是激光特征点云，另一个是gps的里程计（gps的输入），我们分析数据流先从输入开始，先看这两个输入的handler函数做了什么。<br>（1）laserCloudInfoHandler<br>主要功能：<br> 1、scan-to-map匹配。提取布局关键帧map的特征点，与当前帧特征点执行scan-to-map匹配，更新当前帧的位姿（laserOdometry）。<br> 2、因子图优化。添加激光里程计因子、GPS因子、闭环因子，执行因子图优化，更新所有关键帧位姿。</p>
+<p>代码流程：<br>void laserCloudInfoHandler(const lio_sam::cloud_infoConstPtr&amp; msgIn)<br>{<br>    // 当前激光帧时间戳<br>    timeLaserInfoStamp = msgIn-&gt;header.stamp;<br>    timeLaserInfoCur = msgIn-&gt;header.stamp.toSec();</p>
+<pre><code>// 提取当前激光帧角点、平面点集合
+cloudInfo = *msgIn;
+pcl::fromROSMsg(msgIn-&gt;cloud_corner,  *laserCloudCornerLast);
+pcl::fromROSMsg(msgIn-&gt;cloud_surface, *laserCloudSurfLast);
+
+std::lock_guard&lt;std::mutex&gt; lock(mtx);
+
+// mapping执行频率控制
+static double timeLastProcessing = -1;
+if (timeLaserInfoCur - timeLastProcessing &gt;= mappingProcessInterval)
+&#123;
+    timeLastProcessing = timeLaserInfoCur;
+
+    // 当前帧位姿初始化
+    // 1、如果是第一帧，用原始imu数据的RPY初始化当前帧位姿（旋转部分）
+    // 2、后续帧，用imu里程计计算两帧之间的增量位姿变换，作用于前一帧的激光位姿，得到当前帧激光位姿
+    updateInitialGuess();
+</code></pre><div class="xControl">
+    <div class="xHeading"><div class="xIcon"><i class="fa fa-plus"></i></div><span>updateInitialGuess();</span></div>
+    <div class="xContent"><div class="inner">
+        <p>被折叠的内容 1<br>被折叠的内容 2<br>…</p>
+ 
+    </div></div>
+    </div>
+<pre><code>    // 提取局部角点、平面点云集合，加入局部map
+    // 1、对最近的一帧关键帧，搜索时空维度上相邻的关键帧集合，降采样一下
+    // 2、对关键帧集合中的每一帧，提取对应的角点、平面点，加入局部map中
+    extractSurroundingKeyFrames();
+
+    // 当前激光帧角点、平面点集合降采样
+    downsampleCurrentScan();
+
+    // scan-to-map优化当前帧位姿
+    // 1、要求当前帧特征点数量足够多，且匹配的点数够多，才执行优化
+    // 2、迭代30次（上限）优化
+    //    1) 当前激光帧角点寻找局部map匹配点
+    //       a.更新当前帧位姿，将当前帧角点坐标变换到map系下，在局部map中查找5个最近点，距离小于1m，且5个点构成直线（用距离中心点的协方差矩阵，特征值进行判断），则认为匹配上了
+    //       b.计算当前帧角点到直线的距离、垂线的单位向量，存储为角点参数
+    //    2) 当前激光帧平面点寻找局部map匹配点
+    //       a.更新当前帧位姿，将当前帧平面点坐标变换到map系下，在局部map中查找5个最近点，距离小于1m，且5个点构成平面（最小二乘拟合平面），则认为匹配上了
+    //       b.计算当前帧平面点到平面的距离、垂线的单位向量，存储为平面点参数
+    //    3) 提取当前帧中与局部map匹配上了的角点、平面点，加入同一集合
+    //    4) 对匹配特征点计算Jacobian矩阵，观测值为特征点到直线、平面的距离，构建高斯牛顿方程，迭代优化当前位姿，存transformTobeMapped
+    // 3、用imu原始RPY数据与scan-to-map优化后的位姿进行加权融合，更新当前帧位姿的roll、pitch，约束z坐标
+    scan2MapOptimization();
+
+    // 设置当前帧为关键帧并执行因子图优化
+    // 1、计算当前帧与前一帧位姿变换，如果变化太小，不设为关键帧，反之设为关键帧
+    // 2、添加激光里程计因子、GPS因子、闭环因子
+    // 3、执行因子图优化
+    // 4、得到当前帧优化后位姿，位姿协方差
+    // 5、添加cloudKeyPoses3D，cloudKeyPoses6D，更新transformTobeMapped，添加当前关键帧的角点、平面点集合
+    saveKeyFramesAndFactor();
+
+    // 更新因子图中所有变量节点的位姿，也就是所有历史关键帧的位姿，更新里程计轨迹
+    correctPoses();
+
+    // 发布激光里程计
+    publishOdometry();
+
+    // 发布里程计、点云、轨迹
+    // 1、发布历史关键帧位姿集合
+    // 2、发布局部map的降采样平面点集合
+    // 3、发布历史帧（累加的）的角点、平面点降采样集合
+    // 4、发布里程计轨迹
+    publishFrames();
+&#125;
+</code></pre><p>}</p>
+<p>(3)闭环检测。在历史关键帧中找候选闭环匹配帧，执行scan-to-map匹配，得到位姿变换，构建闭环因子，加入到因子图中一并优化。</p>
+</div>
+        </div>
+        
+            <div class="kratos-copyright text-center clearfix">
+                <h5 itemprop="copyrightNotice">本作品采用 <a rel="license nofollow" target="_blank" href="https://creativecommons.org/licenses/by-sa/4.0/">知识共享署名-相同方式共享 4.0 国际许可协议</a> 进行许可</h5>
+            </div>
+        
+        <footer class="kratos-entry-footer clearfix">
+            
+                <div class="post-like-donate text-center clearfix" id="post-like-donate">
+                
+                
+                    <a class="share" href="javascript:;"><i class="fa fa-share-alt"></i> 分享</a>
+                    <div class="share-wrap" style="display: none;">
+    <div class="share-group">
+        <a href="javascript:;" class="share-plain qq" onclick="share('qq');" rel="nofollow">
+            <div class="icon-wrap">
+                <i class="fa fa-qq"></i>
+            </div>
+        </a>
+        <a href="javascript:;" class="share-plain qzone" onclick="share('qzone');" rel="nofollow">
+            <div class="icon-wrap">
+                <i class="fa fa-star"></i>
+            </div>
+        </a>
+        <a href="javascript:;" class="share-plain weixin pop style-plain" rel="nofollow">
+            <div class="icon-wrap">
+                <i class="fa fa-weixin"></i>
+            </div>
+            <div class="share-int">
+                <div class="qrcode" id="wechat-qr"></div>
+                <p>打开微信“扫一扫”，打开网页后点击屏幕右上角分享按钮</p>
+            </div>
+        </a>
+        <a href="javascript:;" class="share-plain weibo" onclick="share('weibo');" rel="nofollow">
+            <div class="icon-wrap">
+                <i class="fa fa-weibo"></i>
+            </div>
+        </a>
+        <a href="javascript:;" class="share-plain facebook style-plain" onclick="share('facebook');" rel="nofollow">
+            <div class="icon-wrap">
+                <i class="fa fa-facebook"></i>
+            </div>
+        </a>
+        <a href="javascript:;" class="share-plain twitter style-plain" onclick="share('twitter');" rel="nofollow">
+            <div class="icon-wrap">
+                <i class="fa fa-twitter"></i>
+            </div>
+        </a>
+    </div>
+    <script type="text/javascript">
+        $(()=>{
+            new QRCode("wechat-qr", {
+                text: "http://yoursite.com/2023/05/10/SLAM/8_LIO_SAM/",
+                width: 150,
+                height: 150,
+                correctLevel : QRCode.CorrectLevel.H
+            });
+        });
+        function share(dest) {
+            const qqBase        = "https://connect.qq.com/widget/shareqq/index.html?";
+            const weiboBase     = "https://service.weibo.com/share/share.php?";
+            const qzoneBase     = "https://sns.qzone.qq.com/cgi-bin/qzshare/cgi_qzshare_onekey?";
+            const facebookBase  = "https://www.facebook.com/sharer/sharer.php?";
+            const twitterBase   = "https://twitter.com/intent/tweet?";
+            const hostUrl       = "http://yoursite.com/2023/05/10/SLAM/8_LIO_SAM/";
+            const title         = "「激光SLAM学习」";
+            const excerpt       = `LIO_SAM代码学习LIO_SAM全称是Lidar-Internal-Odometry Smoothing and Mapping，就是利用Lidar和IMU两个传感器进行融合得到Odometry，再输入到GTSAM库中构建图优化结...`;
+            let _URL;
+            switch (dest) {
+                case "qq"       : _URL = qqBase+"url="+hostUrl+"&title="+title+"&desc=&summary="+excerpt+"&site=cxpy";     break;
+                case "weibo"    : _URL = weiboBase+"url="+hostUrl+"&title="+title+excerpt;                                 break;
+                case "qzone"    : _URL = qzoneBase+"url="+hostUrl+"&title="+title+"&desc=&summary="+excerpt+"&site=cxpy";  break;
+                case "facebook" : _URL = facebookBase+"u="+hostUrl;                                                        break;
+                case "twitter"  : _URL = twitterBase+"text="+title+excerpt+"&url="+hostUrl;                                break;
+            }
+            window.open(_URL);
+        };
+    </script>
+</div>
+                
+                </div>
+            
+            <div class="footer-tag clearfix">
+                <div class="pull-left">
+                <i class="fa fa-tags"></i>
+                    <a class="tag-none-link" href="/tags/LIO-SAM/" rel="tag">LIO_SAM</a>, <a class="tag-none-link" href="/tags/SLAM/" rel="tag">SLAM</a>, <a class="tag-none-link" href="/tags/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0/" rel="tag">机器学习</a>
+                </div>
+                <div class="pull-date">
+                    <time datetime="2023-05-11T02:18:08.635Z" itemprop="dateModified">最后编辑：2023-05-11</time>
+                </div>
+            </div>
+        </footer>
+    </div>
+    
+        <nav class="navigation post-navigation clearfix" role="navigation">
+            
+            <div class="nav-previous clearfix">
+                <a title=" N1文法" href="/2022/12/15/nihongo/nihongo/">&lt; 上一篇</a>
+            </div>
+            
+            
+        </nav>
+    
+    
+</article>
+
+        
+
+            </section>
+
+        
+
+                
+            
+
+<section id="kratos-widget-area" class="col-md-4 hidden-xs hidden-sm">
+    <!-- 文章和页面根据splitter来分割，没有的话就从头开始设置为sticky -->
+    
+    
+                <aside id="krw-about" class="widget widget-kratos-about clearfix">
+    <div class="photo-background"></div>
+    <div class="photo-wrapper clearfix">
+        <div class="photo-wrapper-tip text-center">
+            <img class="about-photo" src="/images/avatar.png" loading="lazy" decoding="auto" />
+        </div>
+    </div>
+    <div class="textwidget">
+        <p class="text-center"></p>
+    </div>
+    <div class="site-meta">
+        <a class="meta-item" href="/archives/">
+            <span class="title">
+                文章
+            </span>
+            <span class="count">
+                15
+            </span>
+        </a>
+        <a class="meta-item" href="/categories/">
+            <span class="title">
+                分类
+            </span>
+            <span class="count">
+                0
+            </span>
+        </a>
+        <a class="meta-item" href="/tags/">
+            <span class="title">
+                标签
+            </span>
+            <span class="count">
+                17
+            </span>
+        </a>
+    </div>
+</aside>
+            
+                    <div class="sticky-area">
+                
+                
+
+            
+                
+  <aside id="krw-tags" class="widget widget-kratos-tags clearfix">
+    <h4 class="widget-title"><i class="fa fa-tags"></i>标签聚合</h4>
+      <div class="tag-clouds">
+        <a href="/tags/AI/" style="font-size: 0.72em;">AI</a> <a href="/tags/Agriculture/" style="font-size: 0.6em;">Agriculture</a> <a href="/tags/Deep-learning/" style="font-size: 0.76em;">Deep learning</a> <a href="/tags/LIO-SAM/" style="font-size: 0.6em;">LIO_SAM</a> <a href="/tags/LOAM/" style="font-size: 0.64em;">LOAM</a> <a href="/tags/Machinery/" style="font-size: 0.6em;">Machinery</a> <a href="/tags/Markdown/" style="font-size: 0.6em;">Markdown</a> <a href="/tags/N1/" style="font-size: 0.6em;">N1</a> <a href="/tags/NDT/" style="font-size: 0.6em;">NDT</a> <a href="/tags/Paper-Reading/" style="font-size: 0.6em;">Paper Reading</a> <a href="/tags/SLAM/" style="font-size: 0.8em;">SLAM</a> <a href="/tags/%E5%87%A0%E4%BD%95/" style="font-size: 0.6em;">几何</a> <a href="/tags/%E6%97%A5%E8%AF%AD%E5%AD%A6%E4%B9%A0/" style="font-size: 0.6em;">日语学习</a> <a href="/tags/%E6%97%A5%E9%BA%BB/" style="font-size: 0.6em;">日麻</a> <a href="/tags/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0/" style="font-size: 0.68em;">机器学习</a> <a href="/tags/%E7%89%B9%E5%BE%81%E6%8F%90%E5%8F%96/" style="font-size: 0.6em;">特征提取</a> <a href="/tags/%E7%95%B8%E5%8F%98%E8%A1%A5%E5%81%BF/" style="font-size: 0.6em;">畸变补偿</a>
+      </div>
+  </aside>
+
+            
+                
+  <aside id="krw-posts" class="widget widget-kratos-posts">
+  <h4 class="widget-title"><i class="fa fa-file"></i>最新文章</h4>
+  <div class="tab-content">
+      <ul class="list-group">
+        
+        
+          
+          
+            <a class="list-group-item" href="/2023/05/10/SLAM/8_LIO_SAM/"><i class="fa  fa-book"></i> 激光SLAM学习</a>
+            
+          
+        
+          
+          
+            <a class="list-group-item" href="/2022/12/15/nihongo/nihongo/"><i class="fa  fa-book"></i> N1文法</a>
+            
+          
+        
+          
+          
+            <a class="list-group-item" href="/2022/11/30/SLAM/6_Mapping/"><i class="fa  fa-book"></i> 激光SLAM学习 SLAM流程与回环检测</a>
+            
+          
+        
+          
+          
+            <a class="list-group-item" href="/2022/11/06/Agriculture/Agriculture_paper/"><i class="fa  fa-book"></i> SLAM在农业机器人方面应用的论文阅读笔记</a>
+            
+          
+        
+          
+          
+            <a class="list-group-item" href="/2022/11/03/SLAM/7_LOAM_code/"><i class="fa  fa-book"></i> 激光SLAM学习 LOAM代码</a>
+            
+          
+        
+          
+            
+          
+            
+          
+            
+          
+            
+          
+            
+          
+            
+          
+            
+          
+            
+          
+            
+          
+            
+      </ul>
+  </div>
+  </aside>
+
+            
+    </div>
+</section>
+        
+        </div>
+    </div>
+</div>
+<footer>
+    <div id="footer"  class="ap-lrc"  >
+        <div class="container">
+            <div class="row">
+                <div class="col-md-6 col-md-offset-3 footer-list text-center">
+                    <ul class="kratos-social-icons">
+                        <li><a target="_blank" rel="nofollow" href="https://weibo.com/u/u/5704847872"><i class="fa fa-weibo"></i></a></li>
+                        <li><a href="mailto:blsmaiden1997@gmail.com"><i class="fa fa-envelope"></i></a></li>
+                        
+                        <li><a target="_blank" rel="nofollow" href="https://twitter.com/dOqLAto0tk0RefS"><i class="fa fa-twitter"></i></a></li>
+                        
+                        
+                        
+                        <li><a target="_blank" rel="nofollow" href="https://github.com/NozomiWyane"><i class="fa fa-github"></i></a></li>
+                        
+                    </ul>
+                    <ul class="kratos-copyright">
+                        <div>
+                            <li>&copy; 2023 Nozomiの優しい空間 版权所有.</li>
+                            <li>本站已运行<span id="span_dt">Loading...</span></li>
+                        </div>
+                        <div>
+                            <li>Theme <a href="https://github.com/Candinya/Kratos-Rebirth" target="_blank">Kratos:Rebirth</a></li>
+                            <li>Site built with&nbsp;<i class="fa fa-heart throb" style="color:#d43f57"></i>&nbsp;by Nozomi.</li>
+                        </div>
+                        <div>
+                            <li>Powered by <a href="https://hexo.io" target="_blank" rel="nofollow">Hexo</a></li>
+                            <li>Hosted on <a href="https://nozomiwyane.github.io/" target="_blank">Nozomi</a></li>
+                        </div>
+                        <div>
+                            
+                            
+                        </div>
+                    </ul>
+                </div>
+            </div>
+        </div>
+        <div class="kr-tool text-center">
+            <div class="tool">
+                
+                    <div class="box search-box">
+                        <a href="/search/">
+                            <span class="fa fa-search"></span>
+                        </a>
+                    </div>
+                
+                
+                    <div class="box theme-box" id="darkmode-switch">
+                        <span class="fa fa-adjust"></span>
+                    </div>
+                
+                
+            </div>
+            <div class="box gotop-box">
+                <span class="fa fa-chevron-up"></span>
+            </div>
+        </div>
+    </div>
+</footer>
+</div>
+</div>
+
+        <script defer src="/vendors/bootstrap@3.3.4/dist/js/bootstrap.min.js"></script>
+<script defer src="/vendors/nprogress@0.2.0/nprogress.js"></script>
+<script>
+    if (!window.kr) {
+        window.kr = {};
+    }
+    window.kr.notMobile = (!(navigator.userAgent.match(/(phone|pad|pod|iPhone|iPod|ios|iPad|Android|Mobile|BlackBerry|IEMobile|MQQBrowser|JUC|Fennec|wOSBrowser|BrowserNG|WebOS|Symbian|Windows Phone)/i)));
+    window.kr.siteRoot = "/";
+</script>
+
+    <div>
+        <canvas id="snow"></canvas>
+        <script async src="/js/snow.min.js"></script>
+    </div>
+
+
+    <script async src="/js/candy.min.js"></script>
+
+
+
+    <script defer src="/vendors/aplayer@1.10.1/dist/APlayer.min.js"></script>
+    
+    <script defer src="/vendors/meting@2.0.1/dist/Meting.min.js"></script>
+    <meting-js
+        server="netease"
+        type="playlist"
+        id="607873524"
+        order="random"
+        fixed="true"
+    >
+    </meting-js>
+
+
+
+    <script defer src="/vendors/@fancyapps/fancybox@3.5.7/dist/jquery.fancybox.min.js"></script>
+
+<script defer src="/vendors/clipboard@2.0.6/dist/clipboard.min.js"></script>
+<script defer src="/js/kratosr.min.js"></script>
+<script defer src="/js/pjax.min.js"></script>
+
+
+
+<!-- Extra support for third-party plguins  -->
+
+
+    <script type="text/x-mathjax-config">
+    MathJax.Hub.Config({
+        tex2jax: {
+            inlineMath: [ ["$","$"], ["\\(","\\)"] ],
+            skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code'],
+            processEscapes: true
+        }
+    });
+    MathJax.Hub.Queue(function() {
+        var all = MathJax.Hub.getAllJax();
+        for (var i = 0; i < all.length; ++i)
+            all[i].SourceElement().parentNode.className += ' has-jax';
+    });
+</script>
+<script src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+</body>
+</html>

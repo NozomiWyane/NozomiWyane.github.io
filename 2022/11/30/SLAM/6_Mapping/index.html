@@ -16,16 +16,16 @@
   
     <meta name="keywords" content="LOAM, SLAM, 机器学习" />
   
-  <meta name="description" content="点云地图构建目前基于地图做定位是各种场景定位的解决方案，架构如前面图。前面讲述的关于前端里程计的主要是对原始数据(激光雷达是点云)，提取到特征后，通过构造的优化模型计算出其前后两帧之间的变化，从而实现位姿约束。还有里程计也是作为位姿的约束。RTK和组合导航是作为先验位置，也就是初始位姿作为一个输入，同时也能作为位姿约束输入。对于定位来说，只要有地图就是进行搜索和匹配，这部分对建图的流程和原理进行学">
+  <meta name="description" content="点云地图构建目前基于地图做定位是各种场景定位的解决方案，架构如前面图。前面讲述的关于前端里程计的主要是对原始数据(激光雷达是点云)，提取到特征后，通过构造的优化模型计算出其前后两帧之间的变化，从而实现位姿约束（即里程计）。RTK和组合导航是作为先验位置，也就是初始位姿作为一个输入，同时也能作为位姿约束输入。对于定位来说，只要有地图就是进行搜索和匹配，这部分对建图的流程和原理进行学习。剩下的部分就是">
 <meta property="og:type" content="article">
 <meta property="og:title" content="激光SLAM学习 SLAM流程与回环检测">
 <meta property="og:url" content="http://yoursite.com/2022/11/30/SLAM/6_Mapping/index.html">
 <meta property="og:site_name" content="Nozomiの優しい空間">
-<meta property="og:description" content="点云地图构建目前基于地图做定位是各种场景定位的解决方案，架构如前面图。前面讲述的关于前端里程计的主要是对原始数据(激光雷达是点云)，提取到特征后，通过构造的优化模型计算出其前后两帧之间的变化，从而实现位姿约束。还有里程计也是作为位姿的约束。RTK和组合导航是作为先验位置，也就是初始位姿作为一个输入，同时也能作为位姿约束输入。对于定位来说，只要有地图就是进行搜索和匹配，这部分对建图的流程和原理进行学">
+<meta property="og:description" content="点云地图构建目前基于地图做定位是各种场景定位的解决方案，架构如前面图。前面讲述的关于前端里程计的主要是对原始数据(激光雷达是点云)，提取到特征后，通过构造的优化模型计算出其前后两帧之间的变化，从而实现位姿约束（即里程计）。RTK和组合导航是作为先验位置，也就是初始位姿作为一个输入，同时也能作为位姿约束输入。对于定位来说，只要有地图就是进行搜索和匹配，这部分对建图的流程和原理进行学习。剩下的部分就是">
 <meta property="og:locale" content="zh_CN">
 <meta property="og:image" content="http://yoursite.com/images/slam/frame.png">
 <meta property="article:published_time" content="2022-11-30T03:55:21.188Z">
-<meta property="article:modified_time" content="2022-12-05T16:58:09.020Z">
+<meta property="article:modified_time" content="2023-05-10T07:07:29.410Z">
 <meta property="article:author" content="Nozomi">
 <meta property="article:tag" content="SLAM">
 <meta property="article:tag" content="LOAM">
@@ -186,7 +186,7 @@
                     <i class="fa fa-edit"></i> 
                     
                     
-                        691
+                        782
                     
                     字
                 </li>
@@ -197,12 +197,12 @@
             
             <div id="expire-alert" class="alert alert-warning hidden" role="alert">
                 <div class="icon"><i class="fa fa-warning"></i></div>
-                <div class="text"><p>本文最后编辑于 <time datetime="1670259489020"></time> 前，其中的内容可能需要更新。</p></div>
+                <div class="text"><p>本文最后编辑于 <time datetime="1683702449410"></time> 前，其中的内容可能需要更新。</p></div>
             </div>
             
             
             <hr />
-            <div itemprop="articleBody"><h1 id="点云地图构建"><a href="#点云地图构建" class="headerlink" title="点云地图构建"></a>点云地图构建</h1><p>目前基于地图做定位是各种场景定位的解决方案，架构如前面图。<br><img src="/images/slam/frame.png" alt="SLAM构建地图的模块框架"><br>前面讲述的关于前端里程计的主要是对原始数据(激光雷达是点云)，提取到特征后，通过构造的优化模型计算出其前后两帧之间的变化，从而实现位姿约束。还有里程计也是作为位姿的约束。RTK和组合导航是作为先验位置，也就是初始位姿作为一个输入，同时也能作为位姿约束输入。<br>对于定位来说，只要有地图就是进行搜索和匹配，这部分对建图的流程和原理进行学习。剩下的部分就是组合导航和回环检测模块。</p>
+            <div itemprop="articleBody"><h1 id="点云地图构建"><a href="#点云地图构建" class="headerlink" title="点云地图构建"></a>点云地图构建</h1><p>目前基于地图做定位是各种场景定位的解决方案，架构如前面图。<br><img src="/images/slam/frame.png" alt="SLAM构建地图的模块框架"><br>前面讲述的关于前端里程计的主要是对原始数据(激光雷达是点云)，提取到特征后，通过构造的优化模型计算出其前后两帧之间的变化，从而实现位姿约束（即里程计）。RTK和组合导航是作为先验位置，也就是初始位姿作为一个输入，同时也能作为位姿约束输入。<br>对于定位来说，只要有地图就是进行搜索和匹配，这部分对建图的流程和原理进行学习。剩下的部分就是组合导航和回环检测模块。</p>
 <h2 id="回环检测"><a href="#回环检测" class="headerlink" title="回环检测"></a>回环检测</h2><p>随着路径的不断延伸，机器人在建图过程中会存在一些累计误差，除了利用局部优化、全局优化等来调整之外，还可以利用回环检测来优化位姿。</p>
 <ul>
 <li>回环检测是什么？<br>回环检测，又称闭环检测，是指机器人识别曾到达某场景，使得地图闭环的能力。就是能够识别检测到它曾经到达过的地方，而不是作为新地图加入到地图中。地图生成时的误差会对定位造成非常大的影响，所以就算有RTK，纯靠RTK的定位误差也会使得地图变得糟糕。<br>目的：它能够消除建图时产生的累计误差，提高地图一致性。<br>方法：在历史帧中找到相似帧（位置相近且有充足共视视野的帧），给出两帧间的相对位姿。<br>用法：在后端优化中，作为相对位姿约束边加入，加入图优化系统。</li>
@@ -210,7 +210,8 @@
 <p>有初始相对位姿的情况下，使用ICP和NDT是这个课程中介绍过的方法。</p>
 <h2 id="后端优化"><a href="#后端优化" class="headerlink" title="后端优化"></a>后端优化</h2><p>目的：利用回环检测结果（与历史帧中相似帧的相对位姿）和惯导先验（也就是初始相对位姿）修正里程计的误差。</p>
 <p>观测：<br>1）连续两帧的相对位姿观测；（也就里程计，开环）<br>2）回环匹配得到的相对位姿观测；<br>3）组合导航提供先验位姿观测。</p>
-<p>1，2组成基于回环；1、3组成基于先验</p>
+<p>1，2组成基于回环；1、3组成基于先验。</p>
+<h2 id="LOAM-MAPPING"><a href="#LOAM-MAPPING" class="headerlink" title="LOAM MAPPING"></a>LOAM MAPPING</h2><p>在LOAM的实现过程中，我们由前端通过线面特征的匹配得到了lidar的odometry，每一个odometry我们可以取一个关键帧来进行地图点云的一部分，从而实现地图构造。</p>
 </div>
         </div>
         
@@ -278,7 +279,7 @@
             const twitterBase   = "https://twitter.com/intent/tweet?";
             const hostUrl       = "http://yoursite.com/2022/11/30/SLAM/6_Mapping/";
             const title         = "「激光SLAM学习 SLAM流程与回环检测」";
-            const excerpt       = `点云地图构建目前基于地图做定位是各种场景定位的解决方案，架构如前面图。前面讲述的关于前端里程计的主要是对原始数据(激光雷达是点云)，提取到特征后，通过构造的优化模型计算出其前后两帧之间的变化，从而实现位姿约束。还有里程计也是作为位姿的...`;
+            const excerpt       = `点云地图构建目前基于地图做定位是各种场景定位的解决方案，架构如前面图。前面讲述的关于前端里程计的主要是对原始数据(激光雷达是点云)，提取到特征后，通过构造的优化模型计算出其前后两帧之间的变化，从而实现位姿约束（即里程计）。RTK和组合...`;
             let _URL;
             switch (dest) {
                 case "qq"       : _URL = qqBase+"url="+hostUrl+"&title="+title+"&desc=&summary="+excerpt+"&site=cxpy";     break;
@@ -300,7 +301,7 @@
                     <a class="tag-none-link" href="/tags/LOAM/" rel="tag">LOAM</a>, <a class="tag-none-link" href="/tags/SLAM/" rel="tag">SLAM</a>, <a class="tag-none-link" href="/tags/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0/" rel="tag">机器学习</a>
                 </div>
                 <div class="pull-date">
-                    <time datetime="2022-12-05T16:58:09.020Z" itemprop="dateModified">最后编辑：2022-12-06</time>
+                    <time datetime="2023-05-10T07:07:29.410Z" itemprop="dateModified">最后编辑：2023-05-10</time>
                 </div>
             </div>
         </footer>
@@ -351,7 +352,7 @@
                 文章
             </span>
             <span class="count">
-                14
+                15
             </span>
         </a>
         <a class="meta-item" href="/categories/">
@@ -367,7 +368,7 @@
                 标签
             </span>
             <span class="count">
-                16
+                17
             </span>
         </a>
     </div>
@@ -382,7 +383,7 @@
   <aside id="krw-tags" class="widget widget-kratos-tags clearfix">
     <h4 class="widget-title"><i class="fa fa-tags"></i>标签聚合</h4>
       <div class="tag-clouds">
-        <a href="/tags/AI/" style="font-size: 0.7em;">AI</a> <a href="/tags/Agriculture/" style="font-size: 0.6em;">Agriculture</a> <a href="/tags/Deep-learning/" style="font-size: 0.75em;">Deep learning</a> <a href="/tags/LOAM/" style="font-size: 0.65em;">LOAM</a> <a href="/tags/Machinery/" style="font-size: 0.6em;">Machinery</a> <a href="/tags/Markdown/" style="font-size: 0.6em;">Markdown</a> <a href="/tags/N1/" style="font-size: 0.6em;">N1</a> <a href="/tags/NDT/" style="font-size: 0.6em;">NDT</a> <a href="/tags/Paper-Reading/" style="font-size: 0.6em;">Paper Reading</a> <a href="/tags/SLAM/" style="font-size: 0.8em;">SLAM</a> <a href="/tags/%E5%87%A0%E4%BD%95/" style="font-size: 0.6em;">几何</a> <a href="/tags/%E6%97%A5%E8%AF%AD%E5%AD%A6%E4%B9%A0/" style="font-size: 0.6em;">日语学习</a> <a href="/tags/%E6%97%A5%E9%BA%BB/" style="font-size: 0.6em;">日麻</a> <a href="/tags/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0/" style="font-size: 0.65em;">机器学习</a> <a href="/tags/%E7%89%B9%E5%BE%81%E6%8F%90%E5%8F%96/" style="font-size: 0.6em;">特征提取</a> <a href="/tags/%E7%95%B8%E5%8F%98%E8%A1%A5%E5%81%BF/" style="font-size: 0.6em;">畸变补偿</a>
+        <a href="/tags/AI/" style="font-size: 0.72em;">AI</a> <a href="/tags/Agriculture/" style="font-size: 0.6em;">Agriculture</a> <a href="/tags/Deep-learning/" style="font-size: 0.76em;">Deep learning</a> <a href="/tags/LIO-SAM/" style="font-size: 0.6em;">LIO_SAM</a> <a href="/tags/LOAM/" style="font-size: 0.64em;">LOAM</a> <a href="/tags/Machinery/" style="font-size: 0.6em;">Machinery</a> <a href="/tags/Markdown/" style="font-size: 0.6em;">Markdown</a> <a href="/tags/N1/" style="font-size: 0.6em;">N1</a> <a href="/tags/NDT/" style="font-size: 0.6em;">NDT</a> <a href="/tags/Paper-Reading/" style="font-size: 0.6em;">Paper Reading</a> <a href="/tags/SLAM/" style="font-size: 0.8em;">SLAM</a> <a href="/tags/%E5%87%A0%E4%BD%95/" style="font-size: 0.6em;">几何</a> <a href="/tags/%E6%97%A5%E8%AF%AD%E5%AD%A6%E4%B9%A0/" style="font-size: 0.6em;">日语学习</a> <a href="/tags/%E6%97%A5%E9%BA%BB/" style="font-size: 0.6em;">日麻</a> <a href="/tags/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0/" style="font-size: 0.68em;">机器学习</a> <a href="/tags/%E7%89%B9%E5%BE%81%E6%8F%90%E5%8F%96/" style="font-size: 0.6em;">特征提取</a> <a href="/tags/%E7%95%B8%E5%8F%98%E8%A1%A5%E5%81%BF/" style="font-size: 0.6em;">畸变补偿</a>
       </div>
   </aside>
 
@@ -393,6 +394,12 @@
   <div class="tab-content">
       <ul class="list-group">
         
+        
+          
+          
+            <a class="list-group-item" href="/2023/05/10/SLAM/8_LIO_SAM/"><i class="fa  fa-book"></i> 激光SLAM学习</a>
+            
+          
         
           
           
@@ -414,16 +421,12 @@
         
           
           
-            <a class="list-group-item" href="/2022/11/03/SLAM/z_LOAM_code/"><i class="fa  fa-book"></i> 激光SLAM学习 LOAM代码</a>
+            <a class="list-group-item" href="/2022/11/03/SLAM/7_LOAM_code/"><i class="fa  fa-book"></i> 激光SLAM学习 LOAM代码</a>
             
           
         
           
-          
-            <a class="list-group-item" href="/2022/10/27/SLAM/5_Geometry_feature/"><i class="fa  fa-book"></i> 激光SLAM学习 点云特征提取与位姿优化</a>
             
-          
-        
           
             
           
