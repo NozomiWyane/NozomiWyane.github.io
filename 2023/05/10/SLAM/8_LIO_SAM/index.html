@@ -16,16 +16,16 @@
   
     <meta name="keywords" content="LIO_SAM, SLAM, 机器学习" />
   
-  <meta name="description" content="LIO_SAM代码学习LIO_SAM全称是Lidar-Internal-Odometry Smoothing and Mapping，就是利用Lidar和IMU两个传感器进行融合得到Odometry，再输入到GTSAM库中构建图优化结构，从而实现Mapping。本学习新的参考以下博客，对我帮助非常大。LIO_SAM代码注释详解LIO_SAM工程LIO_SAM论文地址整体的流程在github中也给出">
+  <meta name="description" content="LIO_SAM代码学习LIO_SAM全称是Lidar-Internal-Odometry Smoothing and Mapping，就是利用Lidar和IMU两个传感器进行融合得到Odometry，再输入到GTSAM库中构建图优化结构，从而实现Mapping。本学习新的参考以下博客，对我帮助非常大。LIO_SAM代码注释详解LIO_SAM工程LIO_SAM论文地址同时也参考了从知乎中LIO_SA">
 <meta property="og:type" content="article">
 <meta property="og:title" content="LIO_SAM mapping代码解析">
 <meta property="og:url" content="http://yoursite.com/2023/05/10/SLAM/8_LIO_SAM/index.html">
 <meta property="og:site_name" content="Nozomiの優しい空間">
-<meta property="og:description" content="LIO_SAM代码学习LIO_SAM全称是Lidar-Internal-Odometry Smoothing and Mapping，就是利用Lidar和IMU两个传感器进行融合得到Odometry，再输入到GTSAM库中构建图优化结构，从而实现Mapping。本学习新的参考以下博客，对我帮助非常大。LIO_SAM代码注释详解LIO_SAM工程LIO_SAM论文地址整体的流程在github中也给出">
+<meta property="og:description" content="LIO_SAM代码学习LIO_SAM全称是Lidar-Internal-Odometry Smoothing and Mapping，就是利用Lidar和IMU两个传感器进行融合得到Odometry，再输入到GTSAM库中构建图优化结构，从而实现Mapping。本学习新的参考以下博客，对我帮助非常大。LIO_SAM代码注释详解LIO_SAM工程LIO_SAM论文地址同时也参考了从知乎中LIO_SA">
 <meta property="og:locale" content="zh_CN">
 <meta property="og:image" content="http://yoursite.com/images/slam/liosam_framework.png">
 <meta property="article:published_time" content="2023-05-10T07:10:18.166Z">
-<meta property="article:modified_time" content="2023-07-26T06:06:03.481Z">
+<meta property="article:modified_time" content="2023-07-26T08:33:51.374Z">
 <meta property="article:author" content="Nozomi">
 <meta property="article:tag" content="SLAM">
 <meta property="article:tag" content="机器学习">
@@ -186,7 +186,7 @@
                     <i class="fa fa-edit"></i> 
                     
                     
-                        ~25.05K
+                        ~47.05K
                     
                     字
                 </li>
@@ -197,21 +197,440 @@
             
             <div id="expire-alert" class="alert alert-warning hidden" role="alert">
                 <div class="icon"><i class="fa fa-warning"></i></div>
-                <div class="text"><p>本文最后编辑于 <time datetime="1690351563481"></time> 前，其中的内容可能需要更新。</p></div>
+                <div class="text"><p>本文最后编辑于 <time datetime="1690360431374"></time> 前，其中的内容可能需要更新。</p></div>
             </div>
             
             
             <hr />
-            <div itemprop="articleBody"><h1 id="LIO-SAM代码学习"><a href="#LIO-SAM代码学习" class="headerlink" title="LIO_SAM代码学习"></a>LIO_SAM代码学习</h1><p>LIO_SAM全称是Lidar-Internal-Odometry Smoothing and Mapping，就是利用Lidar和IMU两个传感器进行融合得到Odometry，再输入到GTSAM库中构建图优化结构，从而实现Mapping。本学习新的参考以下博客，对我帮助非常大。<br><a target="_blank" rel="noopener" href="https://github.com/smilefacehh/LIO-SAM-DetailedNote">LIO_SAM代码注释详解</a><br><a target="_blank" rel="noopener" href="https://github.com/TixiaoShan/LIO-SAM">LIO_SAM工程</a><br><a target="_blank" rel="noopener" href="https://github.com/TixiaoShan/LIO-SAM/blob/master/config/doc/paper.pdf">LIO_SAM论文地址</a><br>整体的流程在github中也给出了，很好地解释了如下图：<br><img src="/images/slam/liosam_framework.png" alt="LIO_SAM framework and code structure"><br>从中我们可以看到整体代码是非常轻量级的，一共只有四个cpp文件，对应四个功能：</p>
+            <div itemprop="articleBody"><h1 id="LIO-SAM代码学习"><a href="#LIO-SAM代码学习" class="headerlink" title="LIO_SAM代码学习"></a>LIO_SAM代码学习</h1><p>LIO_SAM全称是Lidar-Internal-Odometry Smoothing and Mapping，就是利用Lidar和IMU两个传感器进行融合得到Odometry，再输入到GTSAM库中构建图优化结构，从而实现Mapping。本学习新的参考以下博客，对我帮助非常大。<br><a target="_blank" rel="noopener" href="https://github.com/smilefacehh/LIO-SAM-DetailedNote">LIO_SAM代码注释详解</a><br><a target="_blank" rel="noopener" href="https://github.com/TixiaoShan/LIO-SAM">LIO_SAM工程</a><br><a target="_blank" rel="noopener" href="https://github.com/TixiaoShan/LIO-SAM/blob/master/config/doc/paper.pdf">LIO_SAM论文地址</a><br>同时也参考了从知乎中<a target="_blank" rel="noopener" href="https://zhuanlan.zhihu.com/p/352039509">LIO_SAM代码详解</a><br>整体的流程在github中也给出了，很好地解释了如下图：<br><img src="/images/slam/liosam_framework.png" alt="LIO_SAM framework and code structure"><br>从中我们可以看到整体代码是非常轻量级的，一共只有四个cpp文件，对应四个功能：</p>
 <ol>
-<li><p>ImageProjection.cpp:<br>激光运动畸变校正。利用当前帧起止时刻之间的IMU数据、IMU里程计数据计算预积分，得到每一时刻的激光点位姿，从而变换到初始时刻激光点坐标系下，实现校正。</p>
+<li><p>ImageProjection.cpp:<br>激光运动畸变校正。利用当前帧起止时刻之间的IMU数据、IMU里程计数据计算预积分，得到每一时刻的激光点位姿，从而变换到初始时刻激光点坐标系下，实现校正。<br>这是整个LIO-SAM系统的输入，包括imuHandler和cloudHandler，imuHandler直接存入到imuQueue中，但是cloudHandler中需要进行畸变校正，下面对代码进行分析：</p>
+<div class="xControl">
+    <div class="xHeading"><div class="xIcon"><i class="fa fa-plus"></i></div><span>cloudHandler</span></div>
+    <div class="xContent"><div class="inner">
+        <p>/*</p>
+<ul>
+<li>订阅原始lidar数据</li>
+<li>1、添加一帧激光点云到队列，取出最早一帧作为当前帧，计算起止时间戳，检查数据有效性</li>
+<li>2、当前帧起止时刻对应的imu数据、imu里程计数据处理</li>
+<li>imu数据：</li>
+<li>1) 遍历当前激光帧起止时刻之间的imu数据，初始时刻对应imu的姿态角RPY设为当前帧的初始姿态角</li>
+<li>2) 用角速度、时间积分，计算每一时刻相对于初始时刻的旋转量，初始时刻旋转设为0</li>
+<li>imu里程计数据：</li>
+<li>1) 遍历当前激光帧起止时刻之间的imu里程计数据，初始时刻对应imu里程计设为当前帧的初始位姿</li>
+<li>2) 用起始、终止时刻对应imu里程计，计算相对位姿变换，保存平移增量</li>
+<li>3、当前帧激光点云运动畸变校正</li>
+<li>1) 检查激光点距离、扫描线是否合规</li>
+<li>2) 激光运动畸变校正，保存激光点</li>
+<li>4、提取有效激光点，存extractedCloud</li>
+<li>5、发布当前帧校正后点云，有效点</li>
+<li><p>6、重置参数，接收每帧lidar数据都要重置这些参数<br>*/<br>void cloudHandler(const sensor_msgs::PointCloud2ConstPtr&amp; laserCloudMsg)<br>{<br> // 添加一帧激光点云到队列，取出最早一帧作为当前帧，计算起止时间戳，检查数据有效性<br> // 这里是检测header是否符合要求，默认是velodyne格式，目前使用pandar的时候会遇到时间对不上的问题。<br> if (!cachePointCloud(laserCloudMsg))<br> <div class="xControl">
+ <div class="xHeading"><div class="xIcon"><i class="fa fa-plus"></i></div><span>cachePointCloud</span>&lt;/div&gt;<br> <div class="xContent"><div class="inner"></div></div></div></div></p>
+<pre><code> &lt;pre&gt;&lt;code&gt;/**
+</code></pre><p>&lt;/code&gt;&lt;/pre&gt;<ul><br><li><p>添加一帧激光点云到队列，取出最早一帧作为当前帧，计算起止时间戳，检查数据有效性<br><em>/<br>bool cachePointCloud(const sensor_msgs::PointCloud2ConstPtr&amp; laserCloudMsg)<br>{<br> cloudQueue.push_back(</em>laserCloudMsg);<br> if (cloudQueue.size() &lt;= 2)</p><br><pre><code> return false;
+</code></pre><p> // 取出激光点云队列中最早的一帧<br> currentCloudMsg = std::move(cloudQueue.front());<br> cloudQueue.pop_front();<br> if (sensor == SensorType::VELODYNE)<br> {</p><br><pre><code> // 转换成pcl点云格式
+pcl::moveFromROSMsg(currentCloudMsg, *laserCloudIn);
+</code></pre><p> }<br> else if (sensor == SensorType::OUSTER)<br> {</p><br><pre><code> // 转换成Velodyne格式
+pcl::moveFromROSMsg(currentCloudMsg, *tmpOusterCloudIn);
+laserCloudIn-&gt;points.resize(tmpOusterCloudIn-&gt;size());
+laserCloudIn-&gt;is_dense = tmpOusterCloudIn-&gt;is_dense;
+for (size_t i = 0; i &lt; tmpOusterCloudIn-&gt;size(); i++)
+{
+  auto &amp;src = tmpOusterCloudIn-&gt;points[i];
+  auto &amp;dst = laserCloudIn-&gt;points[i];
+  dst.x = src.x;
+  dst.y = src.y;
+  dst.z = src.z;
+  dst.intensity = src.intensity;
+  dst.ring = src.ring;
+  dst.time = src.t * 1e-9f;
+}
+</code></pre><p> }<br> else<br> {</p><br><pre><code> ROS_ERROR_STREAM(&quot;Unknown sensor type: &quot; &lt;&lt; int(sensor));
+ros::shutdown();
+</code></pre><p> }</p><br><p> // 当前帧头部<br> cloudHeader = currentCloudMsg.header;<br> // 当前帧起始时刻<br> timeScanCur = cloudHeader.stamp.toSec();<br> // 当前帧结束时刻，注：点云中激光点的time记录相对于当前帧第一个激光点的时差，第一个点time=0<br> timeScanEnd = timeScanCur + laserCloudIn-&gt;points.back().time;</p><br><p> // 存在无效点，Nan或者Inf<br> if (laserCloudIn-&gt;is_dense == false)<br> {</p><br><pre><code> ROS_ERROR(&quot;Point cloud is not in dense format, please remove NaN points first!&quot;);
+ros::shutdown();
+</code></pre><p> }</p><br><p> // 检查是否存在ring通道，注意static只检查一次<br> static int ringFlag = 0;<br> if (ringFlag == 0)<br> {</p><br><pre><code> ringFlag = -1;<br>for (int i = 0; i &lt; (int)currentCloudMsg.fields.size(); ++i)<br>{<br>  if (currentCloudMsg.fields[i].name == &quot;ring&quot;)<br>  {</code></pre></li></ul></p>
+<pre><code>  ringFlag = 1;
+  break;
+</code></pre><p>  }<br>}<br>if (ringFlag == -1)<br>{<br>  ROS_ERROR(&quot;Point cloud ring channel not available, please configure your point cloud data!&quot;);<br>  ros::shutdown();<br>}<br>&lt;/code&gt;&lt;/pre&gt;</p><p> }</p><br><p> // 检查是否存在time通道<br> if (deskewFlag == 0)<br> {</p><br><pre><code> deskewFlag = -1;<br>for (auto &amp;field : currentCloudMsg.fields)<br>{<br>  if (field.name == &quot;time&quot; || field.name == &quot;t&quot;)<br>  {<p></p>
+<pre><code>  deskewFlag = 1;
+  break;
+</code></pre><p>  }<br>}<br>if (deskewFlag == -1)<br>  ROS_WARN(&quot;Point cloud timestamp not available, deskew function disabled, system will drift significantly!&quot;);<br>&lt;/code&gt;&lt;/pre&gt;</p><p> }</p><br><p> return true;<br>}</p><br>&lt;/li&gt;<br>&lt;/ul&gt;<p></p>
+<p> &lt;/div&gt;&lt;/div&gt;<br> &lt;/div&gt;<br><pre><code> return;
+</code></pre></p><p> // 当前帧起止时刻对应的imu数据、imu里程计数据处理，需要保证时间同步<br> if (!deskewInfo())</p><br><div class="xControl">
+ <div class="xHeading"><div class="xIcon"><i class="fa fa-plus"></i></div><span>deskewInfo</span>&lt;/div&gt;<br> <div class="xContent"><div class="inner"><p></p>
+<pre><code> &lt;pre&gt;&lt;code&gt;/**
+</code></pre><p>&lt;/code&gt;&lt;/pre&gt;<ul><br><li><p>当前帧起止时刻对应的imu数据、imu里程计数据处理<br>*/<br>bool deskewInfo()<br>{<br> std::lock_guard<std::mutex> lock1(imuLock);<br> std::lock_guard<std::mutex> lock2(odoLock);</std::mutex></std::mutex></p>
+<p> // 要求imu数据包含激光数据，否则不往下处理了<br> if (imuQueue.empty() || imuQueue.front().header.stamp.toSec() &gt; timeScanCur || imuQueue.back().header.stamp.toSec() &lt; timeScanEnd)<br> {</p>
+<pre><code> ROS_DEBUG(&quot;Waiting for IMU data ...&quot;);
+return false;
+</code></pre><p> }</p>
+<p> // 当前帧对应imu数据处理<br> // 1、遍历当前激光帧起止时刻之间的imu数据，初始时刻对应imu的姿态角RPY设为当前帧的初始姿态角<br> // 2、用角速度、时间积分，计算每一时刻相对于初始时刻的旋转量，初始时刻旋转设为0<br> // 注：imu数据都已经转换到lidar系下了<br> imuDeskewInfo();<br><div class="xControl">
+<div class="xHeading"><div class="xIcon"><i class="fa fa-plus"></i></div><span>imuDeskewInfo</span>&lt;/div&gt;<br> <div class="xContent"><div class="inner"></div></div></div></div></p>
+<pre><code> &lt;p&gt;/**&lt;/p&gt;
+</code></pre><ul>
+<li>当前帧对应imu数据处理</li><br><li>1、遍历当前激光帧起止时刻之间的imu数据，初始时刻对应imu的姿态角RPY设为当前帧的初始姿态角</li><br><li>2、用角速度、时间积分，计算每一时刻相对于初始时刻的旋转量，初始时刻旋转设为0</li><br><li><p>注：imu数据都已经转换到lidar系下了<br>*/<br>void imuDeskewInfo()<br>{<br> cloudInfo.imuAvailable = false;</p><br><p> // 从imu队列中删除当前激光帧0.01s前面时刻的imu数据<br> while (!imuQueue.empty())<br> {</p><br><pre><code> if (imuQueue.front().header.stamp.toSec() &lt; timeScanCur - 0.01)
+imuQueue.pop_front();
+else
+break;
+</code></pre><p> }</p><br><p> if (imuQueue.empty())</p><br><pre><code> return;
+</code></pre><p> imuPointerCur = 0;</p><br><p> // 遍历当前激光帧起止时刻（前后扩展0.01s）之间的imu数据<br> for (int i = 0; i &lt; (int)imuQueue.size(); ++i)<br> {</p><br><pre><code> sensor_msgs::Imu thisImuMsg = imuQueue[i];<br>double currentImuTime = thisImuMsg.header.stamp.toSec();</code></pre></li></ul></li></ul></p>
+</div></div></div></div></code></pre></li>
+</ul>
+<p>// 提取imu姿态角RPY，作为当前lidar帧初始姿态角<br>if (currentImuTime &lt;= timeScanCur)<br>  imuRPY2rosRPY(&amp;thisImuMsg, &amp;cloudInfo.imuRollInit, &amp;cloudInfo.imuPitchInit, &amp;cloudInfo.imuYawInit);</p>
+<p>// 超过当前激光帧结束时刻0.01s，结束<br>if (currentImuTime &gt; timeScanEnd + 0.01)<br>  break;</p>
+<p>// 第一帧imu旋转角初始化<br>if (imuPointerCur == 0){<br>  imuRotX[0] = 0;<br>  imuRotY[0] = 0;<br>  imuRotZ[0] = 0;<br>  imuTime[0] = currentImuTime;<br>  ++imuPointerCur;<br>  continue;<br>}</p>
+<p>// 提取imu角速度<br>double angular_x, angular_y, angular_z;<br>imuAngular2rosAngular(&amp;thisImuMsg, &amp;angular_x, &amp;angular_y, &amp;angular_z);</p>
+<p>// imu帧间时差<br>double timeDiff = currentImuTime - imuTime[imuPointerCur-1];<br>// 当前时刻旋转角 = 前一时刻旋转角 + 角速度 <em> 时差<br>imuRotX[imuPointerCur] = imuRotX[imuPointerCur-1] + angular_x </em> timeDiff;<br>imuRotY[imuPointerCur] = imuRotY[imuPointerCur-1] + angular_y <em> timeDiff;<br>imuRotZ[imuPointerCur] = imuRotZ[imuPointerCur-1] + angular_z </em> timeDiff;<br>imuTime[imuPointerCur] = currentImuTime;<br>++imuPointerCur;<br>&lt;/code&gt;&lt;/pre&gt;</p><p> }</p><p></p>
+<p> —imuPointerCur;</p>
+<p> // 没有合规的imu数据<br> if (imuPointerCur &lt;= 0)</p>
+<pre><code> return;
+</code></pre><p> cloudInfo.imuAvailable = true;<br>}</p>
+</div></div></div></li>
+
+
+<p> &lt;/div&gt;&lt;/div&gt;<br> &lt;/div&gt;<br></p><p> // 当前帧对应imu里程计处理<br> // 1、遍历当前激光帧起止时刻之间的imu里程计数据，初始时刻对应imu里程计设为当前帧的初始位姿<br> // 2、用起始、终止时刻对应imu里程计，计算相对位姿变换，保存平移增量<br> // 注：imu数据都已经转换到lidar系下了，程序在这里用odom更新了initialguess，计算的数据保存到了odomIncreX，Y，Z，并没有实际作用<br> odomDeskewInfo();</p><br><div class="xControl">
+ <div class="xHeading"><div class="xIcon"><i class="fa fa-plus"></i></div><span>odomDeskewInfo</span>&lt;/div&gt;<br> <div class="xContent"><div class="inner"><p></p>
+<pre><code> &lt;p&gt;void odomDeskewInfo()&lt;br&gt;{&lt;br&gt;    cloudInfo.odomAvailable = false;&lt;/p&gt;
+</code></pre><p><pre><code>// 从imu里程计队列中删除当前激光帧0.01s前面时刻的imu数据<br>while (!odomQueue.empty())<br>{<br> if (odomQueue.front().header.stamp.toSec() &lt; timeScanCur - 0.01)</code></pre></p>
+<pre><code> odomQueue.pop_front();
+</code></pre><p> else</p>
+<pre><code> break;
+</code></pre><p>}</p>
+
+
+<p>if (odomQueue.empty())<br>    return;</p>
+<p>// 要求必须有当前激光帧时刻之前的imu里程计数据<br>if (odomQueue.front().header.stamp.toSec() &gt; timeScanCur)<br>    return;</p>
+<p>// 提取当前激光帧起始时刻的imu里程计<br>nav_msgs::Odometry startOdomMsg;</p>
+<p>for (int i = 0; i &lt; (int)odomQueue.size(); ++i)<br>{<br>    startOdomMsg = odomQueue[i];</p>
+<pre><code>if (ROS_TIME(&amp;amp;startOdomMsg) &amp;lt; timeScanCur)
+    continue;
+else
+    break;
+</code></pre><p>}</p>
+<p>// 提取imu里程计姿态角<br>tf::Quaternion orientation;<br>tf::quaternionMsgToTF(startOdomMsg.pose.pose.orientation, orientation);</p>
+<p>double roll, pitch, yaw;<br>tf::Matrix3x3(orientation).getRPY(roll, pitch, yaw);</p>
+<p>// 用当前激光帧起始时刻的imu里程计，初始化lidar位姿，后面用于mapOptmization<br>cloudInfo.initialGuessX = startOdomMsg.pose.pose.position.x;<br>cloudInfo.initialGuessY = startOdomMsg.pose.pose.position.y;<br>cloudInfo.initialGuessZ = startOdomMsg.pose.pose.position.z;<br>cloudInfo.initialGuessRoll  = roll;<br>cloudInfo.initialGuessPitch = pitch;<br>cloudInfo.initialGuessYaw   = yaw;</p>
+<p>cloudInfo.odomAvailable = true;</p>
+<p>odomDeskewFlag = false;</p>
+<p>// 如果当前激光帧结束时刻之后没有imu里程计数据，返回<br>if (odomQueue.back().header.stamp.toSec() &lt; timeScanEnd)<br>    return;</p>
+<p>// 提取当前激光帧结束时刻的imu里程计<br>nav_msgs::Odometry endOdomMsg;</p>
+<p>for (int i = 0; i &lt; (int)odomQueue.size(); ++i)<br>{<br>    endOdomMsg = odomQueue[i];</p>
+<pre><code>if (ROS_TIME(&amp;amp;endOdomMsg) &amp;lt; timeScanEnd)
+    continue;
+else
+    break;
+</code></pre><p>}</p>
+<p>// 如果起止时刻对应imu里程计的方差不等，返回<br>if (int(round(startOdomMsg.pose.covariance[0])) != int(round(endOdomMsg.pose.covariance[0])))<br>    return;</p>
+<p>Eigen::Affine3f transBegin = pcl::getTransformation(startOdomMsg.pose.pose.position.x, startOdomMsg.pose.pose.position.y, startOdomMsg.pose.pose.position.z, roll, pitch, yaw);</p>
+<p>tf::quaternionMsgToTF(endOdomMsg.pose.pose.orientation, orientation);<br>tf::Matrix3x3(orientation).getRPY(roll, pitch, yaw);<br>Eigen::Affine3f transEnd = pcl::getTransformation(endOdomMsg.pose.pose.position.x, endOdomMsg.pose.pose.position.y, endOdomMsg.pose.pose.position.z, roll, pitch, yaw);</p>
+<p>// 起止时刻imu里程计的相对变换<br>Eigen::Affine3f transBt = transBegin.inverse() * transEnd;</p>
+<p>// 相对变换，提取增量平移、旋转（欧拉角）<br>float rollIncre, pitchIncre, yawIncre;<br>pcl::getTranslationAndEulerAngles(transBt, odomIncreX, odomIncreY, odomIncreZ, rollIncre, pitchIncre, yawIncre);</p>
+<p>odomDeskewFlag = true;<br>&lt;/code&gt;&lt;/pre&gt;</p><p>}</p><p></p>
+<pre><code>&lt;/div&gt;&lt;/div&gt;
+&lt;/div&gt;
+</code></pre><p></p><p> return true;<br>}</p><br>&lt;/li&gt;<br>&lt;/ol&gt;<p></p>
+
+<pre><code>&lt;/div&gt;&lt;/div&gt;
+&lt;/div&gt;
+</code></pre><p><pre><code>// 当前帧激光点云运动畸变校正
+// 1、检查激光点距离、扫描线是否合规
+// 2、激光运动畸变校正，保存激光点
+projectPointCloud();
+</code></pre><div class="xControl">
+    <div class="xHeading"><div class="xIcon"><i class="fa fa-plus"></i></div><span>projectPointCloud</span>&lt;/div&gt;<br>    <div class="xContent"><div class="inner"><br>        <p>void projectPointCloud()<br>{<br>    int cloudSize = laserCloudIn-&gt;points.size();</p></div></div></div></div></p>
+<p><pre><code>// 遍历当前帧激光点云<br>for (int i = 0; i &lt; cloudSize; ++i)<br>{<br>    // pcl格式<br>    PointType thisPoint;<br>    thisPoint.x = laserCloudIn-&gt;points[i].x;<br>    thisPoint.y = laserCloudIn-&gt;points[i].y;<br>    thisPoint.z = laserCloudIn-&gt;points[i].z;<br>    thisPoint.intensity = laserCloudIn-&gt;points[i].intensity;</code></pre></p>
+<pre><code>// 距离检查
+float range = pointDistance(thisPoint);
+if (range &amp;lt; lidarMinRange || range &amp;gt; lidarMaxRange)
+    continue;
+
+// 扫描线检查
+int rowIdn = laserCloudIn-&amp;gt;points[i].ring;
+if (rowIdn &amp;lt; 0 || rowIdn &amp;gt;= N_SCAN)
+    continue;
+
+// 扫描线如果有降采样，跳过采样的扫描线这里要跳过
+if (rowIdn % downsampleRate != 0)
+    continue;
+
+float horizonAngle = atan2(thisPoint.x, thisPoint.y) * 180 / M_PI;
+
+// 水平扫描角度步长，例如一周扫描1800次，则两次扫描间隔角度0.2°
+static float ang_res_x = 360.0/float(Horizon_SCAN);
+int columnIdn = -round((horizonAngle-90.0)/ang_res_x) + Horizon_SCAN/2;
+if (columnIdn &amp;gt;= Horizon_SCAN)
+    columnIdn -= Horizon_SCAN;
+
+if (columnIdn &amp;lt; 0 || columnIdn &amp;gt;= Horizon_SCAN)
+    continue;
+
+// 已经存过该点，不再处理
+if (rangeMat.at&amp;lt;float&amp;gt;(rowIdn, columnIdn) != FLT_MAX)
+    continue;
+
+// 激光运动畸变校正
+// 利用当前帧起止时刻之间的imu数据计算旋转增量，imu里程计数据计算平移增量，进而将每一时刻激光点位置变换到第一个激光点坐标系下，进行运动补偿
+thisPoint = deskewPoint(&amp;amp;thisPoint, laserCloudIn-&amp;gt;points[i].time);
+</code></pre><p>&lt;/code&gt;&lt;/pre&gt;</p><p><div class="xControl">
+    <div class="xHeading"><div class="xIcon"><i class="fa fa-plus"></i></div><span>deskewPoint</span>&lt;/div&gt;<br>    <div class="xContent"><div class="inner"><br>        <p>PointType deskewPoint(PointType <em>point, double relTime)<br>{<br>    if (deskewFlag == -1 || cloudInfo.imuAvailable == false)<br>        return </em>point;</p>&lt;/p&gt;</div></div></div></div></p>
+<p><pre><code>// relTime是当前激光点相对于激光帧起始时刻的时间，pointTime则是当前激光点的时间戳<br>double pointTime = timeScanCur + relTime;</code></pre></p>
+<p>// 在当前激光帧起止时间范围内，计算某一时刻的旋转（相对于起始时刻的旋转增量）<br>float rotXCur, rotYCur, rotZCur;<br>//这里就用到了前面IMU中获取的rotX,Y,Z，在这里进行旋转增加<br>findRotation(pointTime, &amp;rotXCur, &amp;rotYCur, &amp;rotZCur);<br>&lt;/code&gt;&lt;/pre&gt;</p><p><div class="xControl">
+    <div class="xHeading"><div class="xIcon"><i class="fa fa-plus"></i></div><span>findRotation</span>&lt;/div&gt;<br>    <div class="xContent"><div class="inner"><br>        <p>void findRotation(double pointTime, float <em>rotXCur, float </em>rotYCur, float <em>rotZCur)<br>{
+    </em>rotXCur = 0; <em>rotYCur = 0; </em>rotZCur = 0;</p>&lt;/p&gt;</div></div></div></div></p>
+<p><pre><code>int imuPointerFront = 0;<br>while (imuPointerFront &lt; imuPointerCur)<br>{<br>    if (pointTime &lt; imuTime[imuPointerFront])<br>        break;<br>    ++imuPointerFront;<br>}</code></pre></p>
+<p>if (pointTime &gt; imuTime[imuPointerFront] || imuPointerFront == 0)<br>{<br>    <em>rotXCur = imuRotX[imuPointerFront];
+    </em>rotYCur = imuRotY[imuPointerFront];<br>    <em>rotZCur = imuRotZ[imuPointerFront];<br>} else {<br>    int imuPointerBack = imuPointerFront - 1;<br>    double ratioFront = (pointTime - imuTime[imuPointerBack]) / (imuTime[imuPointerFront] - imuTime[imuPointerBack]);<br>    double ratioBack = (imuTime[imuPointerFront] - pointTime) / (imuTime[imuPointerFront] - imuTime[imuPointerBack]);
+    </em>rotXCur = imuRotX[imuPointerFront] <em> ratioFront + imuRotX[imuPointerBack] </em> ratioBack;<br>    <em>rotYCur = imuRotY[imuPointerFront] </em> ratioFront + imuRotY[imuPointerBack] <em> ratioBack;
+    </em>rotZCur = imuRotZ[imuPointerFront] <em> ratioFront + imuRotZ[imuPointerBack] </em> ratioBack;<br>}<br>&lt;/code&gt;&lt;/pre&gt;</p><p>}</p><p></p>
+<pre><code>&lt;/div&gt;&lt;/div&gt;
+&lt;/div&gt;
+</code></pre><p><pre><code>// 在当前激光帧起止时间范围内，计算某一时刻的平移（相对于起始时刻的平移增量）
+float posXCur, posYCur, posZCur;
+//这里在代码中，将平移增量计算屏蔽了，对于速度非常低的载具，可以认为在非常短的时间内增量为0
+findPosition(relTime, &amp;posXCur, &amp;posYCur, &amp;posZCur);
+</code></pre><div class="xControl">
+    <div class="xHeading"><div class="xIcon"><i class="fa fa-plus"></i></div><span>findPosition</span>&lt;/div&gt;<br>    <div class="xContent"><div class="inner"><br>        <p>void findPosition(double relTime, float <em>posXCur, float </em>posYCur, float <em>posZCur)<br>{
+    </em>posXCur = 0; <em>posYCur = 0; </em>posZCur = 0;</p></div></div></div></div></p>
+<p><pre><code>// If the sensor moves relatively slow, like walking speed, positional deskew seems to have little benefits. Thus code below is commented.</code></pre></p>
+<p>// if (cloudInfo.odomAvailable == false || odomDeskewFlag == false)<br>//     return;</p>
+<p>// float ratio = relTime / (timeScanEnd - timeScanCur);</p>
+<p>// <em>posXCur = ratio </em> odomIncreX;<br>// <em>posYCur = ratio </em> odomIncreY;<br>// <em>posZCur = ratio </em> odomIncreZ;<br>&lt;/code&gt;&lt;/pre&gt;</p><p>}</p><p></p>
+<pre><code>&lt;/div&gt;&lt;/div&gt;
+&lt;/div&gt;
+</code></pre><p><pre><code>// 第一个点的位姿增量（0），求逆<br>if (firstPointFlag == true)<br>&#123;<br>    transStartInverse = (pcl::getTransformation(posXCur, posYCur, posZCur, rotXCur, rotYCur, rotZCur)).inverse();<br>    firstPointFlag = false;<br>&#125;</code></pre></p>
+<p>// 当前时刻激光点与第一个激光点的位姿变换<br>Eigen::Affine3f transFinal = pcl::getTransformation(posXCur, posYCur, posZCur, rotXCur, rotYCur, rotZCur);<br>Eigen::Affine3f transBt = transStartInverse * transFinal;</p>
+<p>// 当前激光点在第一个激光点坐标系下的坐标<br>PointType newPoint;<br>newPoint.x = transBt(0,0) <em> point-&gt;x + transBt(0,1) </em> point-&gt;y + transBt(0,2) <em> point-&gt;z + transBt(0,3);<br>newPoint.y = transBt(1,0) </em> point-&gt;x + transBt(1,1) <em> point-&gt;y + transBt(1,2) </em> point-&gt;z + transBt(1,3);<br>newPoint.z = transBt(2,0) <em> point-&gt;x + transBt(2,1) </em> point-&gt;y + transBt(2,2) * point-&gt;z + transBt(2,3);<br>newPoint.intensity = point-&gt;intensity;</p>
+<p>return newPoint;<br>&lt;/code&gt;&lt;/pre&gt;</p><p>}<br></p>
+
+<p><pre><code>&lt;/div&gt;&lt;/div&gt;
+&lt;/div&gt;&lt;br&gt;        // 矩阵存激光点的距离&lt;br&gt;        rangeMat.at&lt;float&gt;(rowIdn, columnIdn) = range;&lt;/p&gt;
+</code></pre></p><p><pre><code>    // 转换成一维索引，存校正之后的激光点
+    int index = columnIdn + rowIdn * Horizon_SCAN;
+    fullCloud-&gt;points[index] = thisPoint;
+&#125;
+</code></pre></p><p>}</p>&lt;/p&gt;<p></p>
+<pre><code>&lt;/div&gt;&lt;/div&gt;
+&lt;/div&gt;
+</code></pre><p><pre><code>// 提取有效激光点，存extractedCloud，就是存到cloudInfo里，下一步进行publish
+cloudExtraction();
+</code></pre><div class="xControl">
+    <div class="xHeading"><div class="xIcon"><i class="fa fa-plus"></i></div><span>cloudExtraction</span>&lt;/div&gt;<br>    <div class="xContent"><div class="inner"><br>        <p>void cloudExtraction()<br>{<br>    int count = 0;<br>    // extract segmented cloud for lidar odometry<br>    for (int i = 0; i &lt; N_SCAN; ++i)<br>    {<br>        cloudInfo.startRingIndex[i] = count - 1 + 5;</p></div></div></div></div></p>
+<p><pre><code>    for (int j = 0; j &lt; Horizon_SCAN; ++j)
+    {
+        if (rangeMat.at&lt;float&gt;(i,j) != FLT_MAX)
+        {
+            // mark the points&#39; column index for marking occlusion later
+            cloudInfo.pointColInd[count] = j;
+            // save range info
+            cloudInfo.pointRange[count] = rangeMat.at&lt;float&gt;(i,j);
+            // save extracted cloud
+            extractedCloud-&gt;push_back(fullCloud-&gt;points[j + i*Horizon_SCAN]);
+            // size of extracted cloud
+            ++count;
+        }
+    }
+    cloudInfo.endRingIndex[i] = count -1 - 5;
+}
+</code></pre><br>    &lt;/div&gt;&lt;/div&gt;<br>    &lt;/div&gt;</p>
+<p><pre><code>// 发布当前帧校正后点云，有效点<br>publishClouds();</code></pre></p>
+<p>// 重置参数，接收每帧lidar数据都要重置这些参数<br>resetParameters();<br>&lt;/code&gt;&lt;/pre&gt;</p><p>}<br></p>
+ 
+    </div></div>
+    </div><p></p>
+<ol>
+<li>FeatureExtraction.cpp<br>提取特征。对经过运动畸变校正之后的当前帧激光点云，计算每个点的曲率，进而提取角点、平面点特征。<br>同样的，这部分的代码直接从上一部分得到的topic中进行输入，从laserCloudInfoHandler进行分析：<div class="xControl">
+    <div class="xHeading"><div class="xIcon"><i class="fa fa-plus"></i></div><span>FeatureExtraction</span></div>
+    <div class="xContent"><div class="inner">
+        <p>/**</p>
+<ul>
+<li>订阅当前激光帧运动畸变校正后的点云信息</li>
+<li>1、计算当前激光帧点云中每个点的曲率</li>
+<li>2、标记属于遮挡、平行两种情况的点，不做特征提取</li>
+<li>3、点云角点、平面点特征提取</li>
+<li>1) 遍历扫描线，每根扫描线扫描一周的点云划分为6段，针对每段提取20个角点、不限数量的平面点，加入角点集合、平面点集合</li>
+<li>2) 认为非角点的点都是平面点，加入平面点云集合，最后降采样</li>
+<li><p>4、发布角点、面点点云，发布带特征点云数据的当前激光帧点云信息<br><em>/<br>void laserCloudInfoHandler(const lio_sam::cloud_infoConstPtr&amp; msgIn)<br>{<br> cloudInfo = </em>msgIn;<br> cloudHeader = msgIn-&gt;header;<br> // 当前激光帧运动畸变校正后的有效点云<br> pcl::fromROSMsg(msgIn-&gt;cloud_deskewed, *extractedCloud); </p>
+<p> // 计算当前激光帧点云中每个点的曲率，跟LOAM中一样<br> calculateSmoothness();<br><div class="xControl">
+ <div class="xHeading"><div class="xIcon"><i class="fa fa-plus"></i></div><span>calculateSmoothness</span>&lt;/div&gt;<br> <div class="xContent"><div class="inner"></div></div></div></div></p>
+<pre><code> &lt;p&gt;void calculateSmoothness()&lt;br&gt;{&lt;br&gt;    // 遍历当前激光帧运动畸变校正后的有效点云&lt;br&gt;    int cloudSize = extractedCloud-&amp;gt;points.size();&lt;br&gt;    for (int i = 5; i &amp;lt; cloudSize - 5; i++)&lt;br&gt;    {&lt;br&gt;        // 用当前激光点前后5个点计算当前点的曲率，平坦位置处曲率较小，角点处曲率较大；这个方法很简单但有效&lt;br&gt;        float diffRange = cloudInfo.pointRange[i-5] + cloudInfo.pointRange[i-4]&lt;/p&gt;
+</code></pre><p><pre><code>                    + cloudInfo.pointRange[i-3] + cloudInfo.pointRange[i-2]</code></pre></p>
+<pre><code>             + cloudInfo.pointRange[i-1] - cloudInfo.pointRange[i] * 10
+             + cloudInfo.pointRange[i+1] + cloudInfo.pointRange[i+2]
+             + cloudInfo.pointRange[i+3] + cloudInfo.pointRange[i+4]
+             + cloudInfo.pointRange[i+5];            
+</code></pre><p> // 距离差值平方作为曲率<br> cloudCurvature[i] = diffRange*diffRange;</p>
+<p> cloudNeighborPicked[i] = 0;<br> cloudLabel[i] = 0;</p>
+<p> // 存储该点曲率值、激光点一维索引<br> cloudSmoothness[i].value = cloudCurvature[i];<br> cloudSmoothness[i].ind = i;<br>}<br>&lt;/code&gt;&lt;/pre&gt;</p><p>}</p><p></p>
+<p> &lt;/div&gt;&lt;/div&gt;<br> &lt;/div&gt;<br>// 标记属于遮挡、平行两种情况的点，不做特征提取<br> markOccludedPoints();<div class="xControl">
+ <div class="xHeading"><div class="xIcon"><i class="fa fa-plus"></i></div><span>markOccludedPoints</span>&lt;/div&gt;<br> <div class="xContent"><div class="inner"></div></div></div></div></p>
+<pre><code> &lt;p&gt;/**&lt;/p&gt;
+</code></pre><ul>
+<li><p>标记属于遮挡、平行两种情况的点，不做特征提取<br>*/<br>void markOccludedPoints()<br>{<br> int cloudSize = extractedCloud-&gt;points.size();<br> // mark occluded points and parallel beam points</p>
+<p> for (int i = 5; i &lt; cloudSize - 6; ++i)<br> {</p>
+<pre><code> // 当前点和下一个点的range值
+float depth1 = cloudInfo.pointRange[i];
+float depth2 = cloudInfo.pointRange[i+1];
+// 两个激光点之间的一维索引差值，如果在一条扫描线上，那么值为1；如果两个点之间有一些无效点被剔除了，可能会比1大，但不会特别大
+// 如果恰好前一个点在扫描一周的结束时刻，下一个点是另一条扫描线的起始时刻，那么值会很大
+int columnDiff = std::abs(int(cloudInfo.pointColInd[i+1] - cloudInfo.pointColInd[i]));
+
+// 两个点在同一扫描线上，且距离相差大于0.3，认为存在遮挡关系（也就是这两个点不在同一平面上，如果在同一平面上，距离相差不会太大）
+// 远处的点会被遮挡，标记一下该点以及相邻的5个点，后面不再进行特征提取
+if (columnDiff &lt; 10){
+
+  if (depth1 - depth2 &gt; 0.3){
+      cloudNeighborPicked[i - 5] = 1;
+      cloudNeighborPicked[i - 4] = 1;
+      cloudNeighborPicked[i - 3] = 1;
+      cloudNeighborPicked[i - 2] = 1;
+      cloudNeighborPicked[i - 1] = 1;
+      cloudNeighborPicked[i] = 1;
+  }else if (depth2 - depth1 &gt; 0.3){
+      cloudNeighborPicked[i + 1] = 1;
+      cloudNeighborPicked[i + 2] = 1;
+      cloudNeighborPicked[i + 3] = 1;
+      cloudNeighborPicked[i + 4] = 1;
+      cloudNeighborPicked[i + 5] = 1;
+      cloudNeighborPicked[i + 6] = 1;
+  }
+}
+
+// 用前后相邻点判断当前点所在平面是否与激光束方向平行
+float diff1 = std::abs(float(cloudInfo.pointRange[i-1] - cloudInfo.pointRange[i]));
+float diff2 = std::abs(float(cloudInfo.pointRange[i+1] - cloudInfo.pointRange[i]));
+
+// 平行则标记一下
+if (diff1 &gt; 0.02 * cloudInfo.pointRange[i] &amp;&amp; diff2 &gt; 0.02 * cloudInfo.pointRange[i])
+  cloudNeighborPicked[i] = 1;
+</code></pre><p> }<br>}</p>
 </li>
-<li><p>FeatureExtraction.cpp<br>提取特征。对经过运动畸变校正之后的当前帧激光点云，计算每个点的曲率，进而提取角点、平面点特征。</p>
+</ul>
+
+<p> &lt;/div&gt;&lt;/div&gt;<br> &lt;/div&gt;<br>// 点云角点、平面点特征提取<br> // 1、遍历扫描线，每根扫描线扫描一周的点云划分为6段，针对每段提取20个角点、不限数量的平面点，加入角点集合、平面点集合<br> // 2、认为非角点的点都是平面点，加入平面点云集合，最后降采样<br> extractFeatures();<div class="xControl">
+ <div class="xHeading"><div class="xIcon"><i class="fa fa-plus"></i></div><span>extractFeatures</span>&lt;/div&gt;<br> <div class="xContent"><div class="inner"></div></div></div></div></p>
+<pre><code> &lt;p&gt;void extractFeatures()&lt;br&gt;{&lt;br&gt;    cornerCloud-&amp;gt;clear();&lt;br&gt;    surfaceCloud-&amp;gt;clear();&lt;/p&gt;
+</code></pre><p><pre><code>pcl::PointCloud&lt;PointType&gt;::Ptr surfaceCloudScan(new pcl::PointCloud&lt;PointType&gt;());<br>pcl::PointCloud&lt;PointType&gt;::Ptr surfaceCloudScanDS(new pcl::PointCloud&lt;PointType&gt;());</code></pre></p>
 </li>
-<li><p>IMUPreintegration.cpp<br>IMU预积分模块，在该预积分模块中有两个类：</p>
+</ul>
+<p>// 遍历扫描线<br>for (int i = 0; i &lt; N_SCAN; i++)<br>{<br>    surfaceCloudScan-&gt;clear();</p>
+<pre><code>// 将一条扫描线扫描一周的点云数据，划分为6段，每段分开提取有限数量的特征，保证特征均匀分布
+for (int j = 0; j &amp;lt; 6; j++)
+{
+    // 每段点云的起始、结束索引；startRingIndex为扫描线起始第5个激光点在一维数组中的索引
+    int sp = (cloudInfo.startRingIndex[i] * (6 - j) + cloudInfo.endRingIndex[i] * j) / 6;
+    int ep = (cloudInfo.startRingIndex[i] * (5 - j) + cloudInfo.endRingIndex[i] * (j + 1)) / 6 - 1;
+
+    if (sp &amp;gt;= ep)
+        continue;
+
+    // 按照曲率从小到大排序点云
+    std::sort(cloudSmoothness.begin()+sp, cloudSmoothness.begin()+ep, by_value());
+
+    // 按照曲率从大到小遍历
+    int largestPickedNum = 0;
+    for (int k = ep; k &amp;gt;= sp; k--)
+    {
+        // 激光点的索引
+        int ind = cloudSmoothness[k].ind;
+        // 当前激光点还未被处理，且曲率大于阈值，则认为是角点
+        if (cloudNeighborPicked[ind] == 0 &amp;amp;&amp;amp; cloudCurvature[ind] &amp;gt; edgeThreshold)
+        {
+            // 每段只取20个角点，如果单条扫描线扫描一周是1800个点，则划分6段，每段300个点，从中提取20个角点
+            largestPickedNum++;
+            if (largestPickedNum &amp;lt;= 20){
+                // 标记为角点
+                cloudLabel[ind] = 1;
+                // 加入角点点云
+                cornerCloud-&amp;gt;push_back(extractedCloud-&amp;gt;points[ind]);
+            } else {
+                break;
+            }
+
+            // 标记已被处理
+            cloudNeighborPicked[ind] = 1;
+            // 同一条扫描线上后5个点标记一下，不再处理，避免特征聚集
+            for (int l = 1; l &amp;lt;= 5; l++)
+            {
+                int columnDiff = std::abs(int(cloudInfo.pointColInd[ind + l] - cloudInfo.pointColInd[ind + l - 1]));
+                if (columnDiff &amp;gt; 10)
+                    break;
+                cloudNeighborPicked[ind + l] = 1;
+            }
+            // 同一条扫描线上前5个点标记一下，不再处理，避免特征聚集
+            for (int l = -1; l &amp;gt;= -5; l--)
+            {
+                int columnDiff = std::abs(int(cloudInfo.pointColInd[ind + l] - cloudInfo.pointColInd[ind + l + 1]));
+                if (columnDiff &amp;gt; 10)
+                    break;
+                cloudNeighborPicked[ind + l] = 1;
+            }
+        }
+    }
+
+    // 按照曲率从小到大遍历
+    for (int k = sp; k &amp;lt;= ep; k++)
+    {
+        // 激光点的索引
+        int ind = cloudSmoothness[k].ind;
+        // 当前激光点还未被处理，且曲率小于阈值，则认为是平面点
+        if (cloudNeighborPicked[ind] == 0 &amp;amp;&amp;amp; cloudCurvature[ind] &amp;lt; surfThreshold)
+        {
+            // 标记为平面点
+            cloudLabel[ind] = -1;
+            // 标记已被处理
+            cloudNeighborPicked[ind] = 1;
+
+            // 同一条扫描线上后5个点标记一下，不再处理，避免特征聚集
+            for (int l = 1; l &amp;lt;= 5; l++) {
+
+                int columnDiff = std::abs(int(cloudInfo.pointColInd[ind + l] - cloudInfo.pointColInd[ind + l - 1]));
+                if (columnDiff &amp;gt; 10)
+                    break;
+
+                cloudNeighborPicked[ind + l] = 1;
+            }
+            // 同一条扫描线上前5个点标记一下，不再处理，避免特征聚集
+            for (int l = -1; l &amp;gt;= -5; l--) {
+
+                int columnDiff = std::abs(int(cloudInfo.pointColInd[ind + l] - cloudInfo.pointColInd[ind + l + 1]));
+                if (columnDiff &amp;gt; 10)
+                    break;
+
+                cloudNeighborPicked[ind + l] = 1;
+            }
+        }
+    }
+
+    // 平面点和未被处理的点，都认为是平面点，加入平面点云集合
+    for (int k = sp; k &amp;lt;= ep; k++)
+    {
+        if (cloudLabel[k] &amp;lt;= 0){
+            surfaceCloudScan-&amp;gt;push_back(extractedCloud-&amp;gt;points[k]);
+        }
+    }
+}
+
+// 平面点云降采样
+surfaceCloudScanDS-&amp;gt;clear();
+downSizeFilter.setInputCloud(surfaceCloudScan);
+downSizeFilter.filter(*surfaceCloudScanDS);
+
+// 加入平面点云集合
+*surfaceCloud += *surfaceCloudScanDS;
+</code></pre><p>}<br>&lt;/code&gt;&lt;/pre&gt;</p><p>}</p><p></p>
+<pre><code>&lt;/div&gt;&lt;/div&gt;
+&lt;/div&gt;  
+</code></pre><p> // 发布角点、面点点云，发布带特征点云数据的当前激光帧点云信息<br> publishFeatureCloud();<br>}</p>
+ 
+    </div></div>
+    </div>
 </li>
 </ol>
-<div class="xControl">
+<p>这两个部分跟前面的LOAM基本上是相同的，我们只需要知道它输入是雷达点云，即config.yaml中的lidar_topic，输出则是publish到/lio_sam/feature/cloud_info中<br>同时也会发送到后面的程序。</p>
+<p>前面两个模块还很好理解，从这里开始就开始非常复杂了。</p>
+<ol>
+<li>IMUPreintegration.cpp<br>IMU预积分模块，在该预积分模块中有两个类：<div class="xControl">
     <div class="xHeading"><div class="xIcon"><i class="fa fa-plus"></i></div><span>TransformFusion类</span></div>
     <div class="xContent"><div class="inner">
         <p>订阅激光里程计（来自MapOptimization，lio_sam/mapping/odometry）和IMU里程计（odomTopic+”_incremental”，来自ImuPreintegration类），<br>根据前一时刻激光里程计，和该时刻到当前时刻的IMU里程计变换增量，计算当前时刻IMU里程计(odomTopic)；rviz展示IMU里程计轨迹（局部）。</p>
@@ -222,6 +641,8 @@
  
     </div></div>
     </div>
+</li>
+</ol>
 <div class="xControl">
     <div class="xHeading"><div class="xIcon"><i class="fa fa-plus"></i></div><span>ImuPreintegration类</span></div>
     <div class="xContent"><div class="inner">
@@ -505,7 +926,7 @@ extractCloud(surroundingKeyPosesDS);
 <pre><code>&lt;/div&gt;&lt;/div&gt;
 &lt;/div&gt;&lt;br&gt;    } else {&lt;br&gt;        ROS_WARN(“Not enough features! Only %d edge and %d planar features available.”, laserCloudCornerLastDSNum, laserCloudSurfLastDSNum);&lt;br&gt;    }&lt;br&gt;}&lt;br&gt;
 </code></pre> 
-    
+    </div>
     <br>        // 设置当前帧为关键帧并执行因子图优化<br>        // 1、计算当前帧与前一帧位姿变换，如果变化太小，不设为关键帧，反之设为关键帧<br>        // 2、添加激光里程计因子、GPS因子、闭环因子<br>        // 3、执行因子图优化<br>        // 4、得到当前帧优化后位姿，位姿协方差<br>        // 5、添加cloudKeyPoses3D，cloudKeyPoses6D，更新transformTobeMapped，添加当前关键帧的角点、平面点集合<br><div class="xControl">
     <div class="xHeading"><div class="xIcon"><i class="fa fa-plus"></i></div><span>saveKeyFramesAndFactor();</span></div>
     <div class="xContent"><div class="inner">
@@ -604,7 +1025,7 @@ publishFrames();
     </div></div>
     </div><p></p>
 <p>(3)闭环检测。在历史关键帧中找候选闭环匹配帧，执行scan-to-map匹配，得到位姿变换，构建闭环因子，加入到因子图中一并优化。</p>
-</div>
+</ol></div>
         </div>
         
             <div class="kratos-copyright text-center clearfix">
@@ -693,7 +1114,7 @@ publishFrames();
                     <a class="tag-none-link" href="/tags/LIO-SAM/" rel="tag">LIO_SAM</a>, <a class="tag-none-link" href="/tags/SLAM/" rel="tag">SLAM</a>, <a class="tag-none-link" href="/tags/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0/" rel="tag">机器学习</a>
                 </div>
                 <div class="pull-date">
-                    <time datetime="2023-07-26T06:06:03.481Z" itemprop="dateModified">最后编辑：2023-07-26</time>
+                    <time datetime="2023-07-26T08:33:51.374Z" itemprop="dateModified">最后编辑：2023-07-26</time>
                 </div>
             </div>
         </footer>
